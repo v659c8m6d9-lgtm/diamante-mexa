@@ -490,6 +490,32 @@ function teamForm(side){
   const g = lr.wins + lr.losses; if(!g) return 0;
   return (lr.wins/g) - 0.5;
 }
+function oddsBlockHTML(g){
+  const awayName = g.teams.away.team.name;
+  const homeName = g.teams.home.team.name;
+  return `
+    <div class="odds" onclick="event.stopPropagation()">
+      <div class="odds-head">
+        <span class="odds-title">Cuotas de la casa</span>
+        <div class="odds-fmt" id="ofmt-${g.gamePk}">
+          <button class="on" onclick="setOddsFmt(${g.gamePk},'american',this)">−150</button>
+          <button onclick="setOddsFmt(${g.gamePk},'decimal',this)">1.65</button>
+        </div>
+      </div>
+      <div class="odds-inputs">
+        <div class="odds-field">
+          <label>${awayName}</label>
+          <input type="text" inputmode="text" id="oa-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+        </div>
+        <div class="odds-field">
+          <label>${homeName}</label>
+          <input type="text" inputmode="text" id="oh-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+        </div>
+      </div>
+      <div class="odds-result" id="ores-${g.gamePk}"></div>
+    </div>`;
+}
+
 function computeForecast(g){
   const box = document.getElementById(`fc-${g.gamePk}`);
   if(!box) return;
@@ -507,7 +533,9 @@ function computeForecast(g){
     box.innerHTML = `<div class="fc-top">
         <div class="fc-label"><span class="dot" style="background:#3a4151;box-shadow:none"></span> Pronóstico</div>
         <div class="fc-wait">Pendiente · falta pitcher de ${faltan.join(' y ')}</div>
-      </div>`;
+      </div>
+      ${oddsBlockHTML(g)}`;
+    restoreOdds(g.gamePk);
     return;
   }
 
@@ -549,26 +577,7 @@ function computeForecast(g){
       <span class="a">${awayName} ${(probAway*100).toFixed(0)}%</span>
       <span class="h">${(probHome*100).toFixed(0)}% ${homeName}</span>
     </div>
-    <div class="odds" onclick="event.stopPropagation()">
-      <div class="odds-head">
-        <span class="odds-title">Cuotas de la casa</span>
-        <div class="odds-fmt" id="ofmt-${g.gamePk}">
-          <button class="on" onclick="setOddsFmt(${g.gamePk},'american',this)">−150</button>
-          <button onclick="setOddsFmt(${g.gamePk},'decimal',this)">1.65</button>
-        </div>
-      </div>
-      <div class="odds-inputs">
-        <div class="odds-field">
-          <label>${awayName}</label>
-          <input type="text" inputmode="text" id="oa-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
-        </div>
-        <div class="odds-field">
-          <label>${homeName}</label>
-          <input type="text" inputmode="text" id="oh-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
-        </div>
-      </div>
-      <div class="odds-result" id="ores-${g.gamePk}"></div>
-    </div>`;
+    ${oddsBlockHTML(g)}`;
 
   // restaurar cuotas guardadas y formato
   restoreOdds(g.gamePk);
