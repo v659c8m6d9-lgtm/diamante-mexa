@@ -173,6 +173,25 @@
   .fc-pcts{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-variant-numeric:tabular-nums}
   .fc-pcts .a{color:#9aa7ba}
   .fc-pcts .h{color:#ff7a88}
+
+  /* ---- cuotas / valor ---- */
+  .odds{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line)}
+  .odds-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .odds-title{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .odds-fmt{display:flex;gap:4px}
+  .odds-fmt button{background:var(--panel2);border:1px solid var(--line);color:var(--muted);font-size:9.5px;padding:3px 7px;border-radius:6px;cursor:pointer;letter-spacing:.5px}
+  .odds-fmt button.on{background:var(--red);border-color:var(--red);color:#fff}
+  .odds-inputs{display:flex;gap:8px}
+  .odds-field{flex:1;display:flex;flex-direction:column;gap:3px}
+  .odds-field label{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .odds-field input{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--cream);font-size:14px;font-variant-numeric:tabular-nums;width:100%;text-align:center}
+  .odds-field input:focus{outline:none;border-color:var(--gold)}
+  .odds-result{margin-top:9px;font-size:12px;line-height:1.5;padding:9px 11px;border-radius:9px;display:none}
+  .odds-result.show{display:block}
+  .odds-result.value-yes{background:rgba(63,169,106,.1);border:1px solid rgba(63,169,106,.35);color:#7fd6a0}
+  .odds-result.value-no{background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+  .odds-result b{color:var(--cream)}
+  .odds-result .imp{color:var(--muted);font-size:11px}
   .fc-wait{font-size:11px;color:var(--muted);font-style:italic}
 
   /* ---- modal detalle ---- */
@@ -529,7 +548,137 @@ function computeForecast(g){
     <div class="fc-pcts">
       <span class="a">${awayName} ${(probAway*100).toFixed(0)}%</span>
       <span class="h">${(probHome*100).toFixed(0)}% ${homeName}</span>
+    </div>
+    <div class="odds" onclick="event.stopPropagation()">
+      <div class="odds-head">
+        <span class="odds-title">Cuotas de la casa</span>
+        <div class="odds-fmt" id="ofmt-${g.gamePk}">
+          <button class="on" onclick="setOddsFmt(${g.gamePk},'american',this)">−150</button>
+          <button onclick="setOddsFmt(${g.gamePk},'decimal',this)">1.65</button>
+        </div>
+      </div>
+      <div class="odds-inputs">
+        <div class="odds-field">
+          <label>${awayName}</label>
+          <input type="text" inputmode="text" id="oa-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+        </div>
+        <div class="odds-field">
+          <label>${homeName}</label>
+          <input type="text" inputmode="text" id="oh-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+        </div>
+      </div>
+      <div class="odds-result" id="ores-${g.gamePk}"></div>
     </div>`;
+
+  // restaurar cuotas guardadas y formato
+  restoreOdds(g.gamePk);
+}
+
+/* ---------- CUOTAS Y VALOR ---------- */
+const ODDS_FMT = {}; // gamePk -> 'american' | 'decimal'
+
+function setOddsFmt(pk, fmt, btn){
+  ODDS_FMT[pk] = fmt;
+  // marcar boton activo
+  const cont = document.getElementById('ofmt-'+pk);
+  if(cont){ for(const b of cont.children) b.classList.remove('on'); btn.classList.add('on'); }
+  // recalcular con el nuevo formato
+  onOddsInput(pk);
+  // guardar preferencia de formato
+  const saved = loadOdds(pk) || {};
+  saved.fmt = fmt;
+  localStorage.setItem('odds:'+pk, JSON.stringify(saved));
+}
+
+// convierte una cuota (segun formato) a probabilidad implicita 0..1
+function oddsToProb(raw, fmt){
+  if(raw===''||raw===null||raw===undefined) return null;
+  const s = (''+raw).trim().replace(',', '.');
+  if(fmt==='decimal'){
+    const d = parseFloat(s);
+    if(isNaN(d) || d<=1) return null;
+    return 1/d;
+  } else {
+    // americana: +130 o -150
+    const n = parseFloat(s.replace('+',''));
+    if(isNaN(n) || n===0) return null;
+    if(n>0) return 100/(n+100);
+    return (-n)/((-n)+100);
+  }
+}
+
+function onOddsInput(pk){
+  const g = GAMES[pk];
+  const fmt = ODDS_FMT[pk] || 'american';
+  const aRaw = document.getElementById('oa-'+pk)?.value ?? '';
+  const hRaw = document.getElementById('oh-'+pk)?.value ?? '';
+  // guardar
+  localStorage.setItem('odds:'+pk, JSON.stringify({a:aRaw, h:hRaw, fmt}));
+  renderOddsResult(pk, aRaw, hRaw, fmt);
+}
+
+function renderOddsResult(pk, aRaw, hRaw, fmt){
+  const g = GAMES[pk];
+  const res = document.getElementById('ores-'+pk);
+  if(!res) return;
+  const pa = oddsToProb(aRaw, fmt);
+  const ph = oddsToProb(hRaw, fmt);
+  if(pa===null && ph===null){ res.className='odds-result'; res.innerHTML=''; return; }
+
+  // probabilidad implicita normalizada (quitar el margen de la casa si tenemos ambas)
+  let impAway=pa, impHome=ph;
+  if(pa!==null && ph!==null){
+    const tot = pa+ph;
+    impAway = pa/tot; impHome = ph/tot;
+  }
+
+  // comparar con nuestro pronostico
+  const pick = g?._pick;
+  let body = '';
+  if(impAway!==null) body += `<div class="imp">Implícita casa · ${g.teams.away.team.name}: ${(impAway*100).toFixed(0)}%</div>`;
+  if(impHome!==null) body += `<div class="imp">Implícita casa · ${g.teams.home.team.name}: ${(impHome*100).toFixed(0)}%</div>`;
+
+  if(pick && pick.hasFull && impAway!==null && impHome!==null){
+    const ourHome = pick.probHome, ourAway = 1-pick.probHome;
+    // valor: nuestro % menos % implicito de la casa
+    const edgeHome = ourHome - impHome;
+    const edgeAway = ourAway - impAway;
+    const THRESH = 0.05; // 5 puntos de diferencia para marcar valor
+    let valueSide = null, edge = 0;
+    if(edgeHome >= THRESH && edgeHome >= edgeAway){ valueSide = g.teams.home.team.name; edge = edgeHome; }
+    else if(edgeAway >= THRESH){ valueSide = g.teams.away.team.name; edge = edgeAway; }
+
+    if(valueSide){
+      res.className = 'odds-result show value-yes';
+      res.innerHTML = `<b>📈 Posible valor en ${valueSide}</b><br>Nuestro modelo le da ${((valueSide===g.teams.home.team.name?ourHome:ourAway)*100).toFixed(0)}% vs ${((valueSide===g.teams.home.team.name?impHome:impAway)*100).toFixed(0)}% de la casa (+${(edge*100).toFixed(0)} pts).${body}`;
+    } else {
+      res.className = 'odds-result show value-no';
+      res.innerHTML = `<b>Sin valor claro</b> · el modelo y la casa van parejos.${body}`;
+    }
+  } else {
+    res.className = 'odds-result show value-no';
+    res.innerHTML = (pick&&pick.hasFull) ? `Mete ambas cuotas para detectar valor.${body}` : `Cuota guardada. El pronóstico aún no está listo.${body}`;
+  }
+}
+
+function loadOdds(pk){
+  try{ return JSON.parse(localStorage.getItem('odds:'+pk)); }catch(e){ return null; }
+}
+
+function restoreOdds(pk){
+  const saved = loadOdds(pk);
+  if(!saved) return;
+  ODDS_FMT[pk] = saved.fmt || 'american';
+  // marcar boton de formato
+  const cont = document.getElementById('ofmt-'+pk);
+  if(cont){
+    for(const b of cont.children) b.classList.remove('on');
+    const idx = (ODDS_FMT[pk]==='decimal') ? 1 : 0;
+    if(cont.children[idx]) cont.children[idx].classList.add('on');
+  }
+  if(saved.a!==undefined && document.getElementById('oa-'+pk)) document.getElementById('oa-'+pk).value = saved.a;
+  if(saved.h!==undefined && document.getElementById('oh-'+pk)) document.getElementById('oh-'+pk).value = saved.h;
+  renderOddsResult(pk, saved.a||'', saved.h||'', ODDS_FMT[pk]);
 }
 
 // pinta el marco de la tarjeta: verde si va segun el pronostico, rojo si en contra, nada si no inicia
