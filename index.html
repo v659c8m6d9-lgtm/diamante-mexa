@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Diamante Mexa — Análisis LMB</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#0e1116; --panel:#171c24; --panel2:#1e242e; --line:#2a313d;
+    --red:#d6263b; --red-dim:#8e1c2a; --cream:#f4ede0; --gold:#e8b04b;
+    --green:#3fa96a; --yellow:#e8b04b; --txt:#e7ebf0; --muted:#8b96a5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    background-image:radial-gradient(circle at 20% 0%,rgba(214,38,59,.10),transparent 45%),radial-gradient(circle at 90% 10%,rgba(232,176,75,.06),transparent 40%);
+    color:var(--txt);font-family:'Archivo',sans-serif;min-height:100vh;padding-bottom:60px;
+  }
+  header{
+    border-bottom:1px solid var(--line);padding:26px 22px 20px;position:sticky;top:0;
+    background:rgba(14,17,22,.92);backdrop-filter:blur(10px);z-index:10;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .accwrap{margin-left:auto;display:flex;gap:8px}
+  .acc{text-align:center;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer;transition:.15s;min-width:108px}
+  .acc:hover{border-color:var(--gold)}
+  .acc-num{font-family:'Bebas Neue';font-size:26px;line-height:1;color:var(--gold)}
+  .acc-lbl{font-size:9px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-top:3px}
+  .acc-detail{font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.3;max-width:130px}
+  .logo{
+    width:46px;height:46px;border-radius:11px;background:linear-gradient(135deg,var(--red),var(--red-dim));
+    display:grid;place-items:center;font-family:'Bebas Neue';font-size:30px;color:var(--cream);
+    box-shadow:0 6px 18px rgba(214,38,59,.35);
+  }
+  h1{font-family:'Bebas Neue';font-size:34px;letter-spacing:1.5px;line-height:1;color:var(--cream)}
+  .sub{color:var(--muted);font-size:12.5px;letter-spacing:.5px;margin-top:3px}
+  .datebar{display:flex;gap:8px;align-items:center;margin-top:18px;flex-wrap:wrap}
+  .datebar label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+  input[type=date]{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:8px 12px;border-radius:9px;font-family:'Archivo';font-size:14px}
+  button.go{background:var(--red);color:var(--cream);border:none;border-radius:9px;padding:9px 18px;font-family:'Archivo';font-weight:700;font-size:13px;letter-spacing:.5px;cursor:pointer;transition:.15s}
+  button.go:hover{background:#ec2c43}
+  main{max-width:760px;margin:0 auto;padding:24px 18px}
+
+  /* selector de vista */
+  .viewtabs{display:flex;gap:8px;margin-bottom:18px}
+  .vtab{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:11px;border-radius:11px;font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;cursor:pointer;transition:.15s}
+  .vtab.active{background:var(--red);color:var(--cream);border-color:var(--red)}
+
+  /* logos */
+  .tlogo{width:30px;height:30px;object-fit:contain;flex-shrink:0}
+  .tlogo.big{width:38px;height:38px}
+  .tname-row{display:flex;align-items:center;gap:9px}
+  .team.home .tname-row{flex-direction:row-reverse}
+
+  /* standing */
+  .zone{margin-bottom:24px}
+  .zone-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:1.5px;color:var(--cream);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+  .zone-title::before{content:'';width:4px;height:20px;background:var(--red);border-radius:2px}
+  .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .stable th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:6px 8px;text-align:center;border-bottom:1px solid var(--line)}
+  .stable th.l{text-align:left}
+  .stable td{padding:9px 8px;text-align:center;border-bottom:1px solid var(--line);font-size:13.5px}
+  .stable td.tm{text-align:left}
+  .stable .tm-row{display:flex;align-items:center;gap:9px}
+  .stable .tm-row .pos{color:var(--muted);font-size:12px;width:16px;text-align:right}
+  .stable .tm-row .nm{font-weight:600;color:var(--cream);font-size:13.5px}
+  .stable tr:hover td{background:rgba(255,255,255,.02)}
+  .stable .pct{color:var(--gold);font-weight:700}
+  .stable .leader td{background:rgba(232,176,75,.04)}
+  .stable .gb{color:var(--muted)}
+  .status{color:var(--muted);text-align:center;padding:40px 0;font-size:15px}
+  .status .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--red);border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .game{background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-bottom:16px;overflow:hidden;animation:rise .4s ease both;cursor:pointer;transition:border-color .15s,transform .15s}
+  .game:hover{border-color:var(--red-dim);transform:translateY(-2px)}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .game-head{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--panel2);border-bottom:1px solid var(--line);font-size:11.5px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+  .badge{padding:3px 9px;border-radius:20px;font-weight:700;font-size:10.5px}
+  .badge.final{background:rgba(139,150,165,.15);color:var(--muted)}
+  .badge.live{background:rgba(214,38,59,.18);color:#ff6072}
+  .badge.prev{background:rgba(232,176,75,.15);color:var(--gold)}
+  .matchup{display:flex;align-items:stretch}
+  .team{flex:1;padding:18px 16px;display:flex;flex-direction:column;gap:9px}
+  .team.home{align-items:flex-end;text-align:right}
+  .tname{font-family:'Bebas Neue';font-size:24px;letter-spacing:.5px;line-height:.95;color:var(--cream)}
+  .trec{font-size:11.5px;color:var(--muted)}
+  .score{font-family:'Bebas Neue';font-size:40px;color:var(--cream);line-height:.8}
+  .vs{display:grid;place-items:center;padding:0 6px;color:var(--muted);font-size:12px;font-weight:700}
+  .pitcher{margin-top:4px;padding-top:9px;border-top:1px dashed var(--line);width:100%}
+  .team.home .pitcher{text-align:right}
+  .plabel{font-size:9.5px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+  .pname{font-size:14px;font-weight:600;color:var(--txt);margin-top:2px}
+  .pstat{font-size:11.5px;color:var(--gold);margin-top:3px;font-variant-numeric:tabular-nums}
+  .pstat span{color:var(--muted)}
+  .tapnote{text-align:center;font-size:10.5px;color:var(--muted);padding:0 0 12px;letter-spacing:.5px}
+  footer{text-align:center;color:var(--muted);font-size:11px;margin-top:30px;letter-spacing:.5px;padding:0 20px}
+  .err{background:rgba(214,38,59,.1);border:1px solid var(--red-dim);color:#ff8a96;padding:14px 16px;border-radius:12px;font-size:13.5px;line-height:1.5}
+
+  /* ---- semaforo / pronostico ---- */
+  .forecast{border-top:1px solid var(--line);padding:13px 16px;background:rgba(0,0,0,.15)}
+  .fc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .fc-label{font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .dot.green{background:var(--green);box-shadow:0 0 8px rgba(63,169,106,.7)}
+  .dot.yellow{background:var(--yellow);box-shadow:0 0 8px rgba(232,176,75,.7)}
+  .dot.red{background:var(--red);box-shadow:0 0 8px rgba(214,38,59,.7)}
+  .fc-pick{font-size:12px;font-weight:700;color:var(--cream)}
+  .fc-bar{height:8px;border-radius:6px;overflow:hidden;display:flex;background:var(--panel2);border:1px solid var(--line)}
+  .fc-bar .away-fill{background:#54607a}
+  .fc-bar .home-fill{background:var(--red)}
+  .fc-pcts{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;font-variant-numeric:tabular-nums}
+  .fc-pcts .a{color:#9aa7ba}
+  .fc-pcts .h{color:#ff7a88}
+  .fc-wait{font-size:11px;color:var(--muted);font-style:italic}
+
+  /* ---- modal detalle ---- */
+  .overlay{position:fixed;inset:0;background:rgba(8,10,14,.72);backdrop-filter:blur(4px);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto}
+  .overlay.open{display:flex}
+  .sheet{background:var(--panel);border:1px solid var(--line);border-radius:18px;max-width:720px;width:100%;animation:rise .3s ease both;margin-bottom:40px}
+  .sheet-head{position:sticky;top:0;background:var(--panel2);border-bottom:1px solid var(--line);border-radius:18px 18px 0 0;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+  .sheet-title{font-family:'Bebas Neue';font-size:24px;letter-spacing:.5px;color:var(--cream);line-height:1}
+  .sheet-title small{display:block;font-family:'Archivo';font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:3px;text-transform:uppercase}
+  .close{background:none;border:1px solid var(--line);color:var(--muted);width:34px;height:34px;border-radius:9px;font-size:18px;cursor:pointer;transition:.15s}
+  .close:hover{border-color:var(--red);color:var(--red)}
+  .sheet-body{padding:20px}
+  .linescore{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin-bottom:22px;font-size:13px}
+  .linescore th,.linescore td{padding:6px 7px;text-align:center;border-bottom:1px solid var(--line)}
+  .linescore th{color:var(--muted);font-weight:600;font-size:11px}
+  .linescore td.tm{text-align:left;font-weight:700;color:var(--cream);white-space:nowrap}
+  .linescore td.tot{font-weight:800;color:var(--gold)}
+  .sech{font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;color:var(--cream);margin:18px 0 10px;border-left:3px solid var(--red);padding-left:9px}
+  .bat{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+  .bat th,.bat td{padding:5px 6px;text-align:center;border-bottom:1px solid var(--line)}
+  .bat th{color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase}
+  .bat td.nm{text-align:left;white-space:nowrap;color:var(--txt)}
+  .bat tr:hover td{background:rgba(255,255,255,.02)}
+  .tabs{display:flex;gap:6px;margin-bottom:14px}
+  .tab{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--muted);padding:8px;border-radius:9px;font-family:'Archivo';font-weight:600;font-size:12px;cursor:pointer;transition:.15s}
+  .tab.active{background:var(--red);color:var(--cream);border-color:var(--red)}
+  .cmp{display:flex;gap:10px;margin-top:6px}
+  .cmp .col{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .cmp .col h4{font-family:'Bebas Neue';font-size:17px;color:var(--cream);letter-spacing:.5px;margin-bottom:8px}
+  .cmp .row{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)}
+  .cmp .row span{color:var(--muted)}
+  .cmp .row b{color:var(--gold);font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">⚾</div>
+    <div>
+      <h1>El Diamante Mexa</h1>
+      <div class="sub">ANÁLISIS DE PARTIDOS · LIGA MEXICANA DE BÉISBOL</div>
+    </div>
+    <div class="accwrap">
+      <div class="acc" id="accDay" title="Efectividad de los partidos de hoy (modelo completo con pitcher)">
+        <div class="acc-num" id="accDayNum">—</div>
+        <div class="acc-lbl">Hoy</div>
+        <div class="acc-detail" id="accDayDetail">sin datos aún</div>
+      </div>
+      <div class="acc" id="accMeter" title="Backtest del modelo base · últimos 21 días">
+        <div class="acc-num" id="accNum">—</div>
+        <div class="acc-lbl">Últimos 21 días</div>
+        <div class="acc-detail" id="accDetail">backtest base</div>
+      </div>
+    </div>
+  </div>
+  <div class="datebar">
+    <label>Fecha</label>
+    <input type="date" id="date">
+    <button class="go" id="go">Ver partidos</button>
+  </div>
+</header>
+
+<main>
+  <div class="viewtabs">
+    <button class="vtab active" id="vt-games" onclick="setView('games')">Partidos</button>
+    <button class="vtab" id="vt-standing" onclick="setView('standing')">Tabla</button>
+  </div>
+  <div id="view-games">
+    <div class="tapnote">Toca un partido para ver el detalle</div>
+    <div id="out"><div class="status"><div class="spinner"></div>Cargando partidos…</div></div>
+  </div>
+  <div id="view-standing" style="display:none">
+    <div id="standout"><div class="status"><div class="spinner"></div>Cargando tabla…</div></div>
+  </div>
+</main>
+
+<footer>Datos: MLB Stats API (Mexican League) · Prototipo Etapa 2 · Solo informativo</footer>
+
+<div class="overlay" id="overlay">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const API = "https://statsapi.mlb.com/api/v1";
+const out = document.getElementById('out');
+const dateInput = document.getElementById('date');
+const overlay = document.getElementById('overlay');
+const sheet = document.getElementById('sheet');
+let GAMES = {};
+
+// fecha local (no UTC) para que no se adelante por zona horaria
+function localDate(d){
+  d = d || new Date();
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off*60000).toISOString().slice(0,10);
+}
+dateInput.value = localDate();
+document.getElementById('go').addEventListener('click', load);
+overlay.addEventListener('click', e=>{ if(e.target===overlay) closeSheet(); });
+
+async function load(){
+  const date = dateInput.value;
+  out.innerHTML = '<div class="status"><div class="spinner"></div>Cargando partidos…</div>';
+  GAMES = {};
+  try{
+    const sched = await fetch(`${API}/schedule?sportId=23&date=${date}&hydrate=probablePitcher,linescore,team`).then(r=>r.json());
+    const dates = sched.dates || [];
+    if(!dates.length || !dates[0].games.length){
+      out.innerHTML = '<div class="status">No hay partidos de la LMB en esta fecha.<br>Prueba con otra fecha de la temporada.</div>';
+      return;
+    }
+    out.innerHTML = '';
+    for(const g of dates[0].games){
+      GAMES[g.gamePk] = g;
+      out.appendChild(renderGame(g));
+      hydratePitchers(g);
+    }
+    computeDayAccuracy();
+  }catch(e){
+    out.innerHTML = `<div class="err"><b>No se pudieron cargar los datos.</b><br>${e.message}<br><br>Si abriste el archivo directo (file://), corre un servidor local con: <b>python3 -m http.server 8000</b> y entra a http://localhost:8000</div>`;
+  }
+}
+
+function statusBadge(g){
+  const s = (g.status && g.status.abstractGameState) || '';
+  if(s === 'Final') return '<span class="badge final">Final</span>';
+  if(s === 'Live')  return '<span class="badge live">● En vivo</span>';
+  return '<span class="badge prev">Por jugar</span>';
+}
+
+function renderGame(g){
+  const el = document.createElement('div');
+  el.className = 'game';
+  el.addEventListener('click', ()=>openSheet(g.gamePk));
+  const away = g.teams.away, home = g.teams.home;
+  const isFinalOrLive = ['Final','Live'].includes(g.status?.abstractGameState);
+  const awayScore = isFinalOrLive ? (away.score ?? '–') : '';
+  const homeScore = isFinalOrLive ? (home.score ?? '–') : '';
+  const awayPP = away.probablePitcher, homePP = home.probablePitcher;
+  el.innerHTML = `
+    <div class="game-head">
+      <span>${g.gameDate ? new Date(g.gameDate).toLocaleString('es-MX',{hour:'2-digit',minute:'2-digit'}) : ''}</span>
+      ${statusBadge(g)}
+    </div>
+    <div class="matchup">
+      <div class="team away">
+        <div class="tname-row"><img class="tlogo" src="${logoUrl(away.team.id)}" alt="" onerror="this.style.display='none'"><div class="tname">${away.team.name}</div></div>
+        <div class="trec">${rec(away)}</div>
+        ${awayScore!=='' ? `<div class="score">${awayScore}</div>`:''}
+        <div class="pitcher">
+          <div class="plabel">Pitcher probable</div>
+          <div class="pname">${awayPP?awayPP.fullName:'Por confirmar'}</div>
+          <div class="pstat" id="ps-${g.gamePk}-away">${awayPP?'<span>cargando ERA…</span>':''}</div>
+        </div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="team home">
+        <div class="tname-row"><img class="tlogo" src="${logoUrl(home.team.id)}" alt="" onerror="this.style.display='none'"><div class="tname">${home.team.name}</div></div>
+        <div class="trec">${rec(home)}</div>
+        ${homeScore!=='' ? `<div class="score">${homeScore}</div>`:''}
+        <div class="pitcher">
+          <div class="plabel">Pitcher probable</div>
+          <div class="pname">${homePP?homePP.fullName:'Por confirmar'}</div>
+          <div class="pstat" id="ps-${g.gamePk}-home">${homePP?'<span>cargando ERA…</span>':''}</div>
+        </div>
+      </div>
+    </div>
+    <div class="forecast" id="fc-${g.gamePk}">
+      <div class="fc-top">
+        <div class="fc-label"><span class="dot yellow"></span> Pronóstico</div>
+        <div class="fc-wait">calculando…</div>
+      </div>
+    </div>`;
+  return el;
+}
+
+function rec(side){ const lr=side.leagueRecord; return lr?`${lr.wins}-${lr.losses}`:''; }
+
+async function hydratePitchers(g){
+  const season = (g.gameDate||'').slice(0,4) || '2026';
+  g._pstats = g._pstats || {};
+  for(const side of ['away','home']){
+    const pp = g.teams[side].probablePitcher;
+    const cell = document.getElementById(`ps-${g.gamePk}-${side}`);
+    if(!pp){ g._pstats[side] = null; continue; }
+    try{
+      const url = `${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=23)`;
+      const data = await fetch(url).then(r=>r.json());
+      const splits = data.people[0].stats?.[0]?.splits;
+      if(splits && splits.length){
+        const s = splits[0].stat;
+        g._pstats[side] = {era:parseFloat(s.era), whip:parseFloat(s.whip)};
+        if(cell) cell.innerHTML = `ERA <b>${s.era ?? '–'}</b> · <span>WHIP</span> ${s.whip ?? '–'} · <span>K</span> ${s.strikeOuts ?? '–'} · ${s.wins}-${s.losses}`;
+      }else{
+        g._pstats[side] = null;
+        if(cell) cell.innerHTML = `<span>Sin estadísticas de temporada</span>`;
+      }
+    }catch(err){ g._pstats[side]=null; if(cell) cell.innerHTML = `<span>ERA no disponible</span>`; }
+  }
+  computeForecast(g);
+}
+
+/* ---------- MODELO DE PRONOSTICO ---------- */
+// Pesos: pitcher 45%, forma del equipo 30%, ventaja local 15%, margen humano 10% (reservado)
+function logistic(x){ return 1/(1+Math.exp(-x)); }
+function pitcherScore(era, whip){
+  // promedios de referencia LMB (liga de bateo alto): ERA ~5.0, WHIP ~1.45
+  if(isNaN(era)||isNaN(whip)) return null;
+  const eraTerm = (5.0 - era);
+  const whipTerm = (1.45 - whip) * 5;
+  return eraTerm + whipTerm;
+}
+function teamForm(side){
+  const lr = side.leagueRecord; if(!lr) return 0;
+  const g = lr.wins + lr.losses; if(!g) return 0;
+  return (lr.wins/g) - 0.5;
+}
+function computeForecast(g){
+  const box = document.getElementById(`fc-${g.gamePk}`);
+  if(!box) return;
+  const ps = g._pstats || {};
+  const ph = ps.home ? pitcherScore(ps.home.era, ps.home.whip) : null;
+  const pa = ps.away ? pitcherScore(ps.away.era, ps.away.whip) : null;
+
+  // Regla honesta: sin AMBOS pitchers confirmados con stats, NO hay pronostico.
+  if(ph===null || pa===null){
+    const homePP = g.teams.home.probablePitcher;
+    const awayPP = g.teams.away.probablePitcher;
+    let faltan = [];
+    if(!awayPP || pa===null) faltan.push(g.teams.away.team.name);
+    if(!homePP || ph===null) faltan.push(g.teams.home.team.name);
+    box.innerHTML = `<div class="fc-top">
+        <div class="fc-label"><span class="dot" style="background:#3a4151;box-shadow:none"></span> Pronóstico</div>
+        <div class="fc-wait">Pendiente · falta pitcher de ${faltan.join(' y ')}</div>
+      </div>`;
+    return;
+  }
+
+  const pitchDiff = ph - pa;
+  const formDiff = teamForm(g.teams.home) - teamForm(g.teams.away);
+  const homeAdv = 1.0;
+
+  const z = (0.45 * pitchDiff * 0.35) + (0.30 * formDiff * 6.0) + (0.15 * homeAdv * 1.6);
+  let probHome = logistic(z);
+  let probAway = 1 - probHome;
+
+  const homeName = g.teams.home.team.name;
+  const awayName = g.teams.away.team.name;
+  const favHome = probHome >= probAway;
+  const favProb = favHome ? probHome : probAway;
+  const favName = favHome ? homeName : awayName;
+
+  let cls='yellow', txt='Ligero favorito';
+  if(favProb>=0.62){ cls='green'; txt='Favorito claro'; }
+  else if(favProb<0.55){ cls='yellow'; txt='Casi parejo'; }
+
+  // guardar el pronostico completo (con pitcher) para medir efectividad del dia
+  g._pick = { favHome, probHome, hasFull:true };
+  computeDayAccuracy();
+
+  box.innerHTML = `
+    <div class="fc-top">
+      <div class="fc-label"><span class="dot ${cls}"></span> ${txt}</div>
+      <div class="fc-pick">${favName} ${(favProb*100).toFixed(0)}%</div>
+    </div>
+    <div class="fc-bar">
+      <div class="away-fill" style="width:${(probAway*100).toFixed(1)}%"></div>
+      <div class="home-fill" style="width:${(probHome*100).toFixed(1)}%"></div>
+    </div>
+    <div class="fc-pcts">
+      <span class="a">${awayName} ${(probAway*100).toFixed(0)}%</span>
+      <span class="h">${(probHome*100).toFixed(0)}% ${homeName}</span>
+    </div>`;
+}
+
+function computeDayAccuracy(){
+  const dayNum = document.getElementById('accDayNum');
+  const dayDetail = document.getElementById('accDayDetail');
+  if(!dayNum) return;
+  const games = Object.values(GAMES);
+  const total = games.length;
+  if(!total){ dayNum.textContent='—'; dayDetail.textContent='sin partidos'; return; }
+
+  let jugados=0, aciertos=0, pendientes=0, conPronostico=0;
+  for(const g of games){
+    const finalizado = g.status?.abstractGameState === 'Final';
+    const pick = g._pick;
+    const h = g.teams.home, a = g.teams.away;
+    if(finalizado && pick && pick.hasFull && h.score!==undefined && a.score!==undefined){
+      jugados++;
+      const homeWon = h.score > a.score;
+      if(pick.favHome === homeWon) aciertos++;
+    }else if(!finalizado){
+      pendientes++;
+    }
+    if(pick && pick.hasFull) conPronostico++;
+  }
+
+  if(jugados>0){
+    dayNum.textContent = Math.round(aciertos/jugados*100)+'%';
+  }else{
+    dayNum.textContent = '—';
+  }
+  // texto de desglose: jugados de total, y pendientes
+  let txt = `${jugados} de ${total} jugados`;
+  if(jugados>0) txt += ` · ${aciertos} acierto${aciertos===1?'':'s'}`;
+  if(pendientes>0) txt += ` · ${pendientes} pendiente${pendientes===1?'':'s'}`;
+  dayDetail.textContent = txt;
+}
+
+/* ---------- DETALLE ---------- */
+async function openSheet(pk){
+  const g = GAMES[pk];
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  sheet.innerHTML = `
+    <div class="sheet-head">
+      <div class="sheet-title">${g.teams.away.team.name} <small>@ ${g.teams.home.team.name}</small></div>
+      <button class="close" onclick="closeSheet()">×</button>
+    </div>
+    <div class="sheet-body"><div class="status"><div class="spinner"></div>Cargando detalle…</div></div>`;
+
+  const state = g.status?.abstractGameState;
+  try{
+    if(state === 'Preview'){
+      await renderPreview(g);
+    }else{
+      await renderBox(g);
+    }
+  }catch(e){
+    sheet.querySelector('.sheet-body').innerHTML = `<div class="err">No se pudo cargar el detalle.<br>${e.message}</div>`;
+  }
+}
+function closeSheet(){ overlay.classList.remove('open'); document.body.style.overflow=''; }
+
+async function renderBox(g){
+  const pk = g.gamePk;
+  const [box, line] = await Promise.all([
+    fetch(`${API}/game/${pk}/boxscore`).then(r=>r.json()),
+    fetch(`${API}/game/${pk}/linescore`).then(r=>r.json())
+  ]);
+  const body = sheet.querySelector('.sheet-body');
+  let html = linescoreTable(g, line);
+  html += `<div class="tabs">
+      <button class="tab active" id="tab-away" onclick="switchTab('away')">${g.teams.away.team.name}</button>
+      <button class="tab" id="tab-home" onclick="switchTab('home')">${g.teams.home.team.name}</button>
+    </div>
+    <div id="batwrap">${battingTable(box,'away')}</div>`;
+  body.innerHTML = html;
+  window.__box = box;
+}
+function switchTab(side){
+  document.getElementById('tab-away').classList.toggle('active', side==='away');
+  document.getElementById('tab-home').classList.toggle('active', side==='home');
+  document.getElementById('batwrap').innerHTML = battingTable(window.__box, side);
+}
+
+function linescoreTable(g, line){
+  const innings = line.innings || [];
+  const aw = g.teams.away.team.name, hm = g.teams.home.team.name;
+  let head = '<th></th>'; let arow=''; let hrow='';
+  const n = Math.max(innings.length, 9);
+  for(let i=0;i<n;i++){
+    head += `<th>${i+1}</th>`;
+    const inn = innings[i] || {};
+    arow += `<td>${inn.away?.runs ?? ''}</td>`;
+    hrow += `<td>${inn.home?.runs ?? ''}</td>`;
+  }
+  head += '<th>R</th><th>H</th><th>E</th>';
+  const t = line.teams || {};
+  arow += `<td class="tot">${t.away?.runs??0}</td><td>${t.away?.hits??0}</td><td>${t.away?.errors??0}</td>`;
+  hrow += `<td class="tot">${t.home?.runs??0}</td><td>${t.home?.hits??0}</td><td>${t.home?.errors??0}</td>`;
+  return `<table class="linescore"><thead><tr>${head}</tr></thead><tbody>
+    <tr><td class="tm">${aw}</td>${arow}</tr>
+    <tr><td class="tm">${hm}</td>${hrow}</tr></tbody></table>`;
+}
+
+function battingTable(box, side){
+  const team = box.teams[side];
+  const order = team.battingOrder || [];
+  let rows='';
+  const ids = order.length ? order : Object.keys(team.players).map(k=>team.players[k].person.id);
+  for(const pid of ids){
+    const p = team.players['ID'+pid] || team.players[pid] || Object.values(team.players).find(x=>x.person.id===pid);
+    if(!p) continue;
+    const b = p.stats?.batting; if(!b || b.atBats===undefined) continue;
+    const pos = p.position?.abbreviation || '';
+    rows += `<tr>
+      <td class="nm">${p.person.fullName} <span style="color:var(--muted)">${pos}</span></td>
+      <td>${b.atBats??0}</td><td>${b.runs??0}</td><td>${b.hits??0}</td>
+      <td>${b.rbi??0}</td><td>${b.baseOnBalls??0}</td><td>${b.strikeOuts??0}</td>
+      <td>${p.seasonStats?.batting?.avg ?? '—'}</td></tr>`;
+  }
+  if(!rows) rows = `<tr><td class="nm" colspan="8" style="color:var(--muted)">Sin datos de bateo todavía.</td></tr>`;
+  return `<div class="sech">Bateo</div><table class="bat">
+    <thead><tr><th style="text-align:left">Jugador</th><th>AB</th><th>C</th><th>H</th><th>CI</th><th>BB</th><th>K</th><th>AVG</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+
+async function renderPreview(g){
+  const season = (g.gameDate||'').slice(0,4) || '2026';
+  const body = sheet.querySelector('.sheet-body');
+  const cols = {};
+  for(const side of ['away','home']){
+    const pp = g.teams[side].probablePitcher;
+    if(!pp){ cols[side] = {name:'Por confirmar', s:null}; continue; }
+    try{
+      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=23)`).then(r=>r.json());
+      cols[side] = {name:pp.fullName, s:d.people[0].stats?.[0]?.splits?.[0]?.stat || null};
+    }catch(e){ cols[side]={name:pp.fullName,s:null}; }
+  }
+  const stat=(o,k)=> o&&o[k]!==undefined?o[k]:'—';
+  const col=(side,teamName)=>{
+    const c=cols[side];
+    return `<div class="col"><h4>${teamName}</h4>
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">${c.name}</div>
+      <div class="row"><span>ERA</span><b>${stat(c.s,'era')}</b></div>
+      <div class="row"><span>WHIP</span><b>${stat(c.s,'whip')}</b></div>
+      <div class="row"><span>Ponches (K)</span><b>${stat(c.s,'strikeOuts')}</b></div>
+      <div class="row"><span>Entradas (IP)</span><b>${stat(c.s,'inningsPitched')}</b></div>
+      <div class="row"><span>Récord</span><b>${c.s?`${c.s.wins}-${c.s.losses}`:'—'}</b></div>
+      <div class="row"><span>AVG en contra</span><b>${stat(c.s,'avg')}</b></div>
+    </div>`;
+  };
+  body.innerHTML = `<div class="sech">Comparación de abridores</div>
+    <div class="cmp">${col('away',g.teams.away.team.name)}${col('home',g.teams.home.team.name)}</div>
+    <p style="color:var(--muted);font-size:11.5px;margin-top:14px;line-height:1.5">Partido aún por jugarse. Cuando termine, aquí verás el box score completo con bateadores y line score por entrada.</p>`;
+}
+
+/* ---------- BACKTEST / EFECTIVIDAD ---------- */
+// Modelo BASE (honesto hacia atras): solo forma de equipo + ventaja local.
+// No usa el pitcher porque su ERA de hoy incluiria datos del futuro.
+function predictBase(homeSide, awaySide){
+  const form = s => { const lr=s.leagueRecord; if(!lr) return 0; const g=lr.wins+lr.losses; return g?(lr.wins/g-0.5):0; };
+  const formDiff = form(homeSide) - form(awaySide);
+  const z = (0.30*formDiff*6.0) + (0.15*1.0*1.6);
+  return logistic(z); // prob de que gane el LOCAL
+}
+
+const accMeter = document.getElementById('accMeter');
+accMeter.addEventListener('click', openPerf);
+
+async function runBacktest(days){
+  // toma los ultimos `days` dias hasta ayer, junta partidos finalizados
+  const end = new Date(); end.setDate(end.getDate()-1);
+  const start = new Date(end); start.setDate(start.getDate()-days);
+  const fmt = d => localDate(d);
+  const url = `${API}/schedule?sportId=23&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team`;
+  const sched = await fetch(url).then(r=>r.json());
+  let hits=0, total=0, details=[];
+  for(const date of (sched.dates||[])){
+    for(const g of date.games){
+      if(g.status?.abstractGameState !== 'Final') continue;
+      const h=g.teams.home, a=g.teams.away;
+      if(h.score===undefined || a.score===undefined) continue;
+      const probHome = predictBase(h, a);
+      const pickHome = probHome >= 0.5;
+      const homeWon = h.score > a.score;
+      const correct = (pickHome===homeWon);
+      if(correct) hits++;
+      total++;
+      details.push({date:date.date, a:a.team.name, h:h.team.name, as:a.score, hs:h.score, pickHome, probHome, correct});
+    }
+  }
+  return {hits,total,details};
+}
+
+let PERF=null;
+async function refreshAccuracy(){
+  try{
+    const r = await runBacktest(21); // ultimas ~3 semanas
+    PERF = r;
+    const num = document.getElementById('accNum');
+    if(r.total){
+      const pct = (r.hits/r.total*100).toFixed(0);
+      num.textContent = pct+'%';
+    }else{
+      num.textContent = '—';
+    }
+  }catch(e){ document.getElementById('accNum').textContent='—'; }
+}
+
+function openPerf(){
+  overlay.classList.add('open'); document.body.style.overflow='hidden';
+  if(!PERF){
+    sheet.innerHTML = `<div class="sheet-head"><div class="sheet-title">Rendimiento del modelo</div>
+      <button class="close" onclick="closeSheet()">×</button></div>
+      <div class="sheet-body"><div class="status"><div class="spinner"></div>Calculando backtest…</div></div>`;
+    runBacktest(21).then(r=>{PERF=r;renderPerf();}).catch(e=>{
+      sheet.querySelector('.sheet-body').innerHTML = `<div class="err">No se pudo correr el backtest.<br>${e.message}</div>`;
+    });
+  }else renderPerf();
+}
+
+function renderPerf(){
+  const r=PERF;
+  const pct = r.total ? (r.hits/r.total*100).toFixed(1) : '0';
+  let rows='';
+  for(const d of r.details.slice().reverse().slice(0,40)){
+    rows += `<tr>
+      <td class="nm" style="color:var(--muted)">${d.date.slice(5)}</td>
+      <td class="nm">${d.a} <span style="color:var(--muted)">@</span> ${d.h}</td>
+      <td>${d.as}-${d.hs}</td>
+      <td>${(d.probHome*100).toFixed(0)}% L</td>
+      <td>${d.correct?'<span style="color:var(--green)">✓</span>':'<span style="color:var(--red)">✗</span>'}</td>
+    </tr>`;
+  }
+  sheet.innerHTML = `
+    <div class="sheet-head"><div class="sheet-title">Rendimiento del modelo<small>Backtest · últimos 21 días</small></div>
+      <button class="close" onclick="closeSheet()">×</button></div>
+    <div class="sheet-body">
+      <div class="cmp">
+        <div class="col"><h4>Aciertos</h4>
+          <div style="font-family:'Bebas Neue';font-size:42px;color:var(--gold);line-height:1">${pct}%</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px">${r.hits} de ${r.total} partidos</div>
+        </div>
+        <div class="col"><h4>Referencia</h4>
+          <div class="row"><span>Volado (azar)</span><b>50%</b></div>
+          <div class="row"><span>Modelos MLB serios</span><b>55-58%</b></div>
+          <div class="row"><span>Este modelo</span><b>${pct}%</b></div>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:11.5px;margin:14px 0;line-height:1.55">
+        <b style="color:var(--gold)">Nota honesta:</b> este backtest mide el <b>modelo base</b> (forma de equipo + ventaja de local), <b>sin</b> incluir al pitcher abridor. Se hace así a propósito: el ERA de hoy de un pitcher incluye juegos posteriores a cada partido pasado, y usarlo inflaría el resultado con información del futuro. El pronóstico en vivo del día <b>sí</b> usa el pitcher.</p>
+      <div class="sech">Últimos partidos evaluados</div>
+      <table class="bat">
+        <thead><tr><th style="text-align:left">Fecha</th><th style="text-align:left">Partido</th><th>Marcador</th><th>Pronóstico</th><th>Resultado</th></tr></thead>
+        <tbody>${rows||'<tr><td colspan="5" class="nm" style="color:var(--muted)">Sin partidos finalizados en el rango.</td></tr>'}</tbody>
+      </table>
+    </div>`;
+}
+
+/* ---------- LOGOS Y VISTAS ---------- */
+function logoUrl(teamId){ return `https://www.mlbstatic.com/team-logos/${teamId}.svg`; }
+
+let STANDING_LOADED = false;
+function setView(v){
+  document.getElementById('vt-games').classList.toggle('active', v==='games');
+  document.getElementById('vt-standing').classList.toggle('active', v==='standing');
+  document.getElementById('view-games').style.display = v==='games'?'':'none';
+  document.getElementById('view-standing').style.display = v==='standing'?'':'none';
+  if(v==='standing' && !STANDING_LOADED){ loadStanding(); STANDING_LOADED=true; }
+}
+
+async function loadStanding(){
+  const box = document.getElementById('standout');
+  const season = new Date().getFullYear();
+  try{
+    // Descubrir el/los leagueId reales de la Mexican League (sportId 23)
+    const teams = await fetch(`${API}/teams?sportId=23&season=${season}`).then(r=>r.json());
+    const leagueIds = [...new Set((teams.teams||[])
+      .filter(t => (t.league?.name||'').toLowerCase().includes('mexican'))
+      .map(t => t.league?.id).filter(Boolean))];
+    const idParam = leagueIds.length ? leagueIds.join(',') : '125';
+
+    const url = `${API}/standings?leagueId=${idParam}&season=${season}&standingsTypes=regularSeason&hydrate=team,division`;
+    let data = await fetch(url).then(r=>r.json());
+    let records = data.records || [];
+    if(!records.length){
+      box.innerHTML = '<div class="status">No se pudo cargar la tabla en este momento.<br>Puede que la liga aún no publique standings para esta temporada.</div>';
+      return;
+    }
+    box.innerHTML = records.map(renderZone).join('');
+  }catch(e){
+    box.innerHTML = `<div class="err">No se pudo cargar la tabla.<br>${e.message}</div>`;
+  }
+}
+
+function renderZone(rec){
+  const zoneName = rec.division?.nameShort || rec.division?.name
+    || rec.league?.name || (rec.division?.abbreviation) || 'Zona';
+  let rows='';
+  (rec.teamRecords||[]).forEach((tr,i)=>{
+    const t = tr.team;
+    const wins = tr.wins, losses = tr.losses;
+    const pct = tr.winningPercentage || (wins/(wins+losses)).toFixed(3);
+    const gb = tr.gamesBack && tr.gamesBack!=='-' ? tr.gamesBack : '—';
+    const streak = tr.streak?.streakCode || '';
+    rows += `<tr class="${i===0?'leader':''}">
+      <td class="tm"><div class="tm-row"><span class="pos">${i+1}</span>
+        <img class="tlogo" src="${logoUrl(t.id)}" alt="" onerror="this.style.display='none'">
+        <span class="nm">${t.name}</span></div></td>
+      <td>${wins}</td><td>${losses}</td>
+      <td class="pct">${(typeof pct==='string'?pct:pct.toFixed(3)).replace(/^0/,'')}</td>
+      <td class="gb">${gb}</td>
+      <td>${streak}</td>
+    </tr>`;
+  });
+  return `<div class="zone">
+    <div class="zone-title">${zoneName}</div>
+    <table class="stable">
+      <thead><tr><th class="l">Equipo</th><th>G</th><th>P</th><th>PCT</th><th>DIF</th><th>RACHA</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+refreshAccuracy();
+load();
+</script>
+</body>
+</html>
