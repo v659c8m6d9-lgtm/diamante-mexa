@@ -532,7 +532,7 @@ async function hydratePitchers(g){
       const splits = data.people[0].stats?.[0]?.splits;
       if(splits && splits.length){
         const s = splits[0].stat;
-        g._pstats[side] = {era:parseFloat(s.era), whip:parseFloat(s.whip)};
+        g._pstats[side] = {era:parseFloat(s.era), whip:parseFloat(s.whip), ip:parseIP(s.inningsPitched)};
         if(cell) cell.innerHTML = `ERA <b>${s.era ?? '–'}</b> · <span>WHIP</span> ${s.whip ?? '–'} · <span>K</span> ${s.strikeOuts ?? '–'} · ${s.wins}-${s.losses}`;
       }else{
         g._pstats[side] = null;
@@ -546,11 +546,32 @@ async function hydratePitchers(g){
 /* ---------- MODELO DE PRONOSTICO ---------- */
 // Pesos: pitcher 45%, forma del equipo 30%, ventaja local 15%, margen humano 10% (reservado)
 function logistic(x){ return 1/(1+Math.exp(-x)); }
-function pitcherScore(era, whip){
+// convierte inningsPitched de la API ("37.2" = 37 y 2/3) a decimal real
+function parseIP(ipStr){
+  if(ipStr===undefined||ipStr===null) return 0;
+  const n = parseFloat(ipStr);
+  if(isNaN(n)) return 0;
+  const whole = Math.floor(n);
+  const frac = Math.round((n - whole)*10); // .1 o .2 = tercios
+  return whole + (frac===1?1/3:frac===2?2/3:0);
+}
+
+// aplica shrinkage: acerca un valor al promedio de liga si hay pocas entradas
+// valor_ajustado = (IP*valor + K*promedio) / (IP + K)  ·  K=30 (equilibrado)
+const SHRINK_K = 30;
+function shrinkStat(valor, ip, promedio){
+  if(!ip || ip<=0) return promedio; // sin entradas, usar el promedio puro
+  return (ip*valor + SHRINK_K*promedio) / (ip + SHRINK_K);
+}
+
+function pitcherScore(era, whip, ip){
   // promedios de referencia LMB (liga de bateo alto): ERA ~5.0, WHIP ~1.45
   if(isNaN(era)||isNaN(whip)) return null;
-  const eraTerm = (5.0 - era);
-  const whipTerm = (1.45 - whip) * 5;
+  // shrinkage hacia el promedio para pitchers con pocas entradas
+  const eraAdj  = shrinkStat(era, ip, 5.0);
+  const whipAdj = shrinkStat(whip, ip, 1.45);
+  const eraTerm = (5.0 - eraAdj);
+  const whipTerm = (1.45 - whipAdj) * 5;
   return eraTerm + whipTerm;
 }
 function teamForm(side){
@@ -588,8 +609,8 @@ function computeForecast(g){
   const box = document.getElementById(`fc-${g.gamePk}`);
   if(!box) return;
   const ps = g._pstats || {};
-  const ph = ps.home ? pitcherScore(ps.home.era, ps.home.whip) : null;
-  const pa = ps.away ? pitcherScore(ps.away.era, ps.away.whip) : null;
+  const ph = ps.home ? pitcherScore(ps.home.era, ps.home.whip, ps.home.ip) : null;
+  const pa = ps.away ? pitcherScore(ps.away.era, ps.away.whip, ps.away.ip) : null;
 
   // Sin AMBOS pitchers: pronostico PARCIAL (forma + ventaja local), confianza reducida.
   if(ph===null || pa===null){
@@ -1207,12 +1228,12 @@ async function hydrateBoardForecast(g, card){
     try{
       const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=23)`).then(r=>r.json());
       const s = d.people[0].stats?.[0]?.splits?.[0]?.stat;
-      g._pstats[side] = s ? {era:parseFloat(s.era), whip:parseFloat(s.whip)} : null;
+      g._pstats[side] = s ? {era:parseFloat(s.era), whip:parseFloat(s.whip), ip:parseIP(s.inningsPitched)} : null;
     }catch(e){ g._pstats[side]=null; }
   }
   // calcular pick con la misma logica del modelo
-  const ph = g._pstats.home ? pitcherScore(g._pstats.home.era, g._pstats.home.whip) : null;
-  const pa = g._pstats.away ? pitcherScore(g._pstats.away.era, g._pstats.away.whip) : null;
+  const ph = g._pstats.home ? pitcherScore(g._pstats.home.era, g._pstats.home.whip, g._pstats.home.ip) : null;
+  const pa = g._pstats.away ? pitcherScore(g._pstats.away.era, g._pstats.away.whip, g._pstats.away.ip) : null;
   if(ph!==null && pa!==null){
     const pitchDiff = ph - pa;
     const formDiff = teamForm(g.teams.home) - teamForm(g.teams.away);
