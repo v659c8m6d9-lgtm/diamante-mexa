@@ -126,6 +126,8 @@
   .badge.final{background:rgba(139,150,165,.15);color:var(--muted)}
   .badge.live{background:rgba(214,38,59,.18);color:#ff6072}
   .badge.prev{background:rgba(232,176,75,.15);color:var(--gold)}
+  .badge.susp{background:rgba(126,138,154,.18);color:#9aa7ba}
+  .live-susp{font-family:'Bebas Neue';font-size:15px;letter-spacing:.5px;color:#9aa7ba;text-align:center;white-space:nowrap}
   .matchup{display:flex;align-items:stretch}
   .team{flex:1;padding:18px 16px;display:flex;flex-direction:column;gap:9px}
   .team.home{align-items:flex-end;text-align:right}
@@ -192,7 +194,48 @@
   .odds-result.value-no{background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
   .odds-result b{color:var(--cream)}
   .odds-result .imp{color:var(--muted);font-size:11px}
+
+  /* ---- estrategia / bankroll ---- */
+  .bank-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+  .bank-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+  .bank-stat{flex:1;min-width:130px}
+  .bank-stat .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+  .bank-stat .val{font-family:'Bebas Neue';font-size:30px;line-height:1;color:var(--cream)}
+  .bank-stat .val.pos{color:var(--green)}
+  .bank-stat .val.neg{color:#ff6072}
+  .bank-edit{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+  .bank-edit input{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;color:var(--cream);font-size:15px;width:130px;font-variant-numeric:tabular-nums}
+  .bank-edit input:focus{outline:none;border-color:var(--gold)}
+  .bank-edit button{background:var(--red);border:none;color:#fff;border-radius:9px;padding:9px 16px;font-family:'Archivo';font-weight:600;font-size:13px;cursor:pointer}
+  .bank-edit button.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .strat-section-title{font-family:'Bebas Neue';font-size:20px;letter-spacing:1px;color:var(--cream);margin:22px 0 12px}
+  .sug-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:12px}
+  .sug-card.has-value{border-color:rgba(63,169,106,.4)}
+  .sug-match{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .sug-pick{font-family:'Bebas Neue';font-size:19px;color:var(--cream);letter-spacing:.5px}
+  .sug-edge{display:inline-block;background:rgba(63,169,106,.12);color:#7fd6a0;font-size:11px;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle}
+  .sug-amounts{display:flex;gap:10px;margin-top:12px}
+  .sug-amt{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:.15s}
+  .sug-amt:hover{border-color:var(--gold)}
+  .sug-amt .amt-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .sug-amt .amt-val{font-family:'Bebas Neue';font-size:24px;color:var(--gold);line-height:1.1;margin-top:2px}
+  .bet-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);gap:10px}
+  .bet-row:last-child{border-bottom:none}
+  .bet-info{flex:1;min-width:0}
+  .bet-info .bp{font-weight:600;color:var(--cream);font-size:14px}
+  .bet-info .bd{font-size:11px;color:var(--muted);margin-top:2px}
+  .bet-actions{display:flex;gap:6px}
+  .bet-actions button{border:none;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;cursor:pointer}
+  .bet-win{background:rgba(63,169,106,.15);color:#7fd6a0;border:1px solid rgba(63,169,106,.4)!important}
+  .bet-lose{background:rgba(214,38,59,.12);color:#ff8a96;border:1px solid var(--red-dim)!important}
+  .bet-del{background:transparent;color:var(--muted);border:1px solid var(--line)!important}
+  .bet-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .bet-status.won{background:rgba(63,169,106,.15);color:#7fd6a0}
+  .bet-status.lost{background:rgba(214,38,59,.12);color:#ff8a96}
+  .strat-empty{color:var(--muted);text-align:center;padding:30px 16px;font-size:13.5px;line-height:1.6}
+  .strat-note{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:8px;padding:10px 12px;background:rgba(232,176,75,.05);border:1px solid rgba(232,176,75,.2);border-radius:9px}
   .fc-wait{font-size:11px;color:var(--muted);font-style:italic}
+  .fc-partial-note{font-size:11px;color:#9aa7ba;line-height:1.5;margin-top:10px;padding:9px 11px;background:rgba(126,138,154,.08);border:1px solid rgba(126,138,154,.25);border-radius:9px}
 
   /* ---- modal detalle ---- */
   .overlay{position:fixed;inset:0;background:rgba(8,10,14,.72);backdrop-filter:blur(4px);z-index:50;display:none;align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto}
@@ -263,6 +306,7 @@
   <div class="viewtabs">
     <button class="vtab active" id="vt-games" onclick="setView('games')">Partidos</button>
     <button class="vtab" id="vt-board" onclick="setView('board')">Pizarra</button>
+    <button class="vtab" id="vt-strategy" onclick="setView('strategy')">Estrategia</button>
     <button class="vtab" id="vt-standing" onclick="setView('standing')">Tabla</button>
   </div>
   <div id="view-games">
@@ -271,6 +315,9 @@
   </div>
   <div id="view-board" style="display:none">
     <div id="boardout"><div class="status"><div class="spinner"></div>Cargando pizarra…</div></div>
+  </div>
+  <div id="view-strategy" style="display:none">
+    <div id="stratout"></div>
   </div>
   <div id="view-standing" style="display:none">
     <div id="standout"><div class="status"><div class="spinner"></div>Cargando tabla…</div></div>
@@ -349,7 +396,7 @@ async function load(){
       GAMES[g.gamePk] = g;
       out.appendChild(renderGame(g));
       hydratePitchers(g);
-      if(g.status?.abstractGameState === 'Live') hydrateLive(g);
+      if(gameState(g) === 'live') hydrateLive(g);
     }
     computeDayAccuracy();
   }catch(e){
@@ -372,8 +419,12 @@ async function hydrateLive(g){
 }
 
 function liveCenter(g){
-  // contenido para el centro de la tarjeta cuando el partido esta en vivo
-  if(g.status?.abstractGameState !== 'Live') return 'VS';
+  const st = gameState(g);
+  // partido suspendido: mostrar nota clara en vez de indicador en vivo
+  if(st === 'suspended') return '<div class="live-susp">⏸ Suspendido</div>';
+  if(st === 'delayed')   return '<div class="live-susp">⏱ Retrasado</div>';
+  // solo mostrar el indicador en vivo si REALMENTE esta en juego
+  if(st !== 'live') return 'VS';
   const ls = g.linescore || {};
   const inning = ls.currentInning || '';
   const half = (ls.inningHalf || '').toLowerCase();
@@ -396,10 +447,27 @@ function liveCenter(g){
     </div>`;
 }
 
+// estado normalizado del partido, detectando suspendidos/pospuestos/retrasados
+// devuelve: 'final' | 'live' | 'suspended' | 'postponed' | 'delayed' | 'preview'
+function gameState(g){
+  const abs = (g.status && g.status.abstractGameState) || '';
+  const ds = ((g.status && g.status.detailedState) || '').toLowerCase();
+  const cs = ((g.status && g.status.codedGameState) || '');
+  if(ds.includes('suspend') || cs==='U' || cs==='T') return 'suspended';
+  if(ds.includes('postpon') || ds.includes('pospu') || cs==='D' || cs==='P') return 'postponed';
+  if(ds.includes('delay') || ds.includes('retras')) return 'delayed';
+  if(abs === 'Final') return 'final';
+  if(abs === 'Live') return 'live';
+  return 'preview';
+}
+
 function statusBadge(g){
-  const s = (g.status && g.status.abstractGameState) || '';
-  if(s === 'Final') return '<span class="badge final">Final</span>';
-  if(s === 'Live')  return '<span class="badge live">● En vivo</span>';
+  const st = gameState(g);
+  if(st === 'final')     return '<span class="badge final">Final</span>';
+  if(st === 'live')      return '<span class="badge live">● En vivo</span>';
+  if(st === 'suspended') return '<span class="badge susp">Suspendido</span>';
+  if(st === 'postponed') return '<span class="badge susp">Pospuesto</span>';
+  if(st === 'delayed')   return '<span class="badge susp">Retrasado</span>';
   return '<span class="badge prev">Por jugar</span>';
 }
 
@@ -523,19 +591,42 @@ function computeForecast(g){
   const ph = ps.home ? pitcherScore(ps.home.era, ps.home.whip) : null;
   const pa = ps.away ? pitcherScore(ps.away.era, ps.away.whip) : null;
 
-  // Regla honesta: sin AMBOS pitchers confirmados con stats, NO hay pronostico.
+  // Sin AMBOS pitchers: pronostico PARCIAL (forma + ventaja local), confianza reducida.
   if(ph===null || pa===null){
-    const homePP = g.teams.home.probablePitcher;
-    const awayPP = g.teams.away.probablePitcher;
-    let faltan = [];
-    if(!awayPP || pa===null) faltan.push(g.teams.away.team.name);
-    if(!homePP || ph===null) faltan.push(g.teams.home.team.name);
-    box.innerHTML = `<div class="fc-top">
-        <div class="fc-label"><span class="dot" style="background:#3a4151;box-shadow:none"></span> Pronóstico</div>
-        <div class="fc-wait">Pendiente · falta pitcher de ${faltan.join(' y ')}</div>
+    const homeName = g.teams.home.team.name;
+    const awayName = g.teams.away.team.name;
+    // pesos del modelo completo: pitcher .45, forma .30, local .15
+    // sin pitcher usamos el MODELO BASE (forma + local, mismos pesos del backtest ~60%)
+    const formDiff = teamForm(g.teams.home) - teamForm(g.teams.away);
+    const homeAdv = 1.0;
+    const z = (0.30 * formDiff * 6.0) + (0.15 * homeAdv * 1.6);
+    let probHome = logistic(z);
+    let probAway = 1 - probHome;
+    const favHome = probHome >= probAway;
+    const favProb = favHome ? probHome : probAway;
+    const favName = favHome ? homeName : awayName;
+
+    // guardar como pronostico PARCIAL (hasFull:false) -> no genera apuestas ni cuenta para efectividad con pitcher
+    g._pick = { favHome, probHome, hasFull:false, partial:true };
+
+    box.innerHTML = `
+      <div class="fc-top">
+        <div class="fc-label"><span class="dot" style="background:#7e8a9a;box-shadow:none"></span> Estimado sin pitcher</div>
+        <div class="fc-pick" style="color:#9aa7ba">${favName} ${(favProb*100).toFixed(0)}%</div>
       </div>
+      <div class="fc-bar" style="opacity:.6">
+        <div class="away-fill" style="width:${(probAway*100).toFixed(1)}%"></div>
+        <div class="home-fill" style="width:${(probHome*100).toFixed(1)}%"></div>
+      </div>
+      <div class="fc-pcts">
+        <span class="a">${awayName} ${(probAway*100).toFixed(0)}%</span>
+        <span class="h">${(probHome*100).toFixed(0)}% ${homeName}</span>
+      </div>
+      <div class="fc-partial-note">⚠️ Estimado sin pitcher confirmado · confianza reducida. Basado solo en forma de equipo y ventaja local (falta el factor pitcher, que pesa casi la mitad del modelo). No genera sugerencias de apuesta.</div>
       ${oddsBlockHTML(g)}`;
     restoreOdds(g.gamePk);
+    const cardP = box.closest('.game');
+    if(cardP) paintFrame(g, cardP);
     return;
   }
 
@@ -666,7 +757,11 @@ function renderOddsResult(pk, aRaw, hRaw, fmt){
     }
   } else {
     res.className = 'odds-result show value-no';
-    res.innerHTML = (pick&&pick.hasFull) ? `Mete ambas cuotas para detectar valor.${body}` : `Cuota guardada. El pronóstico aún no está listo.${body}`;
+    let msg;
+    if(pick && pick.hasFull) msg = `Mete ambas cuotas para detectar valor.`;
+    else if(pick && pick.partial) msg = `Cuota guardada. Sin detección de valor: el estimado no incluye pitcher.`;
+    else msg = `Cuota guardada. El pronóstico aún no está listo.`;
+    res.innerHTML = msg + body;
   }
 }
 
@@ -694,13 +789,13 @@ function restoreOdds(pk){
 function paintFrame(g, card){
   card.classList.remove('fav-on','fav-off');
   const pick = g._pick;
-  const state = g.status?.abstractGameState;
-  // sin pronostico completo o partido no iniciado -> sin color
+  const st = gameState(g);
+  // sin pronostico completo o partido no en juego/terminado -> sin color
   if(!pick || !pick.hasFull) return;
-  if(state !== 'Live' && state !== 'Final') return;
+  if(st !== 'live' && st !== 'final') return;
   const h = g.teams.home, a = g.teams.away;
   if(h.score === undefined || a.score === undefined) return;
-  // empate en vivo -> sin color (todavia indefinido)
+  // empate -> sin color (todavia indefinido)
   if(h.score === a.score){ return; }
   const homeGana = h.score > a.score;
   const vaSegunPronostico = (pick.favHome === homeGana);
@@ -969,12 +1064,13 @@ function logoUrl(teamId){ return `https://www.mlbstatic.com/team-logos/${teamId}
 
 let STANDING_LOADED = false;
 function setView(v){
-  for(const tab of ['games','board','standing']){
+  for(const tab of ['games','board','strategy','standing']){
     document.getElementById('vt-'+tab).classList.toggle('active', v===tab);
     document.getElementById('view-'+tab).style.display = v===tab?'':'none';
   }
   if(v==='standing' && !STANDING_LOADED){ loadStanding(); STANDING_LOADED=true; }
   if(v==='board'){ loadBoard(); }
+  if(v==='strategy'){ loadStrategy(); }
 }
 
 /* ---------- PIZARRA ---------- */
@@ -1001,7 +1097,7 @@ async function loadBoard(){
       grid.appendChild(card);
       // hidratar pitchers para el pronostico si no lo teniamos
       if(!g._pick) hydrateBoardForecast(g, card);
-      if(g.status?.abstractGameState === 'Live') hydrateBoardLive(g, card);
+      if(gameState(g) === 'live') hydrateBoardLive(g, card);
       // pintar marco si ya hay pick
       paintFrame(g, card);
     }
@@ -1011,12 +1107,12 @@ async function loadBoard(){
 }
 
 function boardStatus(g){
-  const s = g.status?.abstractGameState;
-  const ds = g.status?.detailedState || '';
-  if(s==='Final') return '<span class="st-final">Final</span>';
-  if(s==='Live') return '<span class="st-live">● En vivo</span>';
-  if(ds.toLowerCase().includes('postpon')||ds.toLowerCase().includes('pospu')) return '<span class="st-post">Pospuesto</span>';
-  if(ds.toLowerCase().includes('delay')||ds.toLowerCase().includes('retras')) return '<span class="st-post">Retrasado</span>';
+  const st = gameState(g);
+  if(st==='final') return '<span class="st-final">Final</span>';
+  if(st==='live') return '<span class="st-live">● En vivo</span>';
+  if(st==='suspended') return '<span class="st-post">Suspendido</span>';
+  if(st==='postponed') return '<span class="st-post">Pospuesto</span>';
+  if(st==='delayed') return '<span class="st-post">Retrasado</span>';
   return '<span class="st-prev">Por jugar</span>';
 }
 
@@ -1061,9 +1157,10 @@ function renderBoardCard(g){
     if(w||l) pitchers = `<div class="bcard-pitchers">${w?`G: <b>${w}</b>`:''}${w&&l?' · ':''}${l?`P: <b>${l}</b>`:''}</div>`;
   }
 
-  // bloque en vivo (entrada + diamante + outs)
+  // bloque en vivo (entrada + diamante + outs) o nota de suspendido
   let live = '';
-  if(g.status?.abstractGameState==='Live'){
+  const bst = gameState(g);
+  if(bst==='live' || bst==='suspended' || bst==='delayed'){
     live = `<div class="bcard-live" id="blive-${g.gamePk}">${liveCenter(g)}</div>`;
   }
 
@@ -1086,10 +1183,16 @@ function fillBoardForecast(g, card){
   const fc = card.querySelector(`#bfc-${g.gamePk}`);
   if(!fc) return;
   const pick = g._pick;
-  if(!pick || !pick.hasFull){ fc.innerHTML = `<span style="color:var(--muted)">Pronóstico pendiente</span>`; return; }
+  if(!pick){ fc.innerHTML = `<span style="color:var(--muted)">Pronóstico pendiente</span>`; return; }
   const favHome = pick.favHome;
   const favName = favHome ? g.teams.home.team.name : g.teams.away.team.name;
   const favProb = favHome ? pick.probHome : (1-pick.probHome);
+  // estimado parcial sin pitcher
+  if(!pick.hasFull && pick.partial){
+    fc.innerHTML = `<span><span class="dot" style="background:#7e8a9a"></span>Sin pitcher</span><span style="color:#9aa7ba;font-weight:600">${favName} ${(favProb*100).toFixed(0)}%</span>`;
+    return;
+  }
+  if(!pick.hasFull){ fc.innerHTML = `<span style="color:var(--muted)">Pronóstico pendiente</span>`; return; }
   let color = 'var(--yellow)';
   if(favProb>=0.62) color = 'var(--green)';
   fc.innerHTML = `<span><span class="dot" style="background:${color}"></span>Pronóstico</span><span style="color:var(--cream);font-weight:600">${favName} ${(favProb*100).toFixed(0)}%</span>`;
@@ -1117,6 +1220,13 @@ async function hydrateBoardForecast(g, card){
     const probHome = logistic(z);
     g._pick = { favHome: probHome>=0.5, probHome, hasFull:true };
     if(GAMES[g.gamePk]) GAMES[g.gamePk]._pick = g._pick;
+  } else {
+    // estimado parcial sin pitcher (modelo base: forma + ventaja local)
+    const formDiff = teamForm(g.teams.home) - teamForm(g.teams.away);
+    const z = (0.30*formDiff*6.0) + (0.15*1.0*1.6);
+    const probHome = logistic(z);
+    g._pick = { favHome: probHome>=0.5, probHome, hasFull:false, partial:true };
+    if(GAMES[g.gamePk] && !GAMES[g.gamePk]._pick) GAMES[g.gamePk]._pick = g._pick;
   }
   fillBoardForecast(g, card);
   paintFrame(g, card);
@@ -1129,6 +1239,240 @@ async function hydrateBoardLive(g, card){
     const lv = card.querySelector(`#blive-${g.gamePk}`);
     if(lv) lv.innerHTML = liveCenter(g);
   }catch(e){}
+}
+
+/* ---------- ESTRATEGIA / BANKROLL ---------- */
+// Estado guardado en localStorage:
+//   bankroll: capital inicial que el usuario define
+//   bets: lista de apuestas registradas {id, pk, fecha, equipo, monto, cuotaAmerican, estado: 'pending'|'won'|'lost'}
+
+function getBank(){
+  try{ return JSON.parse(localStorage.getItem('strategy')) || {bankroll:0, bets:[]}; }
+  catch(e){ return {bankroll:0, bets:[]}; }
+}
+function saveBank(s){ localStorage.setItem('strategy', JSON.stringify(s)); }
+
+function americanToDecimal(a){
+  a = parseFloat((''+a).replace('+',''));
+  if(isNaN(a)||a===0) return null;
+  return a>0 ? 1 + a/100 : 1 + 100/(-a);
+}
+
+// fraccion de Kelly (0..1). p = prob de nuestro modelo, dec = cuota decimal
+function kellyFraction(p, dec){
+  const b = dec - 1;
+  if(b<=0) return 0;
+  const q = 1 - p;
+  const f = (b*p - q)/b;
+  return Math.max(0, f);
+}
+
+// calcula el saldo actual y stats a partir de las apuestas
+function bankStats(s){
+  let invertido=0, ganado=0, pendiente=0, won=0, lost=0, pend=0;
+  for(const b of s.bets){
+    if(b.estado==='pending'){ pendiente += b.monto; pend++; continue; }
+    invertido += b.monto;
+    if(b.estado==='won'){
+      const dec = americanToDecimal(b.cuotaAmerican) || 1;
+      ganado += b.monto*(dec-1); // ganancia neta
+      won++;
+    } else if(b.estado==='lost'){
+      ganado -= b.monto;
+      lost++;
+    }
+  }
+  const saldo = s.bankroll + ganado; // bankroll inicial +/- resultados resueltos
+  const roi = invertido>0 ? (ganado/invertido)*100 : 0;
+  return {saldo, ganado, invertido, pendiente, won, lost, pend, roi};
+}
+
+function loadStrategy(){
+  const box = document.getElementById('stratout');
+  const s = getBank();
+  const st = bankStats(s);
+  const disponible = st.saldo - st.pendiente;
+
+  const gananciaClass = st.ganado>0?'pos':(st.ganado<0?'neg':'');
+  const roiClass = st.roi>0?'pos':(st.roi<0?'neg':'');
+
+  let html = `
+    <div class="bank-card">
+      <div class="bank-top">
+        <div class="bank-stat"><div class="lbl">Saldo actual</div><div class="val">$${st.saldo.toFixed(0)}</div></div>
+        <div class="bank-stat"><div class="lbl">Ganancia / Pérdida</div><div class="val ${gananciaClass}">${st.ganado>=0?'+':''}$${st.ganado.toFixed(0)}</div></div>
+        <div class="bank-stat"><div class="lbl">ROI</div><div class="val ${roiClass}">${st.roi>=0?'+':''}${st.roi.toFixed(1)}%</div></div>
+      </div>
+      <div class="bank-top" style="margin-top:14px">
+        <div class="bank-stat"><div class="lbl">Disponible p/ apostar</div><div class="val" style="font-size:22px">$${disponible.toFixed(0)}</div></div>
+        <div class="bank-stat"><div class="lbl">Apostado (pendiente)</div><div class="val" style="font-size:22px">$${st.pendiente.toFixed(0)}</div></div>
+        <div class="bank-stat"><div class="lbl">Récord apuestas</div><div class="val" style="font-size:22px">${st.won}-${st.lost}${st.pend?' ('+st.pend+' pend)':''}</div></div>
+      </div>
+      <div class="bank-edit">
+        <input type="number" id="bankInput" placeholder="500" value="${s.bankroll||''}">
+        <button onclick="setBankroll()">Fijar capital inicial</button>
+        ${s.bankroll?'<button class="ghost" onclick="resetStrategy()">Reiniciar todo</button>':''}
+      </div>
+      <div class="strat-note">⚠️ Esto es un laboratorio de aprendizaje. Los resultados de pocas semanas no son concluyentes. Apuesta solo lo que estés dispuesto a perder. La sugerencia es estadística; la decisión final es tuya.</div>
+    </div>`;
+
+  // Sugerencias del dia: partidos con cuotas + valor detectado
+  html += `<div class="strat-section-title">Sugerencias de hoy</div>`;
+  const sugs = buildSuggestions(s, st);
+  if(!sugs){
+    html += `<div class="strat-empty">Para ver sugerencias, primero ve a <b>Partidos</b>, abre los juegos de hoy y captura las cuotas de la casa. La app detectará dónde hay valor y aquí te sugerirá cuánto apostar.</div>`;
+  } else {
+    html += sugs;
+  }
+
+  // Apuestas registradas
+  html += `<div class="strat-section-title">Mis apuestas</div>`;
+  if(!s.bets.length){
+    html += `<div class="strat-empty">Aún no has registrado apuestas. Cuando tomes una sugerencia, aparecerá aquí para que marques si ganó o perdió.</div>`;
+  } else {
+    html += `<div class="bank-card">`;
+    // mostrar mas recientes primero
+    for(const b of [...s.bets].reverse()){
+      html += betRow(b);
+    }
+    html += `</div>`;
+  }
+
+  box.innerHTML = html;
+}
+
+function buildSuggestions(s, st){
+  const disponible = st.saldo - st.pendiente;
+  let out = '';
+  let count = 0;
+  // recorrer los juegos cargados que tengan pick y cuotas guardadas con valor
+  for(const pk in GAMES){
+    const g = GAMES[pk];
+    if(!g._pick || !g._pick.hasFull) continue;
+    const odds = loadOdds(pk);
+    if(!odds || (odds.a==='' && odds.h==='')) continue;
+    const fmt = odds.fmt || 'american';
+    const pa = oddsToProb(odds.a, fmt);
+    const ph = oddsToProb(odds.h, fmt);
+    if(pa===null || ph===null) continue;
+    // normalizar implicitas
+    const tot = pa+ph;
+    const impAway = pa/tot, impHome = ph/tot;
+    const ourHome = g._pick.probHome, ourAway = 1-g._pick.probHome;
+    const edgeHome = ourHome - impHome;
+    const edgeAway = ourAway - impAway;
+    const THRESH = 0.05;
+    let side=null, edge=0, ourP=0, oddRaw='';
+    if(edgeHome>=THRESH && edgeHome>=edgeAway){ side=g.teams.home.team.name; edge=edgeHome; ourP=ourHome; oddRaw=odds.h; }
+    else if(edgeAway>=THRESH){ side=g.teams.away.team.name; edge=edgeAway; ourP=ourAway; oddRaw=odds.a; }
+    if(!side) continue;
+
+    // cuota decimal del lado con valor (convertir a americana para guardar)
+    let dec, american;
+    if(fmt==='decimal'){ dec=parseFloat((''+oddRaw).replace(',','.')); american=decimalToAmerican(dec); }
+    else { american=parseFloat((''+oddRaw).replace('+','')); dec=americanToDecimal(american); }
+    if(!dec) continue;
+
+    const kf = kellyFraction(ourP, dec);
+    if(kf<=0) continue;
+    const base = disponible>0 ? disponible : (s.bankroll||0);
+    const half = Math.round(base*kf*0.5);
+    const quarter = Math.round(base*kf*0.25);
+    if(half<1 && quarter<1) continue;
+
+    count++;
+    out += `
+      <div class="sug-card has-value">
+        <div class="sug-match">${g.teams.away.team.name} @ ${g.teams.home.team.name}</div>
+        <div><span class="sug-pick">${side}</span><span class="sug-edge">+${(edge*100).toFixed(0)} pts de valor</span></div>
+        <div class="sug-match" style="margin-top:6px">Modelo: ${(ourP*100).toFixed(0)}% · Cuota: ${american>0?'+':''}${american}</div>
+        <div class="sug-amounts">
+          <div class="sug-amt" onclick="registerBet('${pk}','${side.replace(/'/g,"")}',${quarter},${american})">
+            <div class="amt-lbl">Conservador (¼)</div>
+            <div class="amt-val">$${quarter}</div>
+          </div>
+          <div class="sug-amt" onclick="registerBet('${pk}','${side.replace(/'/g,"")}',${half},${american})">
+            <div class="amt-lbl">Moderado (½)</div>
+            <div class="amt-val">$${half}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+  return count>0 ? out : null;
+}
+
+function decimalToAmerican(dec){
+  if(!dec||dec<=1) return 0;
+  if(dec>=2) return Math.round((dec-1)*100);
+  return Math.round(-100/(dec-1));
+}
+
+function registerBet(pk, equipo, monto, american){
+  if(monto<1){ alert('El monto sugerido es muy bajo para registrar.'); return; }
+  const s = getBank();
+  const g = GAMES[pk];
+  const match = g ? `${g.teams.away.team.name} @ ${g.teams.home.team.name}` : '';
+  s.bets.push({
+    id: 'b'+Date.now(),
+    pk, equipo, monto,
+    cuotaAmerican: american,
+    match,
+    fecha: dateInput.value,
+    estado:'pending'
+  });
+  saveBank(s);
+  loadStrategy();
+}
+
+function betRow(b){
+  let statusBadge = '';
+  let actions = '';
+  if(b.estado==='pending'){
+    actions = `<div class="bet-actions">
+      <button class="bet-win" onclick="settleBet('${b.id}','won')">Ganó</button>
+      <button class="bet-lose" onclick="settleBet('${b.id}','lost')">Perdió</button>
+      <button class="bet-del" onclick="deleteBet('${b.id}')">✕</button>
+    </div>`;
+  } else {
+    const dec = americanToDecimal(b.cuotaAmerican)||1;
+    const resultado = b.estado==='won' ? '+$'+(b.monto*(dec-1)).toFixed(0) : '-$'+b.monto.toFixed(0);
+    statusBadge = `<span class="bet-status ${b.estado==='won'?'won':'lost'}">${b.estado==='won'?'Ganó':'Perdió'} ${resultado}</span>`;
+    actions = `<div class="bet-actions"><button class="bet-del" onclick="deleteBet('${b.id}')">✕</button></div>`;
+  }
+  return `<div class="bet-row">
+    <div class="bet-info">
+      <div class="bp">${b.equipo} · $${b.monto}</div>
+      <div class="bd">${b.match} · cuota ${b.cuotaAmerican>0?'+':''}${b.cuotaAmerican} · ${b.fecha}</div>
+    </div>
+    ${statusBadge}
+    ${actions}
+  </div>`;
+}
+
+function settleBet(id, estado){
+  const s = getBank();
+  const b = s.bets.find(x=>x.id===id);
+  if(b){ b.estado = estado; saveBank(s); loadStrategy(); }
+}
+function deleteBet(id){
+  if(!confirm('¿Borrar esta apuesta del registro?')) return;
+  const s = getBank();
+  s.bets = s.bets.filter(x=>x.id!==id);
+  saveBank(s);
+  loadStrategy();
+}
+function setBankroll(){
+  const v = parseFloat(document.getElementById('bankInput').value);
+  if(isNaN(v)||v<=0){ alert('Pon una cantidad válida para tu capital.'); return; }
+  const s = getBank();
+  s.bankroll = v;
+  saveBank(s);
+  loadStrategy();
+}
+function resetStrategy(){
+  if(!confirm('Esto borrará tu capital y TODAS tus apuestas registradas. ¿Seguro?')) return;
+  localStorage.removeItem('strategy');
+  loadStrategy();
 }
 
 async function loadStanding(){
