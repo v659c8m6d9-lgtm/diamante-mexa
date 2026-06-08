@@ -24,7 +24,7 @@
     color:var(--txt);font-family:'Archivo',sans-serif;min-height:100vh;padding-bottom:60px;
   }
   header{
-    border-bottom:1px solid var(--line);padding:26px 22px 20px;position:sticky;top:0;
+    border-bottom:1px solid var(--line);padding:26px 22px 20px;
     background:rgba(14,17,22,.92);backdrop-filter:blur(10px);z-index:10;
   }
   .brand{display:flex;align-items:center;gap:14px}
@@ -55,10 +55,10 @@
   input[type=date]{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:8px 12px;border-radius:9px;font-family:'Archivo';font-size:14px}
   button.go{background:var(--red);color:var(--cream);border:none;border-radius:9px;padding:9px 18px;font-family:'Archivo';font-weight:700;font-size:13px;letter-spacing:.5px;cursor:pointer;transition:.15s}
   button.go:hover{background:#ec2c43}
-  main{max-width:760px;margin:0 auto;padding:24px 18px}
+  main{max-width:1180px;margin:0 auto;padding:24px 18px}
 
   /* selector de vista */
-  .viewtabs{display:flex;gap:8px;margin-bottom:18px}
+  .viewtabs{display:flex;gap:8px;margin-bottom:18px;position:sticky;top:0;z-index:9;background:var(--bg);padding:14px 18px 12px;margin-left:-18px;margin-right:-18px}
   .vtab{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:11px;border-radius:11px;font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;cursor:pointer;transition:.15s}
   .vtab.active{background:var(--red);color:var(--cream);border-color:var(--red)}
 
@@ -70,6 +70,9 @@
 
   /* standing */
   .zone{margin-bottom:24px}
+  /* Zona Norte | Zona Sur lado a lado en pantallas grandes, apiladas en telefono */
+  .zones-grid{display:grid;grid-template-columns:1fr;gap:8px 28px;align-items:start}
+  @media(min-width:820px){ .zones-grid{grid-template-columns:repeat(2,1fr)} }
   .zone-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:1.5px;color:var(--cream);margin-bottom:10px;display:flex;align-items:center;gap:9px}
   .zone-title::before{content:'';width:4px;height:20px;background:var(--red);border-radius:2px}
   .stable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
@@ -116,7 +119,13 @@
   .status{color:var(--muted);text-align:center;padding:40px 0;font-size:15px}
   .status .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--red);border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .game{background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-bottom:16px;overflow:hidden;animation:rise .4s ease both;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s}
+  /* grid responsivo: 1 columna en movil, 2-3 en pantallas grandes */
+  #out{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
+  @media(min-width:680px){ #out{grid-template-columns:repeat(2,1fr)} }
+  @media(min-width:1040px){ #out{grid-template-columns:repeat(3,1fr)} }
+  /* cuando #out muestra un mensaje de estado/error, que ocupe todo el ancho */
+  #out > .status, #out > .err{grid-column:1/-1}
+  .game{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;animation:rise .4s ease both;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s}
   .game:hover{border-color:var(--red-dim);transform:translateY(-2px)}
   .game.fav-on{border-color:var(--green);box-shadow:0 0 0 1px var(--green),0 0 14px rgba(63,169,106,.18)}
   .game.fav-off{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 0 14px rgba(214,38,59,.18)}
@@ -237,6 +246,10 @@
   .bet-tag{font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding:1px 6px;border-radius:5px;margin-right:6px;vertical-align:middle;font-weight:700}
   .bet-tag.modelo{background:rgba(63,169,106,.15);color:#7fd6a0}
   .bet-tag.manual{background:rgba(232,176,75,.15);color:var(--gold)}
+  .bet-tag.auto{background:rgba(90,160,255,.16);color:#7fb4ff}
+  .bet-status.push{background:rgba(150,160,175,.18);color:#9aa6b5}
+  .manual-form select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;color:var(--cream);font-size:14px;margin-bottom:11px;font-family:'Archivo'}
+  .manual-form select:focus{outline:none;border-color:var(--gold)}
   /* formulario apuesta manual */
   .manual-bet{margin-bottom:14px}
   .manual-toggle{width:100%;background:var(--panel);border:1px dashed var(--line);color:var(--muted);border-radius:12px;padding:13px;font-family:'Archivo';font-size:13px;cursor:pointer;transition:.15s}
@@ -427,7 +440,9 @@ async function load(){
       return;
     }
     out.innerHTML = '';
-    for(const g of dates[0].games){
+    // ordenar por horario ascendente (los primeros en jugarse, arriba)
+    const lista = [...dates[0].games].sort((a,b)=> (a.gameDate||'').localeCompare(b.gameDate||''));
+    for(const g of lista){
       GAMES[g.gamePk] = g;
       out.appendChild(renderGame(g));
       hydratePitchers(g);
@@ -630,11 +645,11 @@ function oddsBlockHTML(g){
       <div class="odds-inputs">
         <div class="odds-field">
           <label>${awayName}</label>
-          <input type="text" inputmode="text" id="oa-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+          <input type="text" inputmode="decimal" id="oa-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
         </div>
         <div class="odds-field">
           <label>${homeName}</label>
-          <input type="text" inputmode="text" id="oh-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+          <input type="text" inputmode="decimal" id="oh-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
         </div>
       </div>
       <div class="odds-result" id="ores-${g.gamePk}"></div>
@@ -850,11 +865,13 @@ function paintFrame(g, card){
   card.classList.remove('fav-on','fav-off');
   const pick = g._pick;
   const st = gameState(g);
-  // sin pronostico completo o partido no en juego/terminado -> sin color
-  if(!pick || !pick.hasFull) return;
+  // sin pronostico (ni completo ni parcial) o partido no en juego/terminado -> sin color
+  // NOTA: aunque el pronostico sea PARCIAL (sin pitcher), igual coloreamos:
+  // si ya hay un favorito estimado, la tarjeta debe iluminarse segun el resultado.
+  if(!pick) return;
   if(st !== 'live' && st !== 'final') return;
   const h = g.teams.home, a = g.teams.away;
-  if(h.score === undefined || a.score === undefined) return;
+  if(h.score === undefined || a.score === undefined || h.score === null || a.score === null) return;
   // empate -> sin color (todavia indefinido)
   if(h.score === a.score){ return; }
   const homeGana = h.score > a.score;
@@ -1242,6 +1259,7 @@ async function loadBoard(){
       const known = GAMES[g.gamePk];
       if(known && known._pick) g._pick = known._pick;
       const card = renderBoardCard(g);
+      card._game = g; // guardar referencia para reordenar despues
       grid.appendChild(card);
       // hidratar pitchers para el pronostico si no lo teniamos
       if(!g._pick) hydrateBoardForecast(g, card);
@@ -1249,9 +1267,30 @@ async function loadBoard(){
       // pintar marco si ya hay pick
       paintFrame(g, card);
     }
+    // ordenar: primero los que van PERDIENDO respecto al pronostico, luego los GANANDO, al final el resto
+    reorderBoard(grid);
   }catch(e){
     box.innerHTML = `<div class="err">No se pudo cargar la pizarra.<br>${e.message}</div>`;
   }
+}
+
+// Reordena las tarjetas de la pizarra: perdidos (fav-off) primero, ganados (fav-on) despues, resto al final.
+function reorderBoard(grid){
+  if(!grid) return;
+  const cards = Array.from(grid.children);
+  const rank = (card)=>{
+    if(card.classList.contains('fav-off')) return 0; // perdiendo: arriba
+    if(card.classList.contains('fav-on')) return 1;  // ganando: despues
+    return 2;                                         // sin definir: al final
+  };
+  cards.sort((a,b)=>{
+    const ra = rank(a), rb = rank(b);
+    if(ra !== rb) return ra - rb;
+    // dentro del mismo grupo, mantener orden por horario (gameDate)
+    const ta = a._game?.gameDate || '', tb = b._game?.gameDate || '';
+    return ta.localeCompare(tb);
+  });
+  cards.forEach(c=> grid.appendChild(c));
 }
 
 function boardStatus(g){
@@ -1378,6 +1417,8 @@ async function hydrateBoardForecast(g, card){
   }
   fillBoardForecast(g, card);
   paintFrame(g, card);
+  // reordenar la pizarra ahora que este partido ya tiene pronostico/color
+  reorderBoard(card.parentElement);
 }
 
 async function hydrateBoardLive(g, card){
@@ -1386,6 +1427,9 @@ async function hydrateBoardLive(g, card){
     g.linescore = ls;
     const lv = card.querySelector(`#blive-${g.gamePk}`);
     if(lv) lv.innerHTML = liveCenter(g);
+    // repintar y reordenar: el marcador en vivo puede cambiar si va ganando o perdiendo
+    paintFrame(g, card);
+    reorderBoard(card.parentElement);
   }catch(e){}
 }
 
@@ -1420,6 +1464,7 @@ function bankStats(s){
   let invertido=0, ganado=0, pendiente=0, won=0, lost=0, pend=0;
   for(const b of s.bets){
     if(b.estado==='pending'){ pendiente += b.monto; pend++; continue; }
+    if(b.estado==='push'){ continue; } // empate: te devuelven lo apostado, no cuenta
     invertido += b.monto;
     if(b.estado==='won'){
       const dec = americanToDecimal(b.cuotaAmerican) || 1;
@@ -1457,7 +1502,7 @@ function loadStrategy(){
         <div class="bank-stat"><div class="lbl">Récord apuestas</div><div class="val" style="font-size:22px">${st.won}-${st.lost}${st.pend?' ('+st.pend+' pend)':''}</div></div>
       </div>
       <div class="bank-edit">
-        <input type="number" id="bankInput" placeholder="500" value="${s.bankroll||''}">
+        <input type="number" inputmode="decimal" id="bankInput" placeholder="500" value="${s.bankroll||''}">
         <button onclick="setBankroll()">Fijar capital inicial</button>
         ${s.bankroll?'<button class="ghost" onclick="resetStrategy()">Reiniciar todo</button>':''}
       </div>
@@ -1476,19 +1521,19 @@ function loadStrategy(){
   // Apuestas registradas
   html += `<div class="strat-section-title">Mis apuestas</div>`;
 
-  // formulario para apuesta manual (parlay, over/under, etc.)
+  // formulario para apuesta manual / semi-automatica (over/under, handicap, parlay)
   html += `
     <div class="manual-bet">
-      <button class="manual-toggle" onclick="toggleManual()">+ Registrar apuesta manual (parlay, más/menos, etc.)</button>
+      <button class="manual-toggle" onclick="toggleManual()">+ Registrar apuesta (más/menos, hándicap, parlay…)</button>
       <div class="manual-form" id="manualForm" style="display:none">
-        <div class="manual-note">El modelo no analiza estas apuestas, pero las registramos para tu contabilidad completa.</div>
-        <label>Descripción</label>
-        <input type="text" id="mb-desc" placeholder="Ej: Parlay 3 equipos / Bravos-Pericos −14.5 carreras">
-        <div class="manual-row">
-          <div><label>Monto</label><input type="number" id="mb-monto" placeholder="50" min="1"></div>
-          <div><label>Cuota (americana)</label><input type="text" id="mb-cuota" placeholder="+250 o −150"></div>
-        </div>
-        <button class="manual-save" onclick="registerManualBet()">Guardar apuesta manual</button>
+        <label>Tipo de apuesta</label>
+        <select id="mb-tipo" onchange="onManualTypeChange()">
+          <option value="overunder">Más/Menos de carreras (se resuelve solo)</option>
+          <option value="handicap">Hándicap de un equipo (se resuelve solo)</option>
+          <option value="parlay">Parlay / Otra (la marcas tú)</option>
+        </select>
+        <div id="mb-fields"></div>
+        <button class="manual-save" onclick="registerManualBet()">Guardar apuesta</button>
       </div>
     </div>`;
 
@@ -1512,7 +1557,7 @@ function loadStrategy(){
 // trae marcadores frescos de los partidos con apuestas pendientes y repinta
 async function refreshPendingBets(s){
   const pendientes = s.bets.filter(b=>b.estado==='pending');
-  const pks = [...new Set(pendientes.map(b=>b.pk))];
+  const pks = [...new Set(pendientes.map(b=>b.pk).filter(Boolean))];
   let huboCambio = false;
   for(const pk of pks){
     try{
@@ -1528,7 +1573,19 @@ async function refreshPendingBets(s){
       huboCambio = true;
     }catch(e){ /* si falla, se queda con lo que habia */ }
   }
-  if(huboCambio) rerenderBetList(s);
+  // AUTO-RESOLUCION: marcar ganó/perdió las over/under y handicap cuyo partido ya terminó
+  let resueltas = false;
+  for(const b of pendientes){
+    if(b.betKind!=='overunder' && b.betKind!=='handicap') continue;
+    const g = GAMES[b.pk];
+    if(!g || gameState(g)!=='final') continue;     // solo cuando el partido es FINAL
+    const estado = betComputedState(b);
+    if(estado==='win'){ b.estado='won'; resueltas=true; }
+    else if(estado==='lose'){ b.estado='lost'; resueltas=true; }
+    else if(estado==='tie'){ b.estado='push'; resueltas=true; } // empate: ni gana ni pierde
+  }
+  if(resueltas) saveBank(s);
+  if(huboCambio || resueltas) rerenderBetList(s);
 }
 
 function rerenderBetList(s){
@@ -1601,7 +1658,7 @@ function buildSuggestions(s, st){
         </div>
         <div class="sug-register">
           <span class="sug-reg-lbl">Apuesto:</span>
-          <input type="number" id="real-${pk}" placeholder="${quarter}" min="1">
+          <input type="number" inputmode="decimal" id="real-${pk}" placeholder="${quarter}" min="1">
           <button onclick="registerBetReal('${pk}','${sideClean}',${american},${quarter},${half})">Registrar</button>
         </div>
       </div>`;
@@ -1663,28 +1720,118 @@ function registerBetReal(pk, equipo, american, sugCons, sugMod){
 
 function toggleManual(){
   const f = document.getElementById('manualForm');
-  if(f) f.style.display = (f.style.display==='none') ? 'block' : 'none';
+  if(!f) return;
+  const abrir = (f.style.display==='none');
+  f.style.display = abrir ? 'block' : 'none';
+  if(abrir) onManualTypeChange(); // pintar los campos del tipo por defecto
+}
+
+// genera las <option> con los partidos del dia (para over/under y handicap)
+function gameOptionsHTML(){
+  let opts = '<option value="">— elige un partido —</option>';
+  const juegos = Object.values(GAMES).sort((a,b)=>(a.gameDate||'').localeCompare(b.gameDate||''));
+  for(const g of juegos){
+    opts += `<option value="${g.gamePk}">${g.teams.away.team.name} @ ${g.teams.home.team.name}</option>`;
+  }
+  return opts;
+}
+
+// genera las <option> de equipos de un partido (para handicap)
+function teamOptionsHTML(pk){
+  const g = GAMES[pk];
+  if(!g) return '<option value="">—</option>';
+  return `<option value="away">${g.teams.away.team.name} (visitante)</option>
+          <option value="home">${g.teams.home.team.name} (local)</option>`;
+}
+
+// cambia los campos del formulario segun el tipo elegido
+function onManualTypeChange(){
+  const tipo = document.getElementById('mb-tipo').value;
+  const cont = document.getElementById('mb-fields');
+  if(!cont) return;
+  const montoCuota = `
+    <div class="manual-row">
+      <div><label>Monto</label><input type="number" inputmode="decimal" id="mb-monto" placeholder="50" min="1"></div>
+      <div><label>Cuota (americana)</label><input type="text" inputmode="decimal" id="mb-cuota" placeholder="+250 o −150"></div>
+    </div>`;
+
+  if(tipo==='overunder'){
+    cont.innerHTML = `
+      <div class="manual-note">Elige el partido y la línea de carreras. La app revisará el marcador final y resolverá sola.</div>
+      <label>Partido</label>
+      <select id="mb-game">${gameOptionsHTML()}</select>
+      <div class="manual-row">
+        <div><label>Más / Menos</label>
+          <select id="mb-ou-dir"><option value="over">Más de (Over)</option><option value="under">Menos de (Under)</option></select>
+        </div>
+        <div><label>Línea de carreras</label><input type="number" inputmode="decimal" id="mb-ou-line" placeholder="8.5" step="0.5"></div>
+      </div>
+      ${montoCuota}`;
+  } else if(tipo==='handicap'){
+    cont.innerHTML = `
+      <div class="manual-note">Elige el partido, el equipo y los puntos de hándicap (ej: −1.5). La app lo resuelve sola al final.</div>
+      <label>Partido</label>
+      <select id="mb-game" onchange="onManualGameChange()">${gameOptionsHTML()}</select>
+      <label>Equipo</label>
+      <select id="mb-team"><option value="">— primero elige el partido —</option></select>
+      <div class="manual-row">
+        <div><label>Hándicap</label><input type="number" inputmode="decimal" id="mb-hcap" placeholder="-1.5" step="0.5"></div>
+      </div>
+      ${montoCuota}`;
+  } else { // parlay / otra
+    cont.innerHTML = `
+      <div class="manual-note">El modelo no puede resolver esto solo. Lo registramos para tu contabilidad y tú marcas ganó/perdió.</div>
+      <label>Descripción</label>
+      <input type="text" id="mb-desc" placeholder="Ej: Parlay 3 equipos">
+      ${montoCuota}`;
+  }
+}
+
+// cuando cambia el partido en handicap, actualizar la lista de equipos
+function onManualGameChange(){
+  const pk = document.getElementById('mb-game').value;
+  const teamSel = document.getElementById('mb-team');
+  if(teamSel) teamSel.innerHTML = pk ? teamOptionsHTML(pk) : '<option value="">— primero elige el partido —</option>';
 }
 
 function registerManualBet(){
-  const desc = (document.getElementById('mb-desc').value||'').trim();
+  const tipo = document.getElementById('mb-tipo').value;
   const monto = parseFloat(document.getElementById('mb-monto').value);
   let cuotaStr = (document.getElementById('mb-cuota').value||'').trim().replace('−','-');
   const cuota = parseFloat(cuotaStr.replace('+',''));
-  if(!desc){ alert('Describe la apuesta (ej: Parlay 3 equipos).'); return; }
   if(isNaN(monto)||monto<1){ alert('Pon un monto válido (mínimo $1).'); return; }
   if(isNaN(cuota)||cuota===0){ alert('Pon la cuota en formato americano (ej: +250 o −150).'); return; }
+
   const s = getBank();
-  s.bets.push({
-    id: 'b'+Date.now(),
-    manual: true,            // marca que es apuesta manual (no del modelo)
-    equipo: desc,            // usamos el campo equipo para la descripcion
-    monto,
-    cuotaAmerican: cuota,
-    match: 'Apuesta manual',
-    fecha: dateInput.value,
-    estado:'pending'
-  });
+  const base = { id:'b'+Date.now(), manual:true, monto, cuotaAmerican:cuota, fecha:dateInput.value, estado:'pending' };
+
+  if(tipo==='overunder'){
+    const pk = document.getElementById('mb-game').value;
+    const dir = document.getElementById('mb-ou-dir').value;
+    const line = parseFloat(document.getElementById('mb-ou-line').value);
+    if(!pk){ alert('Elige un partido.'); return; }
+    if(isNaN(line)){ alert('Pon la línea de carreras (ej: 8.5).'); return; }
+    const g = GAMES[pk];
+    const match = g ? `${g.teams.away.team.name} @ ${g.teams.home.team.name}` : '';
+    s.bets.push({ ...base, betKind:'overunder', pk, ouDir:dir, ouLine:line,
+      equipo: `${dir==='over'?'Más de':'Menos de'} ${line} carreras`, match });
+  } else if(tipo==='handicap'){
+    const pk = document.getElementById('mb-game').value;
+    const teamSide = document.getElementById('mb-team').value;
+    const hcap = parseFloat(document.getElementById('mb-hcap').value);
+    if(!pk){ alert('Elige un partido.'); return; }
+    if(!teamSide){ alert('Elige el equipo.'); return; }
+    if(isNaN(hcap)){ alert('Pon el hándicap (ej: -1.5).'); return; }
+    const g = GAMES[pk];
+    const match = g ? `${g.teams.away.team.name} @ ${g.teams.home.team.name}` : '';
+    const teamName = g ? g.teams[teamSide].team.name : teamSide;
+    s.bets.push({ ...base, betKind:'handicap', pk, hcapSide:teamSide, hcapLine:hcap,
+      equipo: `${teamName} ${hcap>0?'+':''}${hcap}`, match });
+  } else {
+    const desc = (document.getElementById('mb-desc').value||'').trim();
+    if(!desc){ alert('Describe la apuesta (ej: Parlay 3 equipos).'); return; }
+    s.bets.push({ ...base, betKind:'parlay', equipo:desc, match:'Apuesta manual' });
+  }
   saveBank(s);
   loadStrategy();
 }
@@ -1709,6 +1856,35 @@ function betLiveState(b){
   return yoGano ? 'win' : 'lose';
 }
 
+// estado en vivo para apuestas manuales auto-resolubles (over/under, handicap)
+// devuelve 'win' | 'lose' | 'tie'(push) | null (sin datos / no iniciado)
+function betComputedState(b){
+  const g = GAMES[b.pk];
+  if(!g) return null;
+  const h = g.teams.home, a = g.teams.away;
+  if(h.score===undefined||a.score===undefined||h.score===null||a.score===null) return null;
+  const ls = g.linescore || {};
+  const enJuego = (ls.currentInning!==undefined) || gameState(g)==='live' || gameState(g)==='final';
+  if(!enJuego) return null;
+
+  if(b.betKind==='overunder'){
+    const total = h.score + a.score;
+    if(total === b.ouLine) return 'tie';   // empate exacto (push), raro con .5
+    const paso = total > b.ouLine;
+    const gano = (b.ouDir==='over') ? paso : !paso;
+    return gano ? 'win' : 'lose';
+  }
+  if(b.betKind==='handicap'){
+    // aplicar el handicap al marcador del equipo elegido
+    const miScore = (b.hcapSide==='home') ? h.score : a.score;
+    const otroScore = (b.hcapSide==='home') ? a.score : h.score;
+    const ajustado = miScore + b.hcapLine;
+    if(ajustado === otroScore) return 'tie'; // push
+    return ajustado > otroScore ? 'win' : 'lose';
+  }
+  return null;
+}
+
 function betRow(b){
   let statusBadge = '';
   let actions = '';
@@ -1716,28 +1892,36 @@ function betRow(b){
   const dec = americanToDecimal(b.cuotaAmerican)||1;
 
   if(b.estado==='pending'){
-    // coloreado en vivo (solo apuestas del modelo, las manuales no tienen partido asociado)
-    if(!b.manual){
-      const ls = betLiveState(b);
-      if(ls==='win') liveClass=' bet-live-win';
-      else if(ls==='lose') liveClass=' bet-live-lose';
-      else if(ls==='tie') liveClass=' bet-live-tie';
-    }
+    // coloreado en vivo:
+    // - apuestas del modelo (no manual): segun quien gana
+    // - over/under y handicap: segun el calculo automatico
+    // - parlay/otra: no se colorea (la marca el usuario)
+    let ls = null;
+    if(!b.manual) ls = betLiveState(b);
+    else if(b.betKind==='overunder' || b.betKind==='handicap') ls = betComputedState(b);
+    if(ls==='win') liveClass=' bet-live-win';
+    else if(ls==='lose') liveClass=' bet-live-lose';
+    else if(ls==='tie') liveClass=' bet-live-tie';
     actions = `<div class="bet-actions">
       <button class="bet-win" onclick="settleBet('${b.id}','won')">Ganó</button>
       <button class="bet-lose" onclick="settleBet('${b.id}','lost')">Perdió</button>
       <button class="bet-del" onclick="deleteBet('${b.id}')">✕</button>
     </div>`;
+  } else if(b.estado==='push'){
+    statusBadge = `<span class="bet-status push">Empate · devuelto</span>`;
+    actions = `<div class="bet-actions"><button class="bet-del" onclick="deleteBet('${b.id}')">✕</button></div>`;
   } else {
     const resultado = b.estado==='won' ? '+$'+(b.monto*(dec-1)).toFixed(0) : '-$'+b.monto.toFixed(0);
     statusBadge = `<span class="bet-status ${b.estado==='won'?'won':'lost'}">${b.estado==='won'?'Ganó':'Perdió'} ${resultado}</span>`;
     actions = `<div class="bet-actions"><button class="bet-del" onclick="deleteBet('${b.id}')">✕</button></div>`;
   }
 
-  // etiqueta que distingue del modelo vs manual
-  const tag = b.manual
-    ? '<span class="bet-tag manual">Manual</span>'
-    : '<span class="bet-tag modelo">Modelo</span>';
+  // etiqueta que distingue el tipo de apuesta
+  let tag;
+  if(!b.manual) tag = '<span class="bet-tag modelo">Modelo</span>';
+  else if(b.betKind==='overunder') tag = '<span class="bet-tag auto">Más/Menos</span>';
+  else if(b.betKind==='handicap') tag = '<span class="bet-tag auto">Hándicap</span>';
+  else tag = '<span class="bet-tag manual">Manual</span>';
 
   // proyeccion: que pasaria con real / conservador / moderado
   let proj = '';
@@ -1810,7 +1994,7 @@ async function loadStanding(){
       box.innerHTML = '<div class="status">No se pudo cargar la tabla en este momento.<br>Puede que la liga aún no publique standings para esta temporada.</div>';
       return;
     }
-    box.innerHTML = records.map(renderZone).join('');
+    box.innerHTML = '<div class="zones-grid">' + records.map(renderZone).join('') + '</div>';
   }catch(e){
     box.innerHTML = `<div class="err">No se pudo cargar la tabla.<br>${e.message}</div>`;
   }
