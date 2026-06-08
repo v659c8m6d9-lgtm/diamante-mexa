@@ -318,6 +318,11 @@
         <div class="acc-lbl">Últimos 21 días</div>
         <div class="acc-detail" id="accDetail">backtest base</div>
       </div>
+      <div class="acc" id="accTrack" title="Aciertos acumulados del modelo completo, guardados día a día desde que activaste el seguimiento">
+        <div class="acc-num" id="accTrackNum">—</div>
+        <div class="acc-lbl">Acumulado</div>
+        <div class="acc-detail" id="accTrackDetail">seguimiento en vivo</div>
+      </div>
     </div>
   </div>
   <div class="datebar">
@@ -429,6 +434,7 @@ async function load(){
       if(gameState(g) === 'live') hydrateLive(g);
     }
     computeDayAccuracy();
+    updateTrackingMeter();
   }catch(e){
     out.innerHTML = `<div class="err"><b>No se pudieron cargar los datos.</b><br>${e.message}<br><br>Si abriste el archivo directo (file://), corre un servidor local con: <b>python3 -m http.server 8000</b> y entra a http://localhost:8000</div>`;
   }
@@ -702,6 +708,9 @@ function computeForecast(g){
   // guardar el pronostico completo (con pitcher) para medir efectividad del dia
   g._pick = { favHome, probHome, hasFull:true };
   computeDayAccuracy();
+  // tracking en vivo: si este partido ya termino, guardarlo en el historial acumulado
+  saveTracking();
+  updateTrackingMeter();
   // pintar el marco segun como va el partido contra el pronostico
   const card = box.closest('.game');
   if(card) paintFrame(g, card);
@@ -851,6 +860,94 @@ function paintFrame(g, card){
   const homeGana = h.score > a.score;
   const vaSegunPronostico = (pick.favHome === homeGana);
   card.classList.add(vaSegunPronostico ? 'fav-on' : 'fav-off');
+}
+
+/* ---------- TRACKING EN VIVO: historial acumulado de pronosticos ---------- */
+// Guarda en localStorage cada pronostico COMPLETO de partidos ya terminados.
+// Clave: 'track:<gamePk>' para que nunca se duplique. Acumula a lo largo de semanas.
+function saveTracking(){
+  const games = Object.values(GAMES);
+  let guardadosNuevos = 0;
+  for(const g of games){
+    const pick = g._pick;
+    const finalizado = g.status?.abstractGameState === 'Final';
+    const h = g.teams.home, a = g.teams.away;
+    // solo guardamos partidos TERMINADOS con pronostico COMPLETO y marcador valido
+    if(!finalizado || !pick || !pick.hasFull) continue;
+    if(h.score===undefined || a.score===undefined || h.score===null || a.score===null) continue;
+    if(h.score===a.score) continue; // empate raro en beisbol, lo ignoramos
+    const key = 'track:'+g.gamePk;
+    // si ya lo guardamos antes, no lo repetimos (registro permanente e inmutable)
+    if(localStorage.getItem(key)) continue;
+    const homeWon = h.score > a.score;
+    const acerto = (pick.favHome === homeWon);
+    const registro = {
+      gamePk: g.gamePk,
+      fecha: (g.officialDate || g.gameDate || '').slice(0,10),
+      away: a.team.name,
+      home: h.team.name,
+      favHome: pick.favHome,
+      probHome: pick.probHome,
+      scoreAway: a.score,
+      scoreHome: h.score,
+      homeWon,
+      acerto
+    };
+    try{
+      localStorage.setItem(key, JSON.stringify(registro));
+      guardadosNuevos++;
+    }catch(e){ /* si el storage esta lleno, no truena la app */ }
+  }
+  return guardadosNuevos;
+}
+
+// Lee TODO el historial acumulado de tracking guardado en localStorage.
+function getTrackingHistory(){
+  const out = [];
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.indexOf('track:')===0){
+      try{ out.push(JSON.parse(localStorage.getItem(k))); }catch(e){}
+    }
+  }
+  // ordenar por fecha ascendente
+  out.sort((x,y)=> (x.fecha||'').localeCompare(y.fecha||''));
+  return out;
+}
+
+// Calcula estadisticas del historial acumulado para el medidor.
+function trackingStats(){
+  const hist = getTrackingHistory();
+  const total = hist.length;
+  let aciertos = 0;
+  const porFecha = {};
+  for(const r of hist){
+    if(r.acerto) aciertos++;
+    if(!porFecha[r.fecha]) porFecha[r.fecha] = {j:0, a:0};
+    porFecha[r.fecha].j++;
+    if(r.acerto) porFecha[r.fecha].a++;
+  }
+  const dias = Object.keys(porFecha).length;
+  const pct = total>0 ? Math.round(aciertos/total*100) : null;
+  return { total, aciertos, pct, dias, porFecha };
+}
+
+// Actualiza el medidor visual "Acumulado" con el historial de tracking.
+function updateTrackingMeter(){
+  const num = document.getElementById('accTrackNum');
+  const detail = document.getElementById('accTrackDetail');
+  if(!num) return;
+  const st = trackingStats();
+  if(st.total === 0){
+    num.textContent = '—';
+    detail.textContent = 'aún juntando datos';
+    return;
+  }
+  num.textContent = st.pct + '%';
+  let txt = `${st.aciertos}/${st.total} en ${st.dias} día${st.dias===1?'':'s'}`;
+  // aviso de significancia estadistica: pocos partidos = poco confiable
+  if(st.total < 30) txt += ' · muestra chica';
+  detail.textContent = txt;
 }
 
 function computeDayAccuracy(){
