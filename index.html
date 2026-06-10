@@ -329,6 +329,57 @@
   .sign-btn:hover{border-color:var(--gold)}
   .sign-btn:active{background:var(--gold);color:#04110a}
   .odds-signrow input{flex:1;min-width:0}
+  /* ===== DASHBOARD (Control del Bank) ===== */
+  .dash-head{margin-bottom:18px}
+  .dash-title{font-family:'Bebas Neue';font-size:30px;letter-spacing:1px;color:var(--cream);line-height:1}
+  .dash-sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .dash-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+  @media(min-width:680px){ .dash-metrics{grid-template-columns:repeat(3,1fr)} }
+  @media(min-width:1040px){ .dash-metrics{grid-template-columns:repeat(5,1fr)} }
+  .dash-metric{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+  .dm-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .dm-val{font-family:'Bebas Neue';font-size:26px;color:var(--cream);line-height:1.1;margin-top:3px}
+  .dm-val.pos{color:var(--green)} .dm-val.neg{color:var(--red)}
+  .dm-sub{font-size:9.5px;color:var(--muted);margin-top:2px}
+  .dash-row{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px}
+  @media(min-width:820px){ .dash-row{grid-template-columns:1fr 1fr} }
+  .dash-panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  @media(min-width:820px){ .dash-panel.wide{grid-column:auto} }
+  .dash-panel-title{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px}
+  .dash-empty{font-size:12px;color:var(--muted);font-style:italic;padding:8px 0}
+  .bank-chart{width:100%;height:auto;display:block}
+  .donut{width:140px;height:140px;display:block;margin:0 auto}
+  .donut-legend{display:flex;justify-content:center;gap:16px;margin-top:10px;font-size:12px;color:var(--cream)}
+  .donut-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+  .donut-legend .dot.win{background:var(--green)} .donut-legend .dot.lose{background:var(--red)}
+  .dash-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .dbr-lbl{flex:0 0 78px;font-size:12px;color:var(--cream)}
+  .dbr-track{flex:1;height:8px;background:var(--panel2);border-radius:6px;overflow:hidden}
+  .dbr-fill{height:100%;background:var(--green);border-radius:6px;transition:width .4s}
+  .dbr-fill.alt{background:var(--gold)}
+  .dbr-val{flex:0 0 auto;font-size:12px;color:var(--muted);min-width:24px;text-align:right}
+  .mvm{display:flex;gap:12px}
+  .mvm-col{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px;text-align:center}
+  .mvm-tag{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:5px;font-weight:700}
+  .mvm-tag.modelo{background:rgba(63,169,106,.15);color:#7fd6a0}
+  .mvm-tag.manual{background:rgba(232,176,75,.15);color:var(--gold)}
+  .mvm-record{font-family:'Bebas Neue';font-size:28px;color:var(--cream);margin-top:6px;line-height:1}
+  .mvm-meta{font-size:10px;color:var(--muted)}
+  .mvm-gl{font-size:14px;font-weight:700;margin-top:6px}
+  .mvm-gl.pos{color:var(--green)} .mvm-gl.neg{color:var(--red)}
+  .streak-wrap{text-align:center;padding:8px 0}
+  .streak-big{font-family:'Bebas Neue';font-size:46px;line-height:1;color:var(--cream)}
+  .streak-big.pos{color:var(--green)} .streak-big.neg{color:var(--red)}
+  .streak-lbl{font-size:12px;color:var(--muted);margin-top:4px;text-transform:capitalize}
+  .streak-meta{font-size:10.5px;color:var(--muted);margin-top:8px}
+  .dash-note{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:14px;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.5}
+  .bank-edit button.adjust{background:var(--gold);color:#04110a}
+  .adjust-note{font-size:11.5px;color:var(--gold);margin-top:8px}
+  .sug-teamsel{margin-top:11px}
+  .sug-team-btns{display:flex;gap:8px;margin-top:6px}
+  .sug-team{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:9px 8px;font-size:12px;cursor:pointer;transition:.12s;line-height:1.3}
+  .sug-team.on{border-color:var(--green);color:var(--cream);background:rgba(63,169,106,.12)}
+  .sug-team:hover{border-color:var(--green)}
 </style>
 </head>
 <body>
@@ -385,6 +436,7 @@
     <button class="vtab active" id="vt-games" onclick="setView('games')">Partidos</button>
     <button class="vtab" id="vt-board" onclick="setView('board')">Pizarra</button>
     <button class="vtab" id="vt-strategy" onclick="setView('strategy')">Estrategia</button>
+    <button class="vtab" id="vt-dash" onclick="setView('dash')">Control</button>
     <button class="vtab" id="vt-standing" onclick="setView('standing')">Tabla</button>
   </div>
   <div id="view-games">
@@ -396,6 +448,9 @@
   </div>
   <div id="view-strategy" style="display:none">
     <div id="stratout"></div>
+  </div>
+  <div id="view-dash" style="display:none">
+    <div id="dashout"></div>
   </div>
   <div id="view-standing" style="display:none">
     <div id="standout"><div class="status"><div class="spinner"></div>Cargando tabla…</div></div>
@@ -1438,13 +1493,14 @@ function logoUrl(teamId){ return `https://www.mlbstatic.com/team-logos/${teamId}
 
 let STANDING_LOADED = false;
 function setView(v){
-  for(const tab of ['games','board','strategy','standing']){
+  for(const tab of ['games','board','strategy','dash','standing']){
     document.getElementById('vt-'+tab).classList.toggle('active', v===tab);
     document.getElementById('view-'+tab).style.display = v===tab?'':'none';
   }
   if(v==='standing' && !STANDING_LOADED){ loadStanding(); STANDING_LOADED=true; }
   if(v==='board'){ loadBoard(); }
   if(v==='strategy'){ loadStrategy(); }
+  if(v==='dash'){ loadDashboard(); }
 }
 
 /* ---------- PIZARRA ---------- */
@@ -1684,9 +1740,295 @@ function bankStats(s){
       lost++;
     }
   }
-  const saldo = s.bankroll + ganado; // bankroll inicial +/- resultados resueltos
+  const ajuste = s.ajuste || 0; // ajuste manual de saldo (para cuadrar con la casa real)
+  const saldo = s.bankroll + ganado + ajuste; // inicial +/- resultados +/- ajuste
   const roi = invertido>0 ? (ganado/invertido)*100 : 0;
-  return {saldo, ganado, invertido, pendiente, won, lost, pend, roi};
+  return {saldo, ganado, invertido, pendiente, won, lost, pend, roi, ajuste};
+}
+
+/* ===================== DASHBOARD (Control del Bank) ===================== */
+// Estadisticas extendidas para el dashboard, calculadas desde las apuestas resueltas.
+function dashStats(s){
+  const bets = s.bets || [];
+  const resueltas = bets.filter(b=> b.estado==='won' || b.estado==='lost');
+  const conPush = bets.filter(b=> b.estado==='won' || b.estado==='lost' || b.estado==='push');
+
+  let invertido=0, ganado=0, won=0, lost=0, push=0, pend=0, pendiente=0;
+  let montoModelo=0, ganadoModelo=0, wonModelo=0, lostModelo=0;
+  let montoManual=0, ganadoManual=0, wonManual=0, lostManual=0;
+  const porTipo = { moneyline:{j:0,g:0}, handicap:{j:0,g:0}, totales:{j:0,g:0}, otros:{j:0,g:0} };
+  const stakeBuckets = { '1-20':0, '21-50':0, '51-100':0, '100+':0 };
+
+  for(const b of bets){
+    if(b.estado==='pending'){ pend++; pendiente+=b.monto; continue; }
+    if(b.estado==='push'){ push++; continue; }
+    const dec = americanToDecimal(b.cuotaAmerican) || 1;
+    const resultado = (b.estado==='won') ? b.monto*(dec-1) : -b.monto;
+    invertido += b.monto;
+    ganado += resultado;
+    if(b.estado==='won') won++; else lost++;
+
+    // modelo vs manual
+    if(b.manual){
+      montoManual+=b.monto; ganadoManual+=resultado;
+      if(b.estado==='won') wonManual++; else lostManual++;
+    } else {
+      montoModelo+=b.monto; ganadoModelo+=resultado;
+      if(b.estado==='won') wonModelo++; else lostModelo++;
+    }
+
+    // tipo de mercado
+    let tipo='moneyline';
+    if(b.betKind==='handicap') tipo='handicap';
+    else if(b.betKind==='overunder') tipo='totales';
+    else if(b.betKind==='parlay') tipo='otros';
+    porTipo[tipo].j++; porTipo[tipo].g += resultado;
+
+    // distribucion de stake
+    const m=b.monto;
+    if(m<=20) stakeBuckets['1-20']++;
+    else if(m<=50) stakeBuckets['21-50']++;
+    else if(m<=100) stakeBuckets['51-100']++;
+    else stakeBuckets['100+']++;
+  }
+
+  const saldo = s.bankroll + ganado + (s.ajuste || 0);
+  const roi = invertido>0 ? (ganado/invertido)*100 : 0;
+  const totalApostado = invertido;
+  const yield_ = totalApostado>0 ? (ganado/totalApostado)*100 : 0; // yield = ganancia/total apostado
+  const totalResueltas = won+lost;
+  const winPct = totalResueltas>0 ? (won/totalResueltas)*100 : 0;
+  const stakeProm = totalResueltas>0 ? totalApostado/totalResueltas : 0;
+  const gananciaProm = totalResueltas>0 ? ganado/totalResueltas : 0;
+
+  // curva de evolucion del bank (ordenada por fecha de las resueltas)
+  const ordenadas = [...resueltas].sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||''));
+  let run = s.bankroll;
+  const curva = [{ x:0, y:run, fecha:'inicio' }];
+  ordenadas.forEach((b,i)=>{
+    const dec = americanToDecimal(b.cuotaAmerican)||1;
+    run += (b.estado==='won') ? b.monto*(dec-1) : -b.monto;
+    curva.push({ x:i+1, y:run, fecha:b.fecha });
+  });
+  const maxBank = Math.max(s.bankroll, ...curva.map(p=>p.y));
+
+  // racha actual y mejores rachas (sobre resueltas en orden)
+  let rachaActual=0, rachaTipo='', mejorG=0, mejorP=0, curG=0, curP=0;
+  for(const b of ordenadas){
+    if(b.estado==='won'){ curG++; curP=0; if(curG>mejorG) mejorG=curG; }
+    else { curP++; curG=0; if(curP>mejorP) mejorP=curP; }
+  }
+  if(ordenadas.length){
+    const ult=ordenadas[ordenadas.length-1];
+    if(ult.estado==='won'){ rachaTipo='ganadora'; rachaActual=curG; }
+    else { rachaTipo='perdedora'; rachaActual=curP; }
+  }
+
+  return {
+    saldo, ganado, invertido, roi, yield_, won, lost, push, pend, pendiente,
+    totalApostado, totalResueltas, winPct, stakeProm, gananciaProm, maxBank,
+    curva, porTipo, stakeBuckets,
+    modelo:{ monto:montoModelo, ganado:ganadoModelo, won:wonModelo, lost:lostModelo },
+    manual:{ monto:montoManual, ganado:ganadoManual, won:wonManual, lost:lostManual },
+    racha:{ actual:rachaActual, tipo:rachaTipo, mejorG, mejorP }
+  };
+}
+
+// Renderiza el dashboard completo
+function loadDashboard(){
+  const box = document.getElementById('dashout');
+  const s = getBank();
+  const d = dashStats(s);
+
+  const money = (n)=> (n>=0?'+':'') + '$' + Math.abs(n).toFixed(0).replace('-','');
+  const moneyPlain = (n)=> '$' + n.toFixed(0);
+  const pct = (n)=> (n>=0?'+':'') + n.toFixed(1) + '%';
+  const cls = (n)=> n>0?'pos':(n<0?'neg':'');
+
+  // tarjetas de metricas
+  const metrics = [
+    { lbl:'Bank inicial', val: moneyPlain(s.bankroll||0) },
+    { lbl:'Bank actual', val: moneyPlain(d.saldo), cls: cls(d.ganado) },
+    { lbl:'Ganancia neta', val: money(d.ganado), cls: cls(d.ganado) },
+    { lbl:'ROI', val: pct(d.roi), cls: cls(d.roi), sub:'Ganancia / lo apostado' },
+    { lbl:'Yield', val: pct(d.yield_), cls: cls(d.yield_), sub:'Rendimiento por apuesta' },
+    { lbl:'Apuestas resueltas', val: d.totalResueltas },
+    { lbl:'Ganadas', val: `${d.won}`, cls:'pos', sub: d.totalResueltas? (d.winPct.toFixed(0)+'% de aciertos'):'' },
+    { lbl:'Perdidas', val: `${d.lost}`, cls:'neg' },
+    { lbl:'Monto apostado', val: moneyPlain(d.totalApostado) },
+    { lbl:'Stake promedio', val: moneyPlain(d.stakeProm) },
+  ];
+  let cards = metrics.map(m=>`
+    <div class="dash-metric">
+      <div class="dm-lbl">${m.lbl}</div>
+      <div class="dm-val ${m.cls||''}">${m.val}</div>
+      ${m.sub?`<div class="dm-sub">${m.sub}</div>`:''}
+    </div>`).join('');
+
+  // grafica de evolucion del bank (SVG)
+  const chart = bankChartSVG(d.curva, d.maxBank, s.bankroll);
+
+  // dona de resultados
+  const totalGL = d.won + d.lost;
+  const donut = donutSVG(d.won, d.lost);
+
+  // tipos de mercado
+  const tiposNombre = { moneyline:'Moneyline', handicap:'Hándicap', totales:'Totales', otros:'Otros' };
+  let tiposRows = '';
+  const tiposTotal = Object.values(d.porTipo).reduce((a,t)=>a+t.j,0);
+  for(const k of ['moneyline','handicap','totales','otros']){
+    const t = d.porTipo[k];
+    const p = tiposTotal>0 ? (t.j/tiposTotal*100) : 0;
+    tiposRows += `
+      <div class="dash-bar-row">
+        <div class="dbr-lbl">${tiposNombre[k]}</div>
+        <div class="dbr-track"><div class="dbr-fill" style="width:${p}%"></div></div>
+        <div class="dbr-val">${t.j}</div>
+      </div>`;
+  }
+
+  // modelo vs manual
+  const mvm = (o)=>{
+    const tot=o.won+o.lost;
+    const wp = tot>0?(o.won/tot*100):0;
+    return { tot, wp, ganado:o.ganado };
+  };
+  const mod = mvm(d.modelo), man = mvm(d.manual);
+
+  // distribucion de stake
+  const stkNombre = { '1-20':'$1–20', '21-50':'$21–50', '51-100':'$51–100', '100+':'$100+' };
+  const stkTotal = Object.values(d.stakeBuckets).reduce((a,n)=>a+n,0);
+  let stkRows='';
+  for(const k of ['1-20','21-50','51-100','100+']){
+    const n=d.stakeBuckets[k];
+    const p = stkTotal>0?(n/stkTotal*100):0;
+    stkRows += `
+      <div class="dash-bar-row">
+        <div class="dbr-lbl">${stkNombre[k]}</div>
+        <div class="dbr-track"><div class="dbr-fill alt" style="width:${p}%"></div></div>
+        <div class="dbr-val">${n}</div>
+      </div>`;
+  }
+
+  const vacio = (s.bets||[]).filter(b=>b.estado==='won'||b.estado==='lost').length===0;
+
+  box.innerHTML = `
+    <div class="dash-head">
+      <div class="dash-title">Control del Bank</div>
+      <div class="dash-sub">Resumen de tu rendimiento ${vacio?'· aún sin apuestas resueltas':''}</div>
+    </div>
+    <div class="dash-metrics">${cards}</div>
+
+    <div class="dash-row">
+      <div class="dash-panel wide">
+        <div class="dash-panel-title">Evolución del bank</div>
+        ${chart}
+      </div>
+      <div class="dash-panel">
+        <div class="dash-panel-title">Resultados</div>
+        ${donut}
+        <div class="donut-legend">
+          <span><i class="dot win"></i>Ganadas ${d.won}</span>
+          <span><i class="dot lose"></i>Perdidas ${d.lost}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-row">
+      <div class="dash-panel">
+        <div class="dash-panel-title">Tipos de mercado</div>
+        ${tiposRows || '<div class="dash-empty">Aún no hay apuestas.</div>'}
+      </div>
+      <div class="dash-panel">
+        <div class="dash-panel-title">Distribución de stake</div>
+        ${stkRows || '<div class="dash-empty">Aún no hay apuestas.</div>'}
+      </div>
+    </div>
+
+    <div class="dash-row">
+      <div class="dash-panel">
+        <div class="dash-panel-title">Modelo vs Manual</div>
+        <div class="mvm">
+          <div class="mvm-col">
+            <div class="mvm-tag modelo">Modelo</div>
+            <div class="mvm-record">${d.modelo.won}–${d.modelo.lost}</div>
+            <div class="mvm-meta">${mod.tot? mod.wp.toFixed(0)+'% aciertos':'sin datos'}</div>
+            <div class="mvm-gl ${cls(d.modelo.ganado)}">${money(d.modelo.ganado)}</div>
+          </div>
+          <div class="mvm-col">
+            <div class="mvm-tag manual">Manual</div>
+            <div class="mvm-record">${d.manual.won}–${d.manual.lost}</div>
+            <div class="mvm-meta">${man.tot? man.wp.toFixed(0)+'% aciertos':'sin datos'}</div>
+            <div class="mvm-gl ${cls(d.manual.ganado)}">${money(d.manual.ganado)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-panel">
+        <div class="dash-panel-title">Racha actual</div>
+        <div class="streak-wrap">
+          <div class="streak-big ${d.racha.tipo==='ganadora'?'pos':(d.racha.tipo==='perdedora'?'neg':'')}">
+            ${d.racha.actual||0}${d.racha.tipo==='ganadora'?' 🔥':(d.racha.tipo==='perdedora'?' ❄️':'')}
+          </div>
+          <div class="streak-lbl">${d.racha.tipo? ('racha '+d.racha.tipo):'sin racha aún'}</div>
+          <div class="streak-meta">Mejor ganadora: ${d.racha.mejorG} · Mejor perdedora: ${d.racha.mejorP}</div>
+        </div>
+      </div>
+    </div>
+
+    ${vacio?`<div class="dash-note">Registra y resuelve tus apuestas en la pestaña Estrategia. Aquí verás tus números crecer con cada una.</div>`:''}
+  `;
+}
+
+// Grafica de linea de la evolucion del bank
+function bankChartSVG(curva, maxBank, inicial){
+  const W=560, H=200, pad=34;
+  if(!curva || curva.length<2){
+    return `<div class="dash-empty" style="height:200px;display:flex;align-items:center;justify-content:center">La curva aparecerá cuando resuelvas tu primera apuesta.</div>`;
+  }
+  const xs = curva.map(p=>p.x), ys = curva.map(p=>p.y);
+  const minY = Math.min(...ys, inicial)*0.97;
+  const maxY = Math.max(...ys, inicial)*1.03;
+  const sx = (x)=> pad + (x/(Math.max(...xs)||1))*(W-pad*2);
+  const sy = (y)=> H-pad - ((y-minY)/((maxY-minY)||1))*(H-pad*2);
+  let path = '', area = '';
+  curva.forEach((p,i)=>{
+    const X=sx(p.x), Y=sy(p.y);
+    path += (i===0?'M':'L') + X.toFixed(1) + ' ' + Y.toFixed(1) + ' ';
+  });
+  area = path + `L ${sx(Math.max(...xs)).toFixed(1)} ${H-pad} L ${sx(0).toFixed(1)} ${H-pad} Z`;
+  // linea base del bank inicial
+  const baseY = sy(inicial);
+  const ultimo = curva[curva.length-1].y;
+  const sube = ultimo >= inicial;
+  const color = sube ? 'var(--green)' : 'var(--red)';
+  return `
+    <svg viewBox="0 0 ${W} ${H}" class="bank-chart" preserveAspectRatio="xMidYMid meet">
+      <line x1="${pad}" y1="${baseY.toFixed(1)}" x2="${W-pad}" y2="${baseY.toFixed(1)}" stroke="var(--line)" stroke-dasharray="4 4"/>
+      <path d="${area}" fill="${sube?'rgba(63,169,106,.12)':'rgba(214,38,59,.12)'}"/>
+      <path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="${sx(curva[curva.length-1].x).toFixed(1)}" cy="${sy(ultimo).toFixed(1)}" r="4" fill="${color}"/>
+      <text x="${W-pad}" y="${(sy(ultimo)-10).toFixed(1)}" text-anchor="end" fill="var(--cream)" font-size="13" font-family="Bebas Neue">$${ultimo.toFixed(0)}</text>
+    </svg>`;
+}
+
+// Dona de ganadas vs perdidas
+function donutSVG(won, lost){
+  const total = won+lost;
+  const R=52, C=2*Math.PI*R, cx=70, cy=70;
+  if(total===0){
+    return `<svg viewBox="0 0 140 140" class="donut"><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--line)" stroke-width="16"/><text x="${cx}" y="${cy+5}" text-anchor="middle" fill="var(--muted)" font-size="13">Sin datos</text></svg>`;
+  }
+  const wonFrac = won/total;
+  const wonLen = C*wonFrac;
+  return `
+    <svg viewBox="0 0 140 140" class="donut">
+      <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--red)" stroke-width="16"/>
+      <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--green)" stroke-width="16"
+        stroke-dasharray="${wonLen.toFixed(1)} ${(C-wonLen).toFixed(1)}" stroke-dashoffset="0"
+        transform="rotate(-90 ${cx} ${cy})"/>
+      <text x="${cx}" y="${cy-2}" text-anchor="middle" fill="var(--cream)" font-size="26" font-family="Bebas Neue">${total}</text>
+      <text x="${cx}" y="${cy+16}" text-anchor="middle" fill="var(--muted)" font-size="11">apuestas</text>
+    </svg>`;
 }
 
 function loadStrategy(){
@@ -1715,6 +2057,11 @@ function loadStrategy(){
         <button onclick="setBankroll()">Fijar capital inicial</button>
         ${s.bankroll?'<button class="ghost" onclick="resetStrategy()">Reiniciar todo</button>':''}
       </div>
+      <div class="bank-edit">
+        <input type="number" inputmode="decimal" id="adjustInput" placeholder="Saldo real (ej: 535.53)">
+        <button class="adjust" onclick="adjustBalance()">Ajustar saldo a mi casa</button>
+      </div>
+      ${s.ajuste?`<div class="adjust-note">Ajuste aplicado: ${s.ajuste>=0?'+':''}$${s.ajuste.toFixed(2)} para cuadrar con tu saldo real.</div>`:''}
       <div class="strat-note">⚠️ Esto es un laboratorio de aprendizaje. Los resultados de pocas semanas no son concluyentes. Apuesta solo lo que estés dispuesto a perder. La sugerencia es estadística; la decisión final es tuya.</div>
     </div>`;
 
@@ -1850,11 +2197,31 @@ function buildSuggestions(s, st){
 
     count++;
     const sideClean = side.replace(/'/g,"");
+    const awayName = g.teams.away.team.name, homeName = g.teams.home.team.name;
+    // cuotas americanas de ambos lados (para poder registrar el que el usuario elija)
+    let awayAmer, homeAmer;
+    if(fmt==='decimal'){
+      awayAmer = odds.a!=='' ? decimalToAmerican(parseFloat((''+odds.a).replace(',','.'))) : 0;
+      homeAmer = odds.h!=='' ? decimalToAmerican(parseFloat((''+odds.h).replace(',','.'))) : 0;
+    } else {
+      awayAmer = odds.a!=='' ? parseFloat((''+odds.a).replace('+','')) : 0;
+      homeAmer = odds.h!=='' ? parseFloat((''+odds.h).replace('+','')) : 0;
+    }
+    const favIsHome = (side===homeName);
     out += `
       <div class="sug-card has-value">
-        <div class="sug-match">${g.teams.away.team.name} @ ${g.teams.home.team.name}</div>
+        <div class="sug-match">${awayName} @ ${homeName}</div>
         <div><span class="sug-pick">${side}</span><span class="sug-edge">+${(edge*100).toFixed(0)} pts de valor</span></div>
         <div class="sug-match" style="margin-top:6px">Modelo: ${(ourP*100).toFixed(0)}% · Cuota: ${american>0?'+':''}${american}</div>
+        <div class="sug-teamsel">
+          <span class="sug-reg-lbl">A quién le apuestas:</span>
+          <div class="sug-team-btns">
+            <button class="sug-team ${!favIsHome?'on':''}" id="tsel-${pk}-away"
+              onclick="pickSugTeam('${pk}','away')">${awayName} (${awayAmer>0?'+':''}${awayAmer})</button>
+            <button class="sug-team ${favIsHome?'on':''}" id="tsel-${pk}-home"
+              onclick="pickSugTeam('${pk}','home')">${homeName} (${homeAmer>0?'+':''}${homeAmer})</button>
+          </div>
+        </div>
         <div class="sug-amounts">
           <div class="sug-amt" onclick="fillReal('${pk}',${quarter})">
             <div class="amt-lbl">Conservador (¼)</div>
@@ -1868,11 +2235,51 @@ function buildSuggestions(s, st){
         <div class="sug-register">
           <span class="sug-reg-lbl">Apuesto:</span>
           <input type="number" inputmode="decimal" id="real-${pk}" placeholder="${quarter}" min="1">
-          <button onclick="registerBetReal('${pk}','${sideClean}',${american},${quarter},${half})">Registrar</button>
+          <button onclick="registerSug('${pk}')">Registrar</button>
         </div>
       </div>`;
+    // guardar datos de la sugerencia para el registro flexible
+    SUG_DATA[pk] = {
+      away:awayName, home:homeName, awayAmer, homeAmer,
+      sel: favIsHome?'home':'away', quarter, half
+    };
   }
   return count>0 ? out : null;
+}
+
+// memoria de las sugerencias mostradas (para registrar el equipo elegido)
+const SUG_DATA = {};
+
+// el usuario elige a qué equipo apostar dentro de una sugerencia
+function pickSugTeam(pk, side){
+  if(!SUG_DATA[pk]) return;
+  SUG_DATA[pk].sel = side;
+  const a = document.getElementById('tsel-'+pk+'-away');
+  const h = document.getElementById('tsel-'+pk+'-home');
+  if(a) a.classList.toggle('on', side==='away');
+  if(h) h.classList.toggle('on', side==='home');
+}
+
+// registra la apuesta con el equipo elegido (favorito o underdog)
+function registerSug(pk){
+  const d = SUG_DATA[pk];
+  if(!d) return;
+  const inp = document.getElementById('real-'+pk);
+  const real = parseFloat(inp && inp.value);
+  if(isNaN(real) || real<1){ alert('Pon el monto que vas a apostar (mínimo $1).'); return; }
+  const equipo = d.sel==='home' ? d.home : d.away;
+  const american = d.sel==='home' ? d.homeAmer : d.awayAmer;
+  if(!american){ alert('Ese equipo no tiene cuota capturada. Mete la cuota en la pestaña Partidos.'); return; }
+  const s = getBank();
+  const g = GAMES[pk];
+  const match = g ? `${g.teams.away.team.name} @ ${g.teams.home.team.name}` : '';
+  s.bets.push({
+    id:'b'+Date.now(), pk, equipo, monto:real,
+    sugCons:d.quarter, sugMod:d.half,
+    cuotaAmerican:american, match, fecha:dateInput.value, estado:'pending'
+  });
+  saveBank(s);
+  loadStrategy();
 }
 
 // rellena el campo de monto real cuando tocas una sugerencia
@@ -2189,9 +2596,27 @@ function setBankroll(){
   saveBank(s);
   loadStrategy();
 }
+
+// Ajusta el saldo para que cuadre con tu saldo real en la casa de apuestas.
+// Calcula la diferencia entre lo que la app cree y lo que tienes de verdad,
+// y la guarda como un ajuste. No toca el ROI de tus apuestas.
+function adjustBalance(){
+  const real = parseFloat(document.getElementById('adjustInput').value);
+  if(isNaN(real) || real<0){ alert('Pon tu saldo real (ej: 535.53).'); return; }
+  const s = getBank();
+  const st = bankStats(s);
+  // saldo actual ya incluye el ajuste previo; la nueva diferencia se suma al ajuste existente
+  const diferencia = real - st.saldo;
+  s.ajuste = (s.ajuste || 0) + diferencia;
+  saveBank(s);
+  loadStrategy();
+}
+
 function resetStrategy(){
   if(!confirm('Esto borrará tu capital y TODAS tus apuestas registradas. ¿Seguro?')) return;
-  localStorage.removeItem('strategy');
+  const s = getBank();
+  s.bankroll = 0; s.bets = []; s.ajuste = 0;
+  saveBank(s);          // guarda el estado vacio tambien en la nube
   loadStrategy();
 }
 
