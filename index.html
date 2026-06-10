@@ -323,6 +323,12 @@
   .login-msg{font-size:12.5px;margin-top:14px;min-height:18px}
   .login-msg.error{color:var(--red)}
   .login-msg.ok{color:var(--green)}
+  /* botón de signo +/- para cuotas (resuelve el teclado del iPhone) */
+  .odds-signrow{display:flex;gap:6px;align-items:stretch}
+  .sign-btn{flex:0 0 auto;width:42px;background:var(--panel2);border:1px solid var(--line);color:var(--gold);border-radius:8px;font-size:20px;font-weight:700;cursor:pointer;transition:.12s;line-height:1}
+  .sign-btn:hover{border-color:var(--gold)}
+  .sign-btn:active{background:var(--gold);color:#04110a}
+  .odds-signrow input{flex:1;min-width:0}
 </style>
 </head>
 <body>
@@ -809,11 +815,17 @@ function oddsBlockHTML(g){
       <div class="odds-inputs">
         <div class="odds-field">
           <label>${awayName}</label>
-          <input type="text" inputmode="decimal" id="oa-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+          <div class="odds-signrow">
+            <button type="button" class="sign-btn" onclick="toggleSign('oa-${g.gamePk}',this)">−</button>
+            <input type="text" inputmode="decimal" id="oa-${g.gamePk}" placeholder="150" oninput="onOddsInput(${g.gamePk})">
+          </div>
         </div>
         <div class="odds-field">
           <label>${homeName}</label>
-          <input type="text" inputmode="decimal" id="oh-${g.gamePk}" placeholder="—" oninput="onOddsInput(${g.gamePk})">
+          <div class="odds-signrow">
+            <button type="button" class="sign-btn" onclick="toggleSign('oh-${g.gamePk}',this)">−</button>
+            <input type="text" inputmode="decimal" id="oh-${g.gamePk}" placeholder="150" oninput="onOddsInput(${g.gamePk})">
+          </div>
         </div>
       </div>
       <div class="odds-result" id="ores-${g.gamePk}"></div>
@@ -958,6 +970,31 @@ function onOddsInput(pk){
   renderOddsResult(pk, aRaw, hRaw, fmt);
 }
 
+// Alterna el signo (+/-) del valor de un input de cuota.
+// Resuelve que el teclado numerico del iPhone no trae signos a la mano.
+function toggleSign(inputId, btn){
+  const inp = document.getElementById(inputId);
+  if(!inp) return;
+  let v = (inp.value||'').trim().replace('−','-'); // normaliza el menos largo
+  // quitar cualquier signo existente para trabajar con el numero limpio
+  let neg = v.startsWith('-');
+  let num = v.replace(/^[+-]/,'');
+  // alternar
+  neg = !neg;
+  inp.value = num ? (neg ? '-'+num : num) : (neg ? '-' : '');
+  // actualizar la etiqueta del boton
+  if(btn) btn.textContent = neg ? '−' : '+';
+  // disparar el recalculo si el input tiene un oninput asociado
+  inp.dispatchEvent(new Event('input'));
+  inp.focus();
+}
+
+// Devuelve el signo actual de un valor (para pintar el boton al cargar)
+function signOf(v){
+  v = (''+(v||'')).trim().replace('−','-');
+  return v.startsWith('-') ? '−' : '+';
+}
+
 function renderOddsResult(pk, aRaw, hRaw, fmt){
   const g = GAMES[pk];
   const res = document.getElementById('ores-'+pk);
@@ -1023,6 +1060,11 @@ function restoreOdds(pk){
   }
   if(saved.a!==undefined && document.getElementById('oa-'+pk)) document.getElementById('oa-'+pk).value = saved.a;
   if(saved.h!==undefined && document.getElementById('oh-'+pk)) document.getElementById('oh-'+pk).value = saved.h;
+  // actualizar la etiqueta de los botones de signo segun el valor guardado
+  const rowA = document.getElementById('oa-'+pk)?.parentElement?.querySelector('.sign-btn');
+  const rowH = document.getElementById('oh-'+pk)?.parentElement?.querySelector('.sign-btn');
+  if(rowA) rowA.textContent = signOf(saved.a);
+  if(rowH) rowH.textContent = signOf(saved.h);
   renderOddsResult(pk, saved.a||'', saved.h||'', ODDS_FMT[pk]);
 }
 
@@ -1919,7 +1961,12 @@ function onManualTypeChange(){
   const montoCuota = `
     <div class="manual-row">
       <div><label>Monto</label><input type="number" inputmode="decimal" id="mb-monto" placeholder="50" min="1"></div>
-      <div><label>Cuota (americana)</label><input type="text" inputmode="decimal" id="mb-cuota" placeholder="+250 o −150"></div>
+      <div><label>Cuota (americana)</label>
+        <div class="odds-signrow">
+          <button type="button" class="sign-btn" onclick="toggleSign('mb-cuota',this)">−</button>
+          <input type="text" inputmode="decimal" id="mb-cuota" placeholder="150">
+        </div>
+      </div>
     </div>`;
 
   if(tipo==='overunder'){
@@ -1942,7 +1989,12 @@ function onManualTypeChange(){
       <label>Equipo</label>
       <select id="mb-team"><option value="">— primero elige el partido —</option></select>
       <div class="manual-row">
-        <div><label>Hándicap</label><input type="number" inputmode="decimal" id="mb-hcap" placeholder="-1.5" step="0.5"></div>
+        <div><label>Hándicap</label>
+          <div class="odds-signrow">
+            <button type="button" class="sign-btn" onclick="toggleSign('mb-hcap',this)">−</button>
+            <input type="text" inputmode="decimal" id="mb-hcap" placeholder="1.5">
+          </div>
+        </div>
       </div>
       ${montoCuota}`;
   } else { // parlay / otra
@@ -1985,7 +2037,7 @@ function registerManualBet(){
   } else if(tipo==='handicap'){
     const pk = document.getElementById('mb-game').value;
     const teamSide = document.getElementById('mb-team').value;
-    const hcap = parseFloat(document.getElementById('mb-hcap').value);
+    const hcap = parseFloat((document.getElementById('mb-hcap').value||'').trim().replace('−','-').replace('+',''));
     if(!pk){ alert('Elige un partido.'); return; }
     if(!teamSide){ alert('Elige el equipo.'); return; }
     if(isNaN(hcap)){ alert('Pon el hándicap (ej: -1.5).'); return; }
