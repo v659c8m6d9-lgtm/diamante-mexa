@@ -380,17 +380,14 @@
   .sug-team{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:9px 8px;font-size:12px;cursor:pointer;transition:.12s;line-height:1.3}
   .sug-team.on{border-color:var(--green);color:var(--cream);background:rgba(63,169,106,.12)}
   .sug-team:hover{border-color:var(--green)}
-  /* ===== Selector visual de tipo de apuesta (estilo Playdoit) ===== */
-  .manual-type-selector{margin-bottom:14px}
-  .mts-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
-  .mts-buttons{display:grid;grid-template-columns:1fr;gap:8px}
-  @media(min-width:680px){ .mts-buttons{grid-template-columns:repeat(2,1fr)} }
-  .mts-btn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;transition:.15s;text-align:left;color:var(--cream)}
-  .mts-btn:hover{border-color:var(--gold)}
-  .mts-btn.on{border-color:var(--green);background:rgba(63,169,106,.08)}
-  .mts-icon{font-size:20px;display:block;margin-bottom:4px}
-  .mts-name{font-weight:700;font-size:13px;display:block}
-  .mts-desc{font-size:11px;color:var(--muted);margin-top:2px}
+  /* ===== Caja de respaldo (exportar/importar) ===== */
+  .backup-box{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02)}
+  .backup-title{font-weight:700;font-size:13px;margin-bottom:4px}
+  .backup-desc{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4}
+  .backup-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .backup-exp,.backup-imp{flex:1;min-width:130px;padding:11px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--cream);font-weight:600;font-size:13px;cursor:pointer;transition:.15s}
+  .backup-exp:hover{border-color:var(--green);background:rgba(63,169,106,.08)}
+  .backup-imp:hover{border-color:var(--gold);background:rgba(212,175,55,.08)}
 </style>
 </head>
 <body>
@@ -2073,6 +2070,15 @@ function loadStrategy(){
         <button class="adjust" onclick="adjustBalance()">Ajustar saldo a mi casa</button>
       </div>
       ${s.ajuste?`<div class="adjust-note">Ajuste aplicado: ${s.ajuste>=0?'+':''}$${s.ajuste.toFixed(2)} para cuadrar con tu saldo real.</div>`:''}
+      <div class="backup-box">
+        <div class="backup-title">🛡️ Respaldo de datos</div>
+        <div class="backup-desc">Guarda una copia de todo (apuestas, historial y cuotas) en un archivo. Si la nube falla, restauras desde aquí.</div>
+        <div class="backup-btns">
+          <button class="backup-exp" onclick="exportData()">⬇️ Exportar datos</button>
+          <button class="backup-imp" onclick="document.getElementById('importFile').click()">⬆️ Importar datos</button>
+          <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="importData(event)">
+        </div>
+      </div>
       <div class="strat-note">⚠️ Esto es un laboratorio de aprendizaje. Los resultados de pocas semanas no son concluyentes. Apuesta solo lo que estés dispuesto a perder. La sugerencia es estadística; la decisión final es tuya.</div>
     </div>`;
 
@@ -2091,33 +2097,14 @@ function loadStrategy(){
   // formulario para apuesta manual / semi-automatica (over/under, handicap, parlay)
   html += `
     <div class="manual-bet">
-      <button class="manual-toggle" onclick="toggleManual()">+ Registrar apuesta (moneyline, más/menos, hándicap…)</button>
+      <button class="manual-toggle" onclick="toggleManual()">+ Registrar apuesta (más/menos, hándicap, parlay…)</button>
       <div class="manual-form" id="manualForm" style="display:none">
-        <div class="manual-type-selector">
-          <div class="mts-lbl">Tipo de apuesta</div>
-          <div class="mts-buttons">
-            <button type="button" class="mts-btn on" data-tipo="moneyline" onclick="selectManualType('moneyline')">
-              <span class="mts-icon">💰</span>
-              <span class="mts-name">Moneyline</span>
-              <span class="mts-desc">Ganador del partido</span>
-            </button>
-            <button type="button" class="mts-btn" data-tipo="overunder" onclick="selectManualType('overunder')">
-              <span class="mts-icon">⬆️⬇️</span>
-              <span class="mts-name">Over/Under</span>
-              <span class="mts-desc">Más/Menos carreras</span>
-            </button>
-            <button type="button" class="mts-btn" data-tipo="handicap" onclick="selectManualType('handicap')">
-              <span class="mts-icon">🎯</span>
-              <span class="mts-name">Hándicap</span>
-              <span class="mts-desc">Con puntos</span>
-            </button>
-            <button type="button" class="mts-btn" data-tipo="parlay" onclick="selectManualType('parlay')">
-              <span class="mts-icon">🔗</span>
-              <span class="mts-name">Parlay/Otra</span>
-              <span class="mts-desc">Manual</span>
-            </button>
-          </div>
-        </div>
+        <label>Tipo de apuesta</label>
+        <select id="mb-tipo" onchange="onManualTypeChange()">
+          <option value="overunder">Más/Menos de carreras (se resuelve solo)</option>
+          <option value="handicap">Hándicap de un equipo (se resuelve solo)</option>
+          <option value="parlay">Parlay / Otra (la marcas tú)</option>
+        </select>
         <div id="mb-fields"></div>
         <button class="manual-save" onclick="registerManualBet()">Guardar apuesta</button>
       </div>
@@ -2264,7 +2251,7 @@ function buildSuggestions(s, st){
         </div>
         <div class="sug-register">
           <span class="sug-reg-lbl">Apuesto:</span>
-          <input type="number" inputmode="decimal" id="real-${pk}" placeholder="${quarter}" min="1">
+          <input type="number" inputmode="decimal" id="real-${pk}" placeholder="—" min="1">
           <button onclick="registerSug('${pk}')">Registrar</button>
         </div>
       </div>`;
@@ -2369,7 +2356,7 @@ function toggleManual(){
   if(!f) return;
   const abrir = (f.style.display==='none');
   f.style.display = abrir ? 'block' : 'none';
-  if(abrir) selectManualType('moneyline'); // inicializar con moneyline por defecto
+  if(abrir) onManualTypeChange(); // pintar los campos del tipo por defecto
 }
 
 // genera las <option> con los partidos del dia (para over/under y handicap)
@@ -2391,16 +2378,10 @@ function teamOptionsHTML(pk){
 }
 
 // cambia los campos del formulario segun el tipo elegido
-// selecciona un tipo de apuesta en el formulario manual y llena los campos
-function selectManualType(tipo){
-  // marcar el boton como seleccionado
-  for(const btn of document.querySelectorAll('.mts-btn')){
-    btn.classList.toggle('on', btn.dataset.tipo === tipo);
-  }
-  
+function onManualTypeChange(){
+  const tipo = document.getElementById('mb-tipo').value;
   const cont = document.getElementById('mb-fields');
   if(!cont) return;
-
   const montoCuota = `
     <div class="manual-row">
       <div><label>Monto</label><input type="number" inputmode="decimal" id="mb-monto" placeholder="50" min="1"></div>
@@ -2412,17 +2393,9 @@ function selectManualType(tipo){
       </div>
     </div>`;
 
-  if(tipo==='moneyline'){
+  if(tipo==='overunder'){
     cont.innerHTML = `
-      <div class="manual-note">Elige el partido y el equipo ganador. Se registra como apuesta de moneyline.</div>
-      <label>Partido</label>
-      <select id="mb-game" onchange="onManualGameChange()">${gameOptionsHTML()}</select>
-      <label>Equipo ganador</label>
-      <select id="mb-team"><option value="">— primero elige el partido —</option></select>
-      ${montoCuota}`;
-  } else if(tipo==='overunder'){
-    cont.innerHTML = `
-      <div class="manual-note">Elige el partido y la línea. La app lo resuelve sola al final.</div>
+      <div class="manual-note">Elige el partido y la línea de carreras. La app revisará el marcador final y resolverá sola.</div>
       <label>Partido</label>
       <select id="mb-game">${gameOptionsHTML()}</select>
       <div class="manual-row">
@@ -2434,7 +2407,7 @@ function selectManualType(tipo){
       ${montoCuota}`;
   } else if(tipo==='handicap'){
     cont.innerHTML = `
-      <div class="manual-note">Elige el equipo y los puntos de hándicap. La app lo resuelve sola al final.</div>
+      <div class="manual-note">Elige el partido, el equipo y los puntos de hándicap (ej: −1.5). La app lo resuelve sola al final.</div>
       <label>Partido</label>
       <select id="mb-game" onchange="onManualGameChange()">${gameOptionsHTML()}</select>
       <label>Equipo</label>
@@ -2450,7 +2423,7 @@ function selectManualType(tipo){
       ${montoCuota}`;
   } else { // parlay / otra
     cont.innerHTML = `
-      <div class="manual-note">El modelo no puede resolver esto solo. Tú marcas ganó/perdió.</div>
+      <div class="manual-note">El modelo no puede resolver esto solo. Lo registramos para tu contabilidad y tú marcas ganó/perdió.</div>
       <label>Descripción</label>
       <input type="text" id="mb-desc" placeholder="Ej: Parlay 3 equipos">
       ${montoCuota}`;
@@ -2465,11 +2438,7 @@ function onManualGameChange(){
 }
 
 function registerManualBet(){
-  // detectar el tipo seleccionado (cual boton tiene clase 'on')
-  const btnOn = document.querySelector('.mts-btn.on');
-  const tipo = btnOn ? btnOn.dataset.tipo : null;
-  if(!tipo){ alert('Elige un tipo de apuesta.'); return; }
-  
+  const tipo = document.getElementById('mb-tipo').value;
   const monto = parseFloat(document.getElementById('mb-monto').value);
   let cuotaStr = (document.getElementById('mb-cuota').value||'').trim().replace('−','-');
   const cuota = parseFloat(cuotaStr.replace('+',''));
@@ -2479,16 +2448,7 @@ function registerManualBet(){
   const s = getBank();
   const base = { id:'b'+Date.now(), manual:true, monto, cuotaAmerican:cuota, fecha:dateInput.value, estado:'pending' };
 
-  if(tipo==='moneyline'){
-    const pk = document.getElementById('mb-game').value;
-    const teamSide = document.getElementById('mb-team').value;
-    if(!pk){ alert('Elige un partido.'); return; }
-    if(!teamSide){ alert('Elige el equipo.'); return; }
-    const g = GAMES[pk];
-    const match = g ? `${g.teams.away.team.name} @ ${g.teams.home.team.name}` : '';
-    const teamName = g ? g.teams[teamSide].team.name : teamSide;
-    s.bets.push({ ...base, betKind:'moneyline', pk, mlSide:teamSide, equipo:teamName, match });
-  } else if(tipo==='overunder'){
+  if(tipo==='overunder'){
     const pk = document.getElementById('mb-game').value;
     const dir = document.getElementById('mb-ou-dir').value;
     const line = parseFloat(document.getElementById('mb-ou-line').value);
@@ -2675,6 +2635,61 @@ function resetStrategy(){
   s.bankroll = 0; s.bets = []; s.ajuste = 0;
   saveBank(s);          // guarda el estado vacio tambien en la nube
   loadStrategy();
+}
+
+// ===== Respaldo: Exportar / Importar todos los datos =====
+// Junta TODO lo relevante de localStorage (apuestas, historial, cuotas) en un archivo.
+function exportData(){
+  const data = { _app:'El Diamante Mexa', _version:1, _exportado: new Date().toISOString(), datos:{} };
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(!k) continue;
+    // guardamos strategy, todo el historial track:* y las cuotas odds:*
+    if(k==='strategy' || k.indexOf('track:')===0 || k.indexOf('odds:')===0){
+      data.datos[k] = localStorage.getItem(k);
+    }
+  }
+  const nBets = (()=>{ try{ return (JSON.parse(data.datos['strategy']||'{}').bets||[]).length; }catch(e){ return 0; } })();
+  const nTrack = Object.keys(data.datos).filter(k=>k.indexOf('track:')===0).length;
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const hoy = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `diamante-mexa-respaldo-${hoy}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  alert(`Respaldo descargado ✅\n\nApuestas: ${nBets}\nJuegos en historial: ${nTrack}\n\nGuarda este archivo en un lugar seguro (iCloud, Drive, etc.).`);
+}
+
+// Lee un archivo de respaldo y restaura todo. Sube también a la nube.
+function importData(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    let data;
+    try{ data = JSON.parse(e.target.result); }
+    catch(err){ alert('El archivo no es válido. Asegúrate de elegir un respaldo de El Diamante Mexa.'); return; }
+    if(!data || !data.datos || data._app!=='El Diamante Mexa'){
+      alert('Ese archivo no parece un respaldo de El Diamante Mexa.'); return;
+    }
+    const nBets = (()=>{ try{ return (JSON.parse(data.datos['strategy']||'{}').bets||[]).length; }catch(e){ return 0; } })();
+    const nTrack = Object.keys(data.datos).filter(k=>k.indexOf('track:')===0).length;
+    if(!confirm(`Vas a restaurar:\n\nApuestas: ${nBets}\nJuegos en historial: ${nTrack}\n\nEsto reemplazará tus datos actuales. ¿Continuar?`)) return;
+    // restaurar cada clave en localStorage y subir a la nube
+    let restauradas = 0;
+    for(const k in data.datos){
+      try{
+        localStorage.setItem(k, data.datos[k]);
+        try{ cloudSet(k, JSON.parse(data.datos[k])); }catch(e){}
+        restauradas++;
+      }catch(e){}
+    }
+    alert(`Datos restaurados ✅ (${restauradas} registros).\n\nLa app se va a recargar.`);
+    location.reload();
+  };
+  reader.readAsText(file);
 }
 
 async function loadStanding(){
