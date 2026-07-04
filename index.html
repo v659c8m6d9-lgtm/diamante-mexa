@@ -388,6 +388,31 @@
   .backup-exp,.backup-imp{flex:1;min-width:130px;padding:11px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--cream);font-weight:600;font-size:13px;cursor:pointer;transition:.15s}
   .backup-exp:hover{border-color:var(--green);background:rgba(63,169,106,.08)}
   .backup-imp:hover{border-color:var(--gold);background:rgba(212,175,55,.08)}
+  /* ===== Selector de liga LMB/MLB ===== */
+  .liga-sel{display:flex;gap:3px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:3px;margin-right:8px}
+  .liga-btn{padding:6px 12px;border:none;background:transparent;color:var(--muted);font-weight:800;font-size:12px;letter-spacing:.5px;border-radius:6px;cursor:pointer;transition:.15s;font-family:inherit}
+  .liga-btn.on{background:var(--red);color:#fff}
+  .liga-btn:not(.on):hover{color:var(--cream)}
+  /* ===== Filtro de liga del dashboard ===== */
+  .dash-liga-filter{display:flex;gap:6px;margin-bottom:14px}
+  .dlf-btn{padding:7px 16px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:700;font-size:12px;border-radius:8px;cursor:pointer;transition:.15s;font-family:inherit}
+  .dlf-btn.on{background:var(--gold);color:#04110a;border-color:var(--gold)}
+  .dlf-btn:not(.on):hover{border-color:var(--gold);color:var(--cream)}
+  /* ===== Badge de estado de datos (splits) ===== */
+  .data-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:5px 10px;border-radius:20px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;margin-right:6px}
+  .data-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--muted)}
+  .data-badge.load{color:var(--gold);border-color:rgba(212,175,55,.4)}
+  .data-badge.load::before{background:var(--gold);animation:pulse 1s infinite}
+  .data-badge.ready{color:var(--green);border-color:rgba(63,169,106,.4)}
+  .data-badge.ready::before{background:var(--green)}
+  .data-badge.base{color:var(--muted)}
+  .data-badge.base::before{background:var(--muted)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  /* ===== Estimación de total (Over/Under) ===== */
+  .fc-total{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:10px 12px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.25);border-radius:9px}
+  .fct-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .fct-val{font-family:'Bebas Neue';font-size:22px;color:var(--gold);line-height:1}
+  .fct-detail{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -428,6 +453,11 @@
     </div>
   </div>
   <div class="datebar">
+    <div class="liga-sel">
+      <button class="liga-btn" id="ligaLMB" onclick="cambiarLiga(23)">LMB</button>
+      <button class="liga-btn" id="ligaMLB" onclick="cambiarLiga(1)">MLB</button>
+    </div>
+    <div class="data-badge" id="dataBadge" title="Estado de los datos del modelo">—</div>
     <button class="navbtn" id="prevDay" title="Día anterior">‹</button>
     <div class="datedisplay" id="dateDisplay" title="Toca para elegir fecha">
       <div class="dd-main" id="ddMain">Hoy</div>
@@ -473,6 +503,15 @@
 
 <script>
 const API = "https://statsapi.mlb.com/api/v1";
+
+/* ===================== LIGA (LMB / MLB) ===================== */
+// 23 = Liga Mexicana de Béisbol · 1 = MLB. Se recuerda la última elegida.
+let SPORT_ID = parseInt(localStorage.getItem('sportId') || '23', 10);
+function setSport(id){
+  SPORT_ID = id;
+  localStorage.setItem('sportId', String(id));
+}
+function ligaNombre(){ return SPORT_ID===1 ? 'MLB' : 'LMB'; }
 
 /* ===================== NUBE (Supabase) ===================== */
 const SUPA_URL = "https://leghxfxnrwhkknkyotcx.supabase.co";
@@ -585,8 +624,49 @@ let APP_STARTED = false;
 function startApp(){
   if(APP_STARTED) return;
   APP_STARTED = true;
+  marcarLigaActiva();
+  loadSplits();       // trae récord local/visitante en segundo plano
+  loadForm();         // trae momentum (últimos 10) en segundo plano
   refreshAccuracy();
   load();
+}
+
+// marca visualmente qué liga está activa (LMB o MLB)
+function marcarLigaActiva(){
+  const bLMB = document.getElementById('ligaLMB');
+  const bMLB = document.getElementById('ligaMLB');
+  if(bLMB) bLMB.classList.toggle('on', SPORT_ID===23);
+  if(bMLB) bMLB.classList.toggle('on', SPORT_ID===1);
+  // actualizar subtítulo del header
+  const sub = document.querySelector('.brand .sub');
+  if(sub) sub.textContent = SPORT_ID===1
+    ? 'ANÁLISIS DE PARTIDOS · MLB'
+    : 'ANÁLISIS DE PARTIDOS · LIGA MEXICANA DE BÉISBOL';
+}
+
+// cambia de liga: guarda, recarga partidos y refresca todo
+function cambiarLiga(id){
+  if(SPORT_ID===id) return; // ya está en esa liga
+  setSport(id);
+  marcarLigaActiva();
+  // limpiar datos de la liga anterior para no mezclar
+  GAMES = {};
+  STANDING_LOADED = false;
+  SPLITS_STATE = 'idle';
+  FORM_STATE = 'idle';
+  loadSplits();       // trae splits de la nueva liga
+  loadForm();         // trae momentum de la nueva liga
+  refreshAccuracy();
+  load();
+  // si el usuario está en otra pestaña, refrescarla también
+  const activo = document.querySelector('.vtab.active');
+  if(activo){
+    const id2 = activo.id.replace('vt-','');
+    if(id2==='standing'){ loadStanding(); STANDING_LOADED=true; }
+    else if(id2==='board'){ loadBoard(); }
+    else if(id2==='strategy'){ loadStrategy(); }
+    else if(id2==='dash'){ loadDashboard(); }
+  }
 }
 
 // comprueba si ya hay sesion activa al abrir
@@ -618,6 +698,18 @@ const dateInput = document.getElementById('date');
 const overlay = document.getElementById('overlay');
 const sheet = document.getElementById('sheet');
 let GAMES = {};
+let DASH_LIGA = null; // filtro de liga en el dashboard: null=todas, 23=LMB, 1=MLB
+// Splits local/visitante por equipo (récord en casa vs de gira).
+// SPLITS[teamId] = { home:{w,l}, away:{w,l} }
+let SPLITS = {};
+let SPLITS_STATE = 'idle';   // 'idle' | 'loading' | 'ready' | 'error'
+let SPLITS_SPORT = null;     // de qué liga son los splits cargados
+// Forma reciente (últimos N juegos) por equipo.
+// FORM[teamId] = { w, l, rf, ra, juegos } — rf=carreras a favor, ra=en contra
+let FORM = {};
+let FORM_STATE = 'idle';
+let FORM_SPORT = null;
+const FORM_N = 10; // cuántos juegos recientes considerar
 
 // fecha local (no UTC) para que no se adelante por zona horaria
 function localDate(d){
@@ -666,7 +758,7 @@ async function load(){
   out.innerHTML = '<div class="status"><div class="spinner"></div>Cargando partidos…</div>';
   GAMES = {};
   try{
-    const sched = await fetch(`${API}/schedule?sportId=23&date=${date}&hydrate=probablePitcher,linescore,team`).then(r=>r.json());
+    const sched = await fetch(`${API}/schedule?sportId=${SPORT_ID}&date=${date}&hydrate=probablePitcher,linescore,team`).then(r=>r.json());
     const dates = sched.dates || [];
     if(!dates.length || !dates[0].games.length){
       out.innerHTML = '<div class="status">No hay partidos de la LMB en esta fecha.<br>Prueba con otra fecha de la temporada.</div>';
@@ -811,7 +903,7 @@ async function hydratePitchers(g){
     const cell = document.getElementById(`ps-${g.gamePk}-${side}`);
     if(!pp){ g._pstats[side] = null; continue; }
     try{
-      const url = `${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=23)`;
+      const url = `${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${SPORT_ID})`;
       const data = await fetch(url).then(r=>r.json());
       const splits = data.people[0].stats?.[0]?.splits;
       if(splits && splits.length){
@@ -908,9 +1000,11 @@ function computeForecast(g){
     const awayName = g.teams.away.team.name;
     // pesos del modelo completo: pitcher .45, forma .30, local .15
     // sin pitcher usamos el MODELO BASE (forma + local, mismos pesos del backtest ~60%)
-    const formDiff = teamForm(g.teams.home) - teamForm(g.teams.away);
+    const formDiff = formSplit(g.teams.home, true) - formSplit(g.teams.away, false);
+    const momDiff = formMomentum(g.teams.home) - formMomentum(g.teams.away);
+    const formCombinado = 0.70*formDiff + 0.30*momDiff;
     const homeAdv = 1.0;
-    const z = (0.30 * formDiff * 6.0) + (0.15 * homeAdv * 1.6);
+    const z = (0.30 * formCombinado * 6.0) + (0.15 * homeAdv * 1.6);
     let probHome = logistic(z);
     let probAway = 1 - probHome;
     const favHome = probHome >= probAway;
@@ -942,10 +1036,15 @@ function computeForecast(g){
   }
 
   const pitchDiff = ph - pa;
-  const formDiff = teamForm(g.teams.home) - teamForm(g.teams.away);
+  // récord local/visitante: el local con su récord en casa, el visitante de gira
+  const formDiff = formSplit(g.teams.home, true) - formSplit(g.teams.away, false);
+  // momentum: qué tan caliente viene cada equipo en sus últimos juegos
+  const momDiff = formMomentum(g.teams.home) - formMomentum(g.teams.away);
+  // el factor "forma" (0.30) se reparte: 70% récord local/visitante + 30% momentum
+  const formCombinado = 0.70*formDiff + 0.30*momDiff;
   const homeAdv = 1.0;
 
-  const z = (0.45 * pitchDiff * 0.35) + (0.30 * formDiff * 6.0) + (0.15 * homeAdv * 1.6);
+  const z = (0.45 * pitchDiff * 0.35) + (0.30 * formCombinado * 6.0) + (0.15 * homeAdv * 1.6);
   let probHome = logistic(z);
   let probAway = 1 - probHome;
 
@@ -959,8 +1058,10 @@ function computeForecast(g){
   if(favProb>=0.62){ cls='green'; txt='Favorito claro'; }
   else if(favProb<0.55){ cls='yellow'; txt='Casi parejo'; }
 
-  // guardar el pronostico completo (con pitcher) para medir efectividad del dia
-  g._pick = { favHome, probHome, hasFull:true };
+  // estimación de total de carreras (Over/Under)
+  const ou = predictTotal(g);
+  // guardar el pronostico completo (con pitcher) + total estimado para tracking
+  g._pick = { favHome, probHome, hasFull:true, totalEst: ou ? ou.total : null };
   computeDayAccuracy();
   // tracking en vivo: si este partido ya termino, guardarlo en el historial acumulado
   saveTracking();
@@ -968,6 +1069,13 @@ function computeForecast(g){
   // pintar el marco segun como va el partido contra el pronostico
   const card = box.closest('.game');
   if(card) paintFrame(g, card);
+
+  const ouHTML = ou ? `
+    <div class="fc-total">
+      <span class="fct-lbl">Total estimado</span>
+      <span class="fct-val">${ou.total.toFixed(1)} carreras</span>
+      <span class="fct-detail">${homeName} ~${ou.carrerasLocal.toFixed(1)} · ${awayName} ~${ou.carrerasVisita.toFixed(1)}</span>
+    </div>` : '';
 
   box.innerHTML = `
     <div class="fc-top">
@@ -982,6 +1090,7 @@ function computeForecast(g){
       <span class="a">${awayName} ${(probAway*100).toFixed(0)}%</span>
       <span class="h">${(probHome*100).toFixed(0)}% ${homeName}</span>
     </div>
+    ${ouHTML}
     ${oddsBlockHTML(g)}`;
 
   // restaurar cuotas guardadas y formato
@@ -1169,17 +1278,24 @@ function saveTracking(){
     if(localStorage.getItem(key)) continue;
     const homeWon = h.score > a.score;
     const acerto = (pick.favHome === homeWon);
+    const totalReal = h.score + a.score;
+    const totalEst = (typeof pick.totalEst === 'number') ? pick.totalEst : null;
     const registro = {
       gamePk: g.gamePk,
       fecha: (g.officialDate || g.gameDate || '').slice(0,10),
       away: a.team.name,
       home: h.team.name,
+      liga: SPORT_ID,
       favHome: pick.favHome,
       probHome: pick.probHome,
       scoreAway: a.score,
       scoreHome: h.score,
       homeWon,
-      acerto
+      acerto,
+      // tracking de Over/Under: estimado vs real
+      totalEst: totalEst,
+      totalReal: totalReal,
+      totalErr: (totalEst!==null) ? +(totalReal - totalEst).toFixed(2) : null
     };
     try{
       localStorage.setItem(key, JSON.stringify(registro));
@@ -1219,6 +1335,29 @@ function trackingStats(){
   const dias = Object.keys(porFecha).length;
   const pct = total>0 ? Math.round(aciertos/total*100) : null;
   return { total, aciertos, pct, dias, porFecha };
+}
+
+// Analiza la precisión del modelo de Over/Under: compara total estimado vs real.
+// Devuelve el error medio, el sesgo (si tiende a sobre/subestimar) y la muestra.
+function totalsStats(ligaFiltro){
+  const hist = getTrackingHistory().filter(r => typeof r.totalEst === 'number' && typeof r.totalReal === 'number');
+  const filtrado = (ligaFiltro===23||ligaFiltro===1)
+    ? hist.filter(r => (r.liga||23)===ligaFiltro) : hist;
+  const n = filtrado.length;
+  if(n===0) return { n:0 };
+  let sumaErr=0, sumaAbs=0, dentro1=0;
+  for(const r of filtrado){
+    const err = r.totalReal - r.totalEst; // positivo = salieron más de las estimadas
+    sumaErr += err;
+    sumaAbs += Math.abs(err);
+    if(Math.abs(err) <= 1) dentro1++;
+  }
+  return {
+    n,
+    sesgo: +(sumaErr/n).toFixed(2),      // promedio con signo: + subestima, - sobrestima
+    errMedio: +(sumaAbs/n).toFixed(2),   // error absoluto medio (MAE)
+    dentro1Pct: Math.round(dentro1/n*100) // % de veces que acertó dentro de ±1 carrera
+  };
 }
 
 // Actualiza el medidor visual "Acumulado" con el historial de tracking.
@@ -1371,7 +1510,7 @@ async function renderPreview(g){
     const pp = g.teams[side].probablePitcher;
     if(!pp){ cols[side] = {name:'Por confirmar', s:null}; continue; }
     try{
-      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=23)`).then(r=>r.json());
+      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${SPORT_ID})`).then(r=>r.json());
       cols[side] = {name:pp.fullName, s:d.people[0].stats?.[0]?.splits?.[0]?.stat || null};
     }catch(e){ cols[side]={name:pp.fullName,s:null}; }
   }
@@ -1393,12 +1532,214 @@ async function renderPreview(g){
     <p style="color:var(--muted);font-size:11.5px;margin-top:14px;line-height:1.5">Partido aún por jugarse. Cuando termine, aquí verás el box score completo con bateadores y line score por entrada.</p>`;
 }
 
+/* ---------- SPLITS LOCAL/VISITANTE ---------- */
+// Trae el récord en casa y de gira de todos los equipos de la liga actual,
+// en UNA sola llamada a standings. Guarda en SPLITS y actualiza el indicador.
+async function loadSplits(){
+  // si ya los tenemos para esta liga, no recargar
+  if(SPLITS_STATE==='ready' && SPLITS_SPORT===SPORT_ID) return;
+  SPLITS_STATE = 'loading';
+  SPLITS = {};
+  updateSplitsBadge();
+  const season = new Date().getFullYear();
+  try{
+    // descubrir las ligas (LMB puede tener varias zonas; MLB = 103,104)
+    let leagueParam;
+    if(SPORT_ID===1){
+      leagueParam = '103,104';
+    } else {
+      const teams = await fetch(`${API}/teams?sportId=${SPORT_ID}&season=${season}`).then(r=>r.json());
+      const ids = [...new Set((teams.teams||[])
+        .filter(t => (t.league?.name||'').toLowerCase().includes('mexican'))
+        .map(t => t.league?.id).filter(Boolean))];
+      leagueParam = ids.length ? ids.join(',') : '125';
+    }
+    const url = `${API}/standings?leagueId=${leagueParam}&season=${season}&standingsTypes=regularSeason&hydrate=team`;
+    const data = await fetch(url).then(r=>r.json());
+    let encontrados = 0;
+    for(const rec of (data.records||[])){
+      for(const tr of (rec.teamRecords||[])){
+        const teamId = tr.team?.id;
+        if(!teamId) continue;
+        // splitRecords trae "home" y "away" entre otros
+        const splits = tr.records?.splitRecords || [];
+        const home = splits.find(x=>x.type==='home');
+        const away = splits.find(x=>x.type==='away');
+        if(home || away){
+          SPLITS[teamId] = {
+            home: home ? {w:home.wins, l:home.losses} : null,
+            away: away ? {w:away.wins, l:away.losses} : null
+          };
+          encontrados++;
+        }
+      }
+    }
+    SPLITS_STATE = encontrados>0 ? 'ready' : 'error';
+    SPLITS_SPORT = SPORT_ID;
+  }catch(e){
+    SPLITS_STATE = 'error';
+  }
+  updateSplitsBadge();
+  // si el modelo ya pintó partidos, refrescar para usar los splits
+  if(SPLITS_STATE==='ready' && APP_STARTED && Object.keys(GAMES).length){
+    try{ load(); }catch(e){}
+  }
+}
+
+// Trae el historial reciente de la liga (últimos ~25 días) y calcula, por equipo,
+// su racha y carreras a favor/en contra en los últimos FORM_N juegos.
+// Estos datos sirven para MOMENTUM ahora y para OVER/UNDER en la Fase 3.
+async function loadForm(){
+  if(FORM_STATE==='ready' && FORM_SPORT===SPORT_ID) return;
+  FORM_STATE = 'loading';
+  FORM = {};
+  const end = new Date();
+  const start = new Date(end); start.setDate(start.getDate()-25);
+  const fmt = d => localDate(d);
+  try{
+    const url = `${API}/schedule?sportId=${SPORT_ID}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team,linescore`;
+    const sched = await fetch(url).then(r=>r.json());
+    // juntar todos los juegos finalizados, ordenados por fecha
+    const juegos = [];
+    for(const date of (sched.dates||[])){
+      for(const g of (date.games||[])){
+        if(g.status?.abstractGameState !== 'Final') continue;
+        const h=g.teams.home, a=g.teams.away;
+        if(h.score===undefined || a.score===undefined) continue;
+        juegos.push({ fecha:date.date, h, a });
+      }
+    }
+    juegos.sort((x,y)=> (x.fecha||'').localeCompare(y.fecha||''));
+    // acumular por equipo, quedándonos con los últimos FORM_N
+    const porEquipo = {}; // teamId -> array de {win, rf, ra}
+    for(const j of juegos){
+      const homeWon = j.h.score > j.a.score;
+      const push = (side, rival, gano)=>{
+        const id = side.team?.id; if(!id) return;
+        (porEquipo[id] = porEquipo[id] || []).push({
+          win: gano, rf: side.score, ra: rival.score
+        });
+      };
+      push(j.h, j.a, homeWon);
+      push(j.a, j.h, !homeWon);
+    }
+    for(const id in porEquipo){
+      const ult = porEquipo[id].slice(-FORM_N); // últimos N
+      let w=0,l=0,rf=0,ra=0;
+      for(const e of ult){ if(e.win) w++; else l++; rf+=e.rf; ra+=e.ra; }
+      FORM[id] = { w, l, rf, ra, juegos: ult.length };
+    }
+    FORM_STATE = Object.keys(FORM).length>0 ? 'ready' : 'error';
+    FORM_SPORT = SPORT_ID;
+  }catch(e){
+    FORM_STATE = 'error';
+  }
+  // refrescar la vista si ya hay partidos pintados
+  if(FORM_STATE==='ready' && APP_STARTED && Object.keys(GAMES).length){
+    try{ load(); }catch(e){}
+  }
+}
+
+// Momentum: qué tan "caliente" viene un equipo en sus últimos juegos.
+// Devuelve un valor centrado en 0 (positivo = viene bien, negativo = viene mal).
+function formMomentum(side){
+  const id = side.team?.id;
+  const f = id ? FORM[id] : null;
+  if(!f || f.juegos<3) return 0; // pocos juegos: sin señal de momentum
+  const winPct = f.w / (f.w + f.l);
+  return winPct - 0.5; // -0.5 a +0.5
+}
+
+/* ---------- MODELO OVER/UNDER (totales) ---------- */
+// Park factor por equipo local (1.0 = neutral). Cuando tengamos datos reales
+// de la LMB/MLB, reemplazar este mapa. Por ahora todos neutrales.
+// PARK_FACTORS[teamId] = 1.05 (favorece carreras) / 0.95 (las suprime)
+let PARK_FACTORS = {};
+function parkFactor(homeTeamId){
+  const pf = PARK_FACTORS[homeTeamId];
+  return (typeof pf === 'number' && pf>0) ? pf : 1.0; // neutral por defecto
+}
+
+// Estima el total de carreras esperado en un partido cruzando:
+// la ofensiva de cada equipo (carreras que anota) contra
+// lo que permite el rival (carreras que recibe), ajustado por park factor.
+// Devuelve null si no hay suficientes datos.
+function predictTotal(g){
+  const home = g.teams.home, away = g.teams.away;
+  const hid = home.team?.id, aid = away.team?.id;
+  const fh = hid ? FORM[hid] : null;
+  const fa = aid ? FORM[aid] : null;
+  if(!fh || !fa || fh.juegos<3 || fa.juegos<3) return null;
+
+  // promedios por juego
+  const homeRF = fh.rf/fh.juegos, homeRA = fh.ra/fh.juegos; // local: anota / permite
+  const awayRF = fa.rf/fa.juegos, awayRA = fa.ra/fa.juegos; // visitante: anota / permite
+
+  // carreras esperadas del local = promedio entre lo que anota y lo que el rival permite
+  const carrerasLocal = (homeRF + awayRA) / 2;
+  // carreras esperadas del visitante = lo que anota vs lo que el local permite
+  const carrerasVisita = (awayRF + homeRA) / 2;
+
+  let total = carrerasLocal + carrerasVisita;
+  total *= parkFactor(hid); // ajuste de estadio (neutral por ahora)
+
+  return {
+    total: total,
+    carrerasLocal: carrerasLocal,
+    carrerasVisita: carrerasVisita,
+    muestra: Math.min(fh.juegos, fa.juegos)
+  };
+}
+
+// devuelve el win% ajustado por localía: local usa su récord EN CASA,
+// visitante usa su récord DE GIRA. Si no hay split, cae al récord global.
+function formSplit(side, esLocal){
+  const teamId = side.team?.id;
+  const sp = teamId ? SPLITS[teamId] : null;
+  const rec = sp ? (esLocal ? sp.home : sp.away) : null;
+  if(rec && (rec.w+rec.l)>0){
+    return (rec.w/(rec.w+rec.l)) - 0.5;
+  }
+  // fallback: récord global
+  const lr = side.leagueRecord;
+  if(!lr) return 0;
+  const g = lr.wins+lr.losses;
+  return g ? (lr.wins/g - 0.5) : 0;
+}
+
+// actualiza el semáforo visual de estado de datos
+function updateSplitsBadge(){
+  const badge = document.getElementById('dataBadge');
+  if(!badge) return;
+  const map = {
+    idle:    {cls:'', txt:'—'},
+    loading: {cls:'load', txt:'Cargando datos…'},
+    ready:   {cls:'ready', txt:'Datos completos'},
+    error:   {cls:'base', txt:'Datos base'}
+  };
+  const st = map[SPLITS_STATE] || map.idle;
+  badge.className = 'data-badge ' + st.cls;
+  badge.textContent = st.txt;
+  badge.title = SPLITS_STATE==='ready'
+    ? 'El modelo usa el récord local/visitante real de cada equipo.'
+    : (SPLITS_STATE==='error'
+        ? 'No se pudieron cargar los splits; el modelo usa el récord global.'
+        : 'Cargando récord local/visitante de la liga…');
+}
+
 /* ---------- BACKTEST / EFECTIVIDAD ---------- */
 // Modelo BASE (honesto hacia atras): solo forma de equipo + ventaja local.
 // No usa el pitcher porque su ERA de hoy incluiria datos del futuro.
-function predictBase(homeSide, awaySide){
-  const form = s => { const lr=s.leagueRecord; if(!lr) return 0; const g=lr.wins+lr.losses; return g?(lr.wins/g-0.5):0; };
-  const formDiff = form(homeSide) - form(awaySide);
+function predictBase(homeSide, awaySide, usarSplits){
+  // usarSplits=true (default en pronósticos de hoy): récord local/visitante real.
+  // usarSplits=false (backtest): solo récord global, honesto hacia atrás.
+  let formDiff;
+  if(usarSplits===false){
+    const form = s => { const lr=s.leagueRecord; if(!lr) return 0; const g=lr.wins+lr.losses; return g?(lr.wins/g-0.5):0; };
+    formDiff = form(homeSide) - form(awaySide);
+  } else {
+    formDiff = formSplit(homeSide, true) - formSplit(awaySide, false);
+  }
   const z = (0.30*formDiff*6.0) + (0.15*1.0*1.6);
   return logistic(z); // prob de que gane el LOCAL
 }
@@ -1411,7 +1752,7 @@ async function runBacktest(days){
   const end = new Date(); end.setDate(end.getDate()-1);
   const start = new Date(end); start.setDate(start.getDate()-days);
   const fmt = d => localDate(d);
-  const url = `${API}/schedule?sportId=23&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team`;
+  const url = `${API}/schedule?sportId=${SPORT_ID}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team`;
   const sched = await fetch(url).then(r=>r.json());
   let hits=0, total=0, details=[];
   for(const date of (sched.dates||[])){
@@ -1419,7 +1760,7 @@ async function runBacktest(days){
       if(g.status?.abstractGameState !== 'Final') continue;
       const h=g.teams.home, a=g.teams.away;
       if(h.score===undefined || a.score===undefined) continue;
-      const probHome = predictBase(h, a);
+      const probHome = predictBase(h, a, false); // backtest: solo récord global
       const pickHome = probHome >= 0.5;
       const homeWon = h.score > a.score;
       const correct = (pickHome===homeWon);
@@ -1517,7 +1858,7 @@ async function loadBoard(){
   const date = dateInput.value;
   box.innerHTML = '<div class="status"><div class="spinner"></div>Cargando pizarra…</div>';
   try{
-    const sched = await fetch(`${API}/schedule?sportId=23&date=${date}&hydrate=probablePitcher,linescore,team,decisions`).then(r=>r.json());
+    const sched = await fetch(`${API}/schedule?sportId=${SPORT_ID}&date=${date}&hydrate=probablePitcher,linescore,team,decisions`).then(r=>r.json());
     const dates = sched.dates || [];
     if(!dates.length || !dates[0].games.length){
       box.innerHTML = '<div class="status">No hay partidos en esta fecha.</div>';
@@ -1665,7 +2006,7 @@ async function hydrateBoardForecast(g, card){
     const pp = g.teams[side].probablePitcher;
     if(!pp){ g._pstats[side]=null; continue; }
     try{
-      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=23)`).then(r=>r.json());
+      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${SPORT_ID})`).then(r=>r.json());
       const s = d.people[0].stats?.[0]?.splits?.[0]?.stat;
       g._pstats[side] = s ? {era:parseFloat(s.era), whip:parseFloat(s.whip), ip:parseIP(s.inningsPitched)} : null;
     }catch(e){ g._pstats[side]=null; }
@@ -1756,8 +2097,12 @@ function bankStats(s){
 
 /* ===================== DASHBOARD (Control del Bank) ===================== */
 // Estadisticas extendidas para el dashboard, calculadas desde las apuestas resueltas.
-function dashStats(s){
-  const bets = s.bets || [];
+function dashStats(s, ligaFiltro){
+  // ligaFiltro: undefined/null = todas · 23 = LMB · 1 = MLB
+  let bets = s.bets || [];
+  if(ligaFiltro===23 || ligaFiltro===1){
+    bets = bets.filter(b => (b.liga||23) === ligaFiltro); // apuestas viejas sin liga = LMB
+  }
   const resueltas = bets.filter(b=> b.estado==='won' || b.estado==='lost');
   const conPush = bets.filter(b=> b.estado==='won' || b.estado==='lost' || b.estado==='push');
 
@@ -1843,10 +2188,31 @@ function dashStats(s){
 }
 
 // Renderiza el dashboard completo
+// cambia el filtro de liga del dashboard y lo vuelve a pintar
+function setDashLiga(liga){
+  DASH_LIGA = liga;
+  loadDashboard();
+}
+
 function loadDashboard(){
   const box = document.getElementById('dashout');
   const s = getBank();
-  const d = dashStats(s);
+  const d = dashStats(s, DASH_LIGA);
+
+  // selector de liga del dashboard (Todas / LMB / MLB)
+  const betsAll = s.bets || [];
+  const hayLMB = betsAll.some(b => (b.liga||23)===23);
+  const hayMLB = betsAll.some(b => b.liga===1);
+  let filtroHTML = '';
+  // solo mostramos el filtro si hay apuestas de ambas ligas (si no, no tiene sentido)
+  if(hayLMB && hayMLB){
+    filtroHTML = `
+      <div class="dash-liga-filter">
+        <button class="dlf-btn ${DASH_LIGA===null?'on':''}" onclick="setDashLiga(null)">Todas</button>
+        <button class="dlf-btn ${DASH_LIGA===23?'on':''}" onclick="setDashLiga(23)">LMB</button>
+        <button class="dlf-btn ${DASH_LIGA===1?'on':''}" onclick="setDashLiga(1)">MLB</button>
+      </div>`;
+  }
 
   const money = (n)=> (n>=0?'+':'') + '$' + Math.abs(n).toFixed(0).replace('-','');
   const moneyPlain = (n)=> '$' + n.toFixed(0);
@@ -1925,6 +2291,7 @@ function loadDashboard(){
       <div class="dash-title">Control del Bank</div>
       <div class="dash-sub">Resumen de tu rendimiento ${vacio?'· aún sin apuestas resueltas':''}</div>
     </div>
+    ${filtroHTML}
     <div class="dash-metrics">${cards}</div>
 
     <div class="dash-row">
@@ -1984,7 +2351,53 @@ function loadDashboard(){
     </div>
 
     ${vacio?`<div class="dash-note">Registra y resuelve tus apuestas en la pestaña Estrategia. Aquí verás tus números crecer con cada una.</div>`:''}
+    ${totalsPanel(DASH_LIGA)}
   `;
+}
+
+// Panel de aprendizaje del modelo de totales (Over/Under): estimado vs real
+function totalsPanel(ligaFiltro){
+  const t = totalsStats(ligaFiltro);
+  if(!t.n){
+    return `<div class="dash-panel" style="margin-top:16px">
+      <div class="dash-panel-title">Precisión de totales (Over/Under)</div>
+      <div class="dash-empty" style="padding:20px;text-align:center">
+        Aún no hay partidos con estimación de total registrados.<br>
+        Se irán guardando solos conforme terminen los juegos que la app pronosticó.
+      </div>
+    </div>`;
+  }
+  const sesgoTxt = t.sesgo>0
+    ? `Subestima ${Math.abs(t.sesgo)} carreras en promedio`
+    : (t.sesgo<0 ? `Sobrestima ${Math.abs(t.sesgo)} carreras en promedio` : 'Sin sesgo apreciable');
+  return `<div class="dash-panel" style="margin-top:16px">
+    <div class="dash-panel-title">Precisión de totales (Over/Under) · aprendizaje</div>
+    <div class="dash-metrics" style="margin-top:10px">
+      <div class="dash-metric">
+        <div class="dm-lbl">Muestra</div>
+        <div class="dm-val">${t.n}</div>
+        <div class="dm-sub">juegos con estimación</div>
+      </div>
+      <div class="dash-metric">
+        <div class="dm-lbl">Error medio</div>
+        <div class="dm-val">${t.errMedio}</div>
+        <div class="dm-sub">carreras de diferencia (MAE)</div>
+      </div>
+      <div class="dash-metric">
+        <div class="dm-lbl">Dentro de ±1</div>
+        <div class="dm-val">${t.dentro1Pct}%</div>
+        <div class="dm-sub">estimaciones muy cercanas</div>
+      </div>
+      <div class="dash-metric">
+        <div class="dm-lbl">Sesgo</div>
+        <div class="dm-val ${t.sesgo>0?'neg':(t.sesgo<0?'pos':'')}">${t.sesgo>0?'+':''}${t.sesgo}</div>
+        <div class="dm-sub">${sesgoTxt}</div>
+      </div>
+    </div>
+    <div class="dash-note" style="margin-top:10px">
+      Cuando tengas suficientes juegos (idealmente 100+), este sesgo te dirá cómo ajustar el modelo: si sobrestima, bajamos; si subestima, subimos. Exporta tus datos para analizarlos a fondo.
+    </div>
+  </div>`;
 }
 
 // Grafica de linea de la evolucion del bank
@@ -2293,7 +2706,8 @@ function registerSug(pk){
   s.bets.push({
     id:'b'+Date.now(), pk, equipo, monto:real,
     sugCons:d.quarter, sugMod:d.half,
-    cuotaAmerican:american, match, fecha:dateInput.value, estado:'pending'
+    cuotaAmerican:american, match, fecha:dateInput.value, estado:'pending',
+    liga: SPORT_ID
   });
   saveBank(s);
   loadStrategy();
@@ -2322,7 +2736,8 @@ function registerBet(pk, equipo, monto, american){
     cuotaAmerican: american,
     match,
     fecha: dateInput.value,
-    estado:'pending'
+    estado:'pending',
+    liga: SPORT_ID
   });
   saveBank(s);
   loadStrategy();
@@ -2345,7 +2760,8 @@ function registerBetReal(pk, equipo, american, sugCons, sugMod){
     cuotaAmerican: american,
     match,
     fecha: dateInput.value,
-    estado:'pending'
+    estado:'pending',
+    liga: SPORT_ID
   });
   saveBank(s);
   loadStrategy();
@@ -2446,7 +2862,7 @@ function registerManualBet(){
   if(isNaN(cuota)||cuota===0){ alert('Pon la cuota en formato americano (ej: +250 o −150).'); return; }
 
   const s = getBank();
-  const base = { id:'b'+Date.now(), manual:true, monto, cuotaAmerican:cuota, fecha:dateInput.value, estado:'pending' };
+  const base = { id:'b'+Date.now(), manual:true, monto, cuotaAmerican:cuota, fecha:dateInput.value, estado:'pending', liga: SPORT_ID };
 
   if(tipo==='overunder'){
     const pk = document.getElementById('mb-game').value;
@@ -2696,8 +3112,20 @@ async function loadStanding(){
   const box = document.getElementById('standout');
   const season = new Date().getFullYear();
   try{
-    // Descubrir el/los leagueId reales de la Mexican League (sportId 23)
-    const teams = await fetch(`${API}/teams?sportId=23&season=${season}`).then(r=>r.json());
+    if(SPORT_ID===1){
+      // MLB: ligas American (103) y National (104)
+      const url = `${API}/standings?leagueId=103,104&season=${season}&standingsTypes=regularSeason&hydrate=team,division`;
+      let data = await fetch(url).then(r=>r.json());
+      let records = data.records || [];
+      if(!records.length){
+        box.innerHTML = '<div class="status">No se pudo cargar la tabla en este momento.</div>';
+        return;
+      }
+      box.innerHTML = '<div class="zones-grid">' + records.map(renderZone).join('') + '</div>';
+      return;
+    }
+    // LMB: descubrir el/los leagueId reales de la Mexican League (sportId 23)
+    const teams = await fetch(`${API}/teams?sportId=${SPORT_ID}&season=${season}`).then(r=>r.json());
     const leagueIds = [...new Set((teams.teams||[])
       .filter(t => (t.league?.name||'').toLowerCase().includes('mexican'))
       .map(t => t.league?.id).filter(Boolean))];
