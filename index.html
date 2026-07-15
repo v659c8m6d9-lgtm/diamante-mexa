@@ -413,6 +413,76 @@
   .fct-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
   .fct-val{font-family:'Bebas Neue';font-size:22px;color:var(--gold);line-height:1}
   .fct-detail{font-size:11px;color:var(--muted)}
+  /* ===== Importador de momios ===== */
+  .games-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .import-odds-btn{background:var(--gold);color:#04110a;border:none;padding:9px 14px;border-radius:9px;font-weight:700;font-size:13px;cursor:pointer;transition:.15s;font-family:inherit}
+  .import-odds-btn:hover{filter:brightness(1.1)}
+  .import-sheet{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:560px;width:92%;max-height:85vh;overflow-y:auto}
+  .import-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .import-title{font-family:'Bebas Neue';font-size:24px;color:var(--gold)}
+  .import-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px}
+  .import-help{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+  .import-help code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px;color:var(--cream)}
+  .import-textarea{width:100%;min-height:140px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--cream);font-family:monospace;font-size:13px;resize:vertical;box-sizing:border-box}
+  .import-preview{margin-top:12px;max-height:200px;overflow-y:auto}
+  .imp-prev-title{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px}
+  .imp-prev-row{font-size:12px;padding:5px 8px;border-radius:6px;margin-bottom:4px}
+  .imp-prev-row.ok{background:rgba(63,169,106,.1);color:var(--cream)}
+  .imp-prev-row.no{background:rgba(220,60,60,.1);color:#e88}
+  .import-actions{margin-top:14px;display:flex;justify-content:flex-end}
+  .import-apply{background:var(--green);color:#fff;border:none;padding:11px 20px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+  .import-apply:hover{filter:brightness(1.1)}
+  /* ===== Pestaña Efectividad ===== */
+  .eff-warn{background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.35);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--gold);margin-bottom:14px}
+  .eff-chart{width:100%;height:auto;margin-top:8px}
+  .eff-cal-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .eff-cal-lbl{font-size:12px;color:var(--muted);min-width:120px}
+  .eff-cal-bar{flex:1;height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+  .eff-cal-fill{height:100%;background:var(--green);border-radius:5px;transition:.3s}
+  .eff-cal-val{font-size:13px;font-weight:700;min-width:70px;text-align:right}
+  .eff-cal-val small{color:var(--muted);font-weight:400}
+  .eff-teams-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px}
+  @media(min-width:680px){ .eff-teams-grid{grid-template-columns:1fr 1fr} }
+  .eff-team-head{font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px}
+  .eff-team-head.pos{color:var(--green)}
+  .eff-team-head.neg{color:#c0504d}
+  .eff-team-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .eff-team-row b.pos{color:var(--green)}
+  .eff-team-row b.neg{color:#c0504d}
+  .eff-team-row small{color:var(--muted)}
+  /* secciones con identidad visual clara */
+  .eff-section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px}
+  .eff-sec-ml{border-left:4px solid var(--green)}
+  .eff-sec-ou{border-left:4px solid var(--gold)}
+  .eff-section-title{font-family:'Bebas Neue';font-size:20px;letter-spacing:.5px;color:var(--cream);margin-bottom:12px}
+  .eff-sub-title{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 6px;font-weight:700}
+  .eff-day-select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px;color:var(--cream);font-size:14px;font-family:inherit}
+  .effd-list{margin-top:12px}
+  .effd-game{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .effd-game.ok{border-left:4px solid var(--green)}
+  .effd-game.no{border-left:4px solid #c0504d}
+  .effd-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .effd-match{font-weight:700;font-size:13px}
+  .effd-score{font-family:'Bebas Neue';font-size:20px;color:var(--gold)}
+  .effd-pick{font-size:12px;color:var(--muted);margin-top:4px}
+  .effd-pick b{color:var(--cream)}
+  .effd-ou{font-size:12px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:1px dashed rgba(255,255,255,.08)}
+  .effd-ou b{color:var(--cream)}
+  .pos{color:var(--green)} .neg{color:#c0504d}
+  /* ===== Forma reciente en la tarjeta del partido ===== */
+
+  /* ===== Momios - secciones verticales limpias ===== */
+  .pdo-section{margin-top:14px;padding:14px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:10px}
+  .pdo-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-bottom:10px}
+  .pdo-pair{display:flex;flex-direction:column;gap:8px}
+  .pdo-team-row{display:flex;align-items:center;gap:10px}
+  .pdo-name{font-size:13px;font-weight:700;color:var(--cream);min-width:70px}
+  .pdo-team-row .odds-signrow{flex:1;max-width:130px}
+  .pdo-team-row .odds-signrow input{width:100%;font-size:14px;padding:9px 8px;text-align:center}
+  .pdo-line-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .pdo-line-lbl{font-size:12px;color:var(--muted);min-width:70px}
+  .pdo-line-input{width:70px;font-size:15px;padding:8px;text-align:center;background:var(--panel);border:1px solid var(--gold);border-radius:8px;color:var(--gold);font-weight:700}
+  .pdo-hc-badge{font-size:13px;font-weight:700;color:var(--cream);background:rgba(255,255,255,.08);padding:7px 10px;border-radius:8px;min-width:40px;text-align:center}
 </style>
 </head>
 <body>
@@ -475,10 +545,14 @@
     <button class="vtab" id="vt-board" onclick="setView('board')">Pizarra</button>
     <button class="vtab" id="vt-strategy" onclick="setView('strategy')">Estrategia</button>
     <button class="vtab" id="vt-dash" onclick="setView('dash')">Control</button>
+    <button class="vtab" id="vt-eff" onclick="setView('eff')">Efectividad</button>
     <button class="vtab" id="vt-standing" onclick="setView('standing')">Tabla</button>
   </div>
   <div id="view-games">
-    <div class="tapnote">Toca un partido para ver el detalle</div>
+    <div class="games-toolbar">
+      <div class="tapnote">Toca un partido para ver el detalle</div>
+      <button class="import-odds-btn" onclick="openOddsImport()">📥 Importar momios</button>
+    </div>
     <div id="out"><div class="status"><div class="spinner"></div>Cargando partidos…</div></div>
   </div>
   <div id="view-board" style="display:none">
@@ -489,6 +563,9 @@
   </div>
   <div id="view-dash" style="display:none">
     <div id="dashout"></div>
+  </div>
+  <div id="view-eff" style="display:none">
+    <div id="effout"></div>
   </div>
   <div id="view-standing" style="display:none">
     <div id="standout"><div class="status"><div class="spinner"></div>Cargando tabla…</div></div>
@@ -501,6 +578,26 @@
   <div class="sheet" id="sheet"></div>
 </div>
 
+<div class="overlay" id="oddsImportOverlay" style="display:none">
+  <div class="import-sheet">
+    <div class="import-head">
+      <div class="import-title">📥 Importar momios</div>
+      <button class="import-close" onclick="closeOddsImport()">✕</button>
+    </div>
+    <div class="import-help">
+      Pega aquí los momios (formato: <b>Equipo | ML | Total | O/U precio | HC | HC precio</b>, uno por línea).<br>
+      Ejemplo: <code>Toros de Tijuana | -225 | 8.5 | -125 | -1.5 | -118</code>
+    </div>
+    <textarea id="oddsImportText" class="import-textarea" placeholder="Toros de Tijuana | -225 | 8.5 | -125 | -1.5 | -118
+Tecolotes | +165 | 8.5 | -118 | +1.5 | -125
+..."></textarea>
+    <div id="oddsImportPreview" class="import-preview"></div>
+    <div class="import-actions">
+      <button class="import-apply" onclick="applyOddsImport()">Aplicar momios</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API = "https://statsapi.mlb.com/api/v1";
 
@@ -510,6 +607,15 @@ let SPORT_ID = parseInt(localStorage.getItem('sportId') || '23', 10);
 function setSport(id){
   SPORT_ID = id;
   localStorage.setItem('sportId', String(id));
+  aplicarParkFactors();
+}
+// carga el mapa de park factors según la liga activa
+function aplicarParkFactors(){
+  if(SPORT_ID===1 && typeof PARK_FACTORS_MLB!=='undefined'){
+    PARK_FACTORS = PARK_FACTORS_MLB;   // MLB: valores reales
+  } else {
+    PARK_FACTORS = {};                 // LMB: neutral por ahora (pendiente calcular)
+  }
 }
 function ligaNombre(){ return SPORT_ID===1 ? 'MLB' : 'LMB'; }
 
@@ -625,6 +731,7 @@ function startApp(){
   if(APP_STARTED) return;
   APP_STARTED = true;
   marcarLigaActiva();
+  aplicarParkFactors();  // carga park factors de la liga activa
   loadSplits();       // trae récord local/visitante en segundo plano
   loadForm();         // trae momentum (últimos 10) en segundo plano
   refreshAccuracy();
@@ -958,32 +1065,93 @@ function teamForm(side){
 function oddsBlockHTML(g){
   const awayName = g.teams.away.team.name;
   const homeName = g.teams.home.team.name;
+  const pk = g.gamePk;
+  const aN = awayName.split(' ').pop();
+  const hN = homeName.split(' ').pop();
+
+  const signRow = (id) => `
+    <div class="odds-signrow">
+      <button type="button" class="sign-btn" onclick="toggleSign('${id}',this)">−</button>
+      <input type="text" inputmode="decimal" id="${id}" placeholder="—">
+    </div>`;
+
   return `
     <div class="odds" onclick="event.stopPropagation()">
       <div class="odds-head">
-        <span class="odds-title">Cuotas de la casa</span>
-        <div class="odds-fmt" id="ofmt-${g.gamePk}">
-          <button class="on" onclick="setOddsFmt(${g.gamePk},'american',this)">−150</button>
-          <button onclick="setOddsFmt(${g.gamePk},'decimal',this)">1.65</button>
+        <span class="odds-title">Momios</span>
+        <div class="odds-fmt" id="ofmt-${pk}">
+          <button class="on" onclick="setOddsFmt(${pk},'american',this)">US</button>
+          <button onclick="setOddsFmt(${pk},'decimal',this)">DEC</button>
         </div>
       </div>
-      <div class="odds-inputs">
-        <div class="odds-field">
-          <label>${awayName}</label>
-          <div class="odds-signrow">
-            <button type="button" class="sign-btn" onclick="toggleSign('oa-${g.gamePk}',this)">−</button>
-            <input type="text" inputmode="decimal" id="oa-${g.gamePk}" placeholder="150" oninput="onOddsInput(${g.gamePk})">
+
+      <div class="pdo-section">
+        <div class="pdo-label">💰 Ganador</div>
+        <div class="pdo-pair">
+          <div class="pdo-team-row">
+            <span class="pdo-name">${aN}</span>
+            <div class="odds-signrow">
+              <button type="button" class="sign-btn" onclick="toggleSign('oa-${pk}',this)">−</button>
+              <input type="text" inputmode="decimal" id="oa-${pk}" placeholder="—" oninput="onOddsInput(${pk})">
+            </div>
           </div>
-        </div>
-        <div class="odds-field">
-          <label>${homeName}</label>
-          <div class="odds-signrow">
-            <button type="button" class="sign-btn" onclick="toggleSign('oh-${g.gamePk}',this)">−</button>
-            <input type="text" inputmode="decimal" id="oh-${g.gamePk}" placeholder="150" oninput="onOddsInput(${g.gamePk})">
+          <div class="pdo-team-row">
+            <span class="pdo-name">${hN}</span>
+            <div class="odds-signrow">
+              <button type="button" class="sign-btn" onclick="toggleSign('oh-${pk}',this)">−</button>
+              <input type="text" inputmode="decimal" id="oh-${pk}" placeholder="—" oninput="onOddsInput(${pk})">
+            </div>
           </div>
         </div>
       </div>
-      <div class="odds-result" id="ores-${g.gamePk}"></div>
+
+      <div class="pdo-section">
+        <div class="pdo-label">📊 Totales (O/U)</div>
+        <div class="pdo-line-row">
+          <span class="pdo-line-lbl">Línea</span>
+          <input type="text" inputmode="decimal" id="ou-line-${pk}" class="pdo-line-input" placeholder="9.5">
+        </div>
+        <div class="pdo-pair">
+          <div class="pdo-team-row">
+            <span class="pdo-name">↑ Over</span>
+            <div class="odds-signrow">
+              <button type="button" class="sign-btn" onclick="toggleSign('ou-over-${pk}',this)">−</button>
+              <input type="text" inputmode="decimal" id="ou-over-${pk}" placeholder="—">
+            </div>
+          </div>
+          <div class="pdo-team-row">
+            <span class="pdo-name">↓ Under</span>
+            <div class="odds-signrow">
+              <button type="button" class="sign-btn" onclick="toggleSign('ou-under-${pk}',this)">−</button>
+              <input type="text" inputmode="decimal" id="ou-under-${pk}" placeholder="—">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdo-section">
+        <div class="pdo-label">🎯 Hándicap</div>
+        <div class="pdo-pair">
+          <div class="pdo-team-row">
+            <span class="pdo-name">${aN}</span>
+            <span class="pdo-hc-badge" id="hc-lbl-a-${pk}">+1.5</span>
+            <div class="odds-signrow">
+              <button type="button" class="sign-btn" onclick="toggleSign('hc-a-${pk}',this)">−</button>
+              <input type="text" inputmode="decimal" id="hc-a-${pk}" placeholder="—">
+            </div>
+          </div>
+          <div class="pdo-team-row">
+            <span class="pdo-name">${hN}</span>
+            <span class="pdo-hc-badge" id="hc-lbl-h-${pk}">−1.5</span>
+            <div class="odds-signrow">
+              <button type="button" class="sign-btn" onclick="toggleSign('hc-h-${pk}',this)">−</button>
+              <input type="text" inputmode="decimal" id="hc-h-${pk}" placeholder="—">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="odds-result" id="ores-${pk}"></div>
     </div>`;
 }
 
@@ -1004,7 +1172,8 @@ function computeForecast(g){
     const momDiff = formMomentum(g.teams.home) - formMomentum(g.teams.away);
     const formCombinado = 0.70*formDiff + 0.30*momDiff;
     const homeAdv = 1.0;
-    const z = (0.30 * formCombinado * 6.0) + (0.15 * homeAdv * 1.6);
+    const bpDiff = bullpenFatiga(g.teams.away) - bullpenFatiga(g.teams.home);
+    const z = (0.30 * formCombinado * 6.0) + (0.15 * homeAdv * 1.6) + (bpDiff * 0.25);
     let probHome = logistic(z);
     let probAway = 1 - probHome;
     const favHome = probHome >= probAway;
@@ -1043,8 +1212,10 @@ function computeForecast(g){
   // el factor "forma" (0.30) se reparte: 70% récord local/visitante + 30% momentum
   const formCombinado = 0.70*formDiff + 0.30*momDiff;
   const homeAdv = 1.0;
+  // bullpen: un relevo cansado resta chances. Diferencia de fatiga entre rivales.
+  const bpDiff = bullpenFatiga(g.teams.away) - bullpenFatiga(g.teams.home); // + favorece al local
 
-  const z = (0.45 * pitchDiff * 0.35) + (0.30 * formCombinado * 6.0) + (0.15 * homeAdv * 1.6);
+  const z = (0.45 * pitchDiff * 0.35) + (0.30 * formCombinado * 6.0) + (0.15 * homeAdv * 1.6) + (bpDiff * 0.25);
   let probHome = logistic(z);
   let probAway = 1 - probHome;
 
@@ -1095,6 +1266,158 @@ function computeForecast(g){
 
   // restaurar cuotas guardadas y formato
   restoreOdds(g.gamePk);
+}
+
+/* ---------- IMPORTADOR DE MOMIOS EN LOTE ---------- */
+function openOddsImport(){
+  document.getElementById('oddsImportOverlay').style.display = 'flex';
+  document.getElementById('oddsImportText').value = '';
+  document.getElementById('oddsImportPreview').innerHTML = '';
+  const ta = document.getElementById('oddsImportText');
+  ta.oninput = previewOddsImport;
+  setTimeout(()=>ta.focus(), 100);
+}
+function closeOddsImport(){
+  document.getElementById('oddsImportOverlay').style.display = 'none';
+}
+
+// normaliza un nombre de equipo para comparar (quita acentos, minúsculas, palabras genéricas)
+function normalizeTeam(name){
+  let s = (name||'').toLowerCase().trim();
+  s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // quitar acentos
+  // quitar palabras genéricas de club para emparejar mejor
+  const stop = ['de','los','las','el','la','del','y','fc','cf'];
+  s = s.replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w && !stop.includes(w)).join(' ');
+  return s.trim();
+}
+
+// intenta emparejar una línea de texto con un partido del día
+function matchGameByTeam(teamText){
+  const norm = normalizeTeam(teamText);
+  if(!norm) return null;
+  let best = null, bestScore = 0;
+  for(const pk in GAMES){
+    const g = GAMES[pk];
+    for(const side of ['home','away']){
+      const teamNorm = normalizeTeam(g.teams[side].team.name);
+      // puntaje: cuántas palabras comparten
+      const a = new Set(norm.split(' '));
+      const b = new Set(teamNorm.split(' '));
+      let comunes = 0;
+      for(const w of a){ if(b.has(w)) comunes++; }
+      const score = comunes / Math.max(a.size, b.size);
+      if(score > bestScore && score >= 0.5){
+        bestScore = score; best = { pk, side, teamName: g.teams[side].team.name };
+      }
+    }
+  }
+  return best;
+}
+
+// analiza el texto pegado y muestra una vista previa de lo que se va a aplicar
+function parseOddsImport(){
+  const txt = document.getElementById('oddsImportText').value || '';
+  const lineas = txt.split('\n').map(l=>l.trim()).filter(Boolean);
+  const filas = [];
+  for(const linea of lineas){
+    // separadores admitidos: | , tab, o punto y coma
+    const partes = linea.split(/\s*[|;\t]\s*/).map(p=>p.trim());
+    if(partes.length < 2) continue;
+    const teamText = partes[0];
+    const ml = partes[1] || '';
+    const total = partes[2] || '';
+    const ouPrice = partes[3] || '';  // precio del O/U
+    const hcLine = partes[4] || '';   // línea del hándicap (+1.5 / -1.5)
+    const hcPrice = partes[5] || '';  // precio del hándicap
+    const match = matchGameByTeam(teamText);
+    filas.push({ teamText, ml, total, ouPrice, hcLine, hcPrice, match });
+  }
+  return filas;
+}
+
+function previewOddsImport(){
+  const filas = parseOddsImport();
+  const box = document.getElementById('oddsImportPreview');
+  if(!filas.length){ box.innerHTML = ''; return; }
+  let html = '<div class="imp-prev-title">Vista previa:</div>';
+  for(const f of filas){
+    if(f.match){
+      const extras = [f.total?`Total ${f.total}`:'', f.ouPrice?`O/U ${f.ouPrice}`:'', f.hcLine?`HC ${f.hcLine}`:'', f.hcPrice?f.hcPrice:''].filter(Boolean).join(' · ');
+      html += `<div class="imp-prev-row ok">✓ <b>${f.match.teamName}</b> → ML ${f.ml||'—'}${extras?' · '+extras:''}</div>`;
+    } else {
+      html += `<div class="imp-prev-row no">✗ "${f.teamText}" no se encontró en los partidos de hoy</div>`;
+    }
+  }
+  box.innerHTML = html;
+}
+
+// aplica los momios emparejados a cada partido (moneyline + total + hándicap)
+function applyOddsImport(){
+  const filas = parseOddsImport();
+  const validas = filas.filter(f=>f.match);
+  if(!validas.length){ alert('No se encontraron partidos que coincidan. Revisa los nombres.'); return; }
+
+  let aplicados = 0;
+  for(const f of validas){
+    const pk = f.match.pk, side = f.match.side;
+    const saved = loadOdds(pk) || {};
+    // moneyline
+    if(f.ml){
+      const mlNorm = f.ml.replace('−','-').replace(/\s/g,'');
+      if(side==='away') saved.a = mlNorm; else saved.h = mlNorm;
+      const inputId = (side==='away' ? 'oa-' : 'oh-') + pk;
+      const inp = document.getElementById(inputId);
+      if(inp){
+        inp.value = mlNorm.replace('+','');
+        const signBtn = inp.parentElement?.querySelector('.sign-btn');
+        if(signBtn) signBtn.textContent = mlNorm.startsWith('-') ? '−' : '+';
+      }
+    }
+    // over/under: línea y precio
+    if(f.total){
+      saved.ouLine = f.total.replace(',','.');
+      const lineInp = document.getElementById('ou-line-'+pk);
+      if(lineInp) lineInp.value = saved.ouLine;
+    }
+    if(f.ouPrice){
+      const priceNorm = f.ouPrice.replace('−','-').replace(/\s/g,'');
+      if(side==='away'){ saved.ouOver = priceNorm; }
+      else { saved.ouUnder = priceNorm; }
+      const ouId = side==='away' ? 'ou-over-'+pk : 'ou-under-'+pk;
+      const ouInp = document.getElementById(ouId);
+      if(ouInp){
+        ouInp.value = priceNorm.replace('+','');
+        const sb = ouInp.parentElement?.querySelector('.sign-btn');
+        if(sb) sb.textContent = priceNorm.startsWith('-')?'−':'+';
+      }
+    }
+    // hándicap: línea y precio
+    if(f.hcLine){
+      const hcNorm = f.hcLine.replace('−','-').replace(/\s/g,'');
+      if(side==='away') saved.hcLineA = hcNorm; else saved.hcLineH = hcNorm;
+      const lblId = side==='away' ? 'hc-lbl-a-'+pk : 'hc-lbl-h-'+pk;
+      const lbl = document.getElementById(lblId);
+      if(lbl) lbl.textContent = hcNorm;
+    }
+    if(f.hcPrice){
+      const hcpNorm = f.hcPrice.replace('−','-').replace(/\s/g,'');
+      if(side==='away') saved.hcA = hcpNorm; else saved.hcH = hcpNorm;
+      const hcId = side==='away' ? 'hc-a-'+pk : 'hc-h-'+pk;
+      const hcInp = document.getElementById(hcId);
+      if(hcInp){
+        hcInp.value = hcpNorm.replace('+','');
+        const sb = hcInp.parentElement?.querySelector('.sign-btn');
+        if(sb) sb.textContent = hcpNorm.startsWith('-')?'−':'+';
+      }
+    }
+    localStorage.setItem('odds:'+pk, JSON.stringify(saved));
+    cloudSet('odds:'+pk, saved);
+    onOddsInput(pk);
+    aplicados++;
+  }
+  closeOddsImport();
+  alert(`Momios aplicados a ${aplicados} partido(s) ✅\nGanador + Totales + Hándicap\n\nAbre cada partido para ver los momios cargados.`);
+  location.reload(); // recarga para que restoreOdds llene todo al reabrir
 }
 
 /* ---------- CUOTAS Y VALOR ---------- */
@@ -1230,14 +1553,36 @@ function restoreOdds(pk){
     const idx = (ODDS_FMT[pk]==='decimal') ? 1 : 0;
     if(cont.children[idx]) cont.children[idx].classList.add('on');
   }
-  if(saved.a!==undefined && document.getElementById('oa-'+pk)) document.getElementById('oa-'+pk).value = saved.a;
-  if(saved.h!==undefined && document.getElementById('oh-'+pk)) document.getElementById('oh-'+pk).value = saved.h;
-  // actualizar la etiqueta de los botones de signo segun el valor guardado
-  const rowA = document.getElementById('oa-'+pk)?.parentElement?.querySelector('.sign-btn');
-  const rowH = document.getElementById('oh-'+pk)?.parentElement?.querySelector('.sign-btn');
-  if(rowA) rowA.textContent = signOf(saved.a);
-  if(rowH) rowH.textContent = signOf(saved.h);
-  renderOddsResult(pk, saved.a||'', saved.h||'', ODDS_FMT[pk]);
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if(!el || val===undefined || val===null || val==='') return;
+    el.value = String(val).replace('+','');
+    const sb = el.parentElement?.querySelector('.sign-btn');
+    if(sb) sb.textContent = signOf(val);
+  };
+  // moneyline
+  setVal('oa-'+pk, saved.a || saved.away);
+  setVal('oh-'+pk, saved.h || saved.home);
+  // over/under: línea + precios
+  const ouLine = saved.ouLine || saved.totalLine;
+  if(ouLine){
+    const lineEl = document.getElementById('ou-line-'+pk);
+    if(lineEl) lineEl.value = ouLine;
+  }
+  setVal('ou-over-'+pk, saved.ouOver);
+  setVal('ou-under-'+pk, saved.ouUnder);
+  // handicap: etiquetas + precios
+  if(saved.hcLineA){
+    const lblA = document.getElementById('hc-lbl-a-'+pk);
+    if(lblA) lblA.textContent = saved.hcLineA;
+  }
+  if(saved.hcLineH){
+    const lblH = document.getElementById('hc-lbl-h-'+pk);
+    if(lblH) lblH.textContent = saved.hcLineH;
+  }
+  setVal('hc-a-'+pk, saved.hcA);
+  setVal('hc-h-'+pk, saved.hcH);
+  renderOddsResult(pk, saved.a||saved.away||'', saved.h||saved.home||'', ODDS_FMT[pk]);
 }
 
 // pinta el marco de la tarjeta: verde si va segun el pronostico, rojo si en contra, nada si no inicia
@@ -1529,166 +1874,40 @@ async function renderPreview(g){
   };
   body.innerHTML = `<div class="sech">Comparación de abridores</div>
     <div class="cmp">${col('away',g.teams.away.team.name)}${col('home',g.teams.home.team.name)}</div>
+    ${formaRecienteHTML(g)}
     <p style="color:var(--muted);font-size:11.5px;margin-top:14px;line-height:1.5">Partido aún por jugarse. Cuando termine, aquí verás el box score completo con bateadores y line score por entrada.</p>`;
 }
 
-/* ---------- SPLITS LOCAL/VISITANTE ---------- */
-// Trae el récord en casa y de gira de todos los equipos de la liga actual,
-// en UNA sola llamada a standings. Guarda en SPLITS y actualiza el indicador.
-async function loadSplits(){
-  // si ya los tenemos para esta liga, no recargar
-  if(SPLITS_STATE==='ready' && SPLITS_SPORT===SPORT_ID) return;
-  SPLITS_STATE = 'loading';
-  SPLITS = {};
-  updateSplitsBadge();
-  const season = new Date().getFullYear();
-  try{
-    // descubrir las ligas (LMB puede tener varias zonas; MLB = 103,104)
-    let leagueParam;
-    if(SPORT_ID===1){
-      leagueParam = '103,104';
-    } else {
-      const teams = await fetch(`${API}/teams?sportId=${SPORT_ID}&season=${season}`).then(r=>r.json());
-      const ids = [...new Set((teams.teams||[])
-        .filter(t => (t.league?.name||'').toLowerCase().includes('mexican'))
-        .map(t => t.league?.id).filter(Boolean))];
-      leagueParam = ids.length ? ids.join(',') : '125';
+// Bloque "Forma reciente (últimos 10)" para la tarjeta del partido.
+function formaRecienteHTML(g){
+  const buildCol = (side, teamName) => {
+    const id = side.team?.id;
+    const f = id ? FORM[id] : null;
+    if(!f || !f.juegos){
+      return `<div class="cmpcol">
+        <div class="cmpcol-team">${teamName}</div>
+        <div class="row" style="color:var(--muted);font-size:12px;padding:12px 0">Sin datos recientes</div>
+      </div>`;
     }
-    const url = `${API}/standings?leagueId=${leagueParam}&season=${season}&standingsTypes=regularSeason&hydrate=team`;
-    const data = await fetch(url).then(r=>r.json());
-    let encontrados = 0;
-    for(const rec of (data.records||[])){
-      for(const tr of (rec.teamRecords||[])){
-        const teamId = tr.team?.id;
-        if(!teamId) continue;
-        // splitRecords trae "home" y "away" entre otros
-        const splits = tr.records?.splitRecords || [];
-        const home = splits.find(x=>x.type==='home');
-        const away = splits.find(x=>x.type==='away');
-        if(home || away){
-          SPLITS[teamId] = {
-            home: home ? {w:home.wins, l:home.losses} : null,
-            away: away ? {w:away.wins, l:away.losses} : null
-          };
-          encontrados++;
-        }
-      }
-    }
-    SPLITS_STATE = encontrados>0 ? 'ready' : 'error';
-    SPLITS_SPORT = SPORT_ID;
-  }catch(e){
-    SPLITS_STATE = 'error';
-  }
-  updateSplitsBadge();
-  // si el modelo ya pintó partidos, refrescar para usar los splits
-  if(SPLITS_STATE==='ready' && APP_STARTED && Object.keys(GAMES).length){
-    try{ load(); }catch(e){}
-  }
-}
-
-// Trae el historial reciente de la liga (últimos ~25 días) y calcula, por equipo,
-// su racha y carreras a favor/en contra en los últimos FORM_N juegos.
-// Estos datos sirven para MOMENTUM ahora y para OVER/UNDER en la Fase 3.
-async function loadForm(){
-  if(FORM_STATE==='ready' && FORM_SPORT===SPORT_ID) return;
-  FORM_STATE = 'loading';
-  FORM = {};
-  const end = new Date();
-  const start = new Date(end); start.setDate(start.getDate()-25);
-  const fmt = d => localDate(d);
-  try{
-    const url = `${API}/schedule?sportId=${SPORT_ID}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team,linescore`;
-    const sched = await fetch(url).then(r=>r.json());
-    // juntar todos los juegos finalizados, ordenados por fecha
-    const juegos = [];
-    for(const date of (sched.dates||[])){
-      for(const g of (date.games||[])){
-        if(g.status?.abstractGameState !== 'Final') continue;
-        const h=g.teams.home, a=g.teams.away;
-        if(h.score===undefined || a.score===undefined) continue;
-        juegos.push({ fecha:date.date, h, a });
-      }
-    }
-    juegos.sort((x,y)=> (x.fecha||'').localeCompare(y.fecha||''));
-    // acumular por equipo, quedándonos con los últimos FORM_N
-    const porEquipo = {}; // teamId -> array de {win, rf, ra}
-    for(const j of juegos){
-      const homeWon = j.h.score > j.a.score;
-      const push = (side, rival, gano)=>{
-        const id = side.team?.id; if(!id) return;
-        (porEquipo[id] = porEquipo[id] || []).push({
-          win: gano, rf: side.score, ra: rival.score
-        });
-      };
-      push(j.h, j.a, homeWon);
-      push(j.a, j.h, !homeWon);
-    }
-    for(const id in porEquipo){
-      const ult = porEquipo[id].slice(-FORM_N); // últimos N
-      let w=0,l=0,rf=0,ra=0;
-      for(const e of ult){ if(e.win) w++; else l++; rf+=e.rf; ra+=e.ra; }
-      FORM[id] = { w, l, rf, ra, juegos: ult.length };
-    }
-    FORM_STATE = Object.keys(FORM).length>0 ? 'ready' : 'error';
-    FORM_SPORT = SPORT_ID;
-  }catch(e){
-    FORM_STATE = 'error';
-  }
-  // refrescar la vista si ya hay partidos pintados
-  if(FORM_STATE==='ready' && APP_STARTED && Object.keys(GAMES).length){
-    try{ load(); }catch(e){}
-  }
-}
-
-// Momentum: qué tan "caliente" viene un equipo en sus últimos juegos.
-// Devuelve un valor centrado en 0 (positivo = viene bien, negativo = viene mal).
-function formMomentum(side){
-  const id = side.team?.id;
-  const f = id ? FORM[id] : null;
-  if(!f || f.juegos<3) return 0; // pocos juegos: sin señal de momentum
-  const winPct = f.w / (f.w + f.l);
-  return winPct - 0.5; // -0.5 a +0.5
-}
-
-/* ---------- MODELO OVER/UNDER (totales) ---------- */
-// Park factor por equipo local (1.0 = neutral). Cuando tengamos datos reales
-// de la LMB/MLB, reemplazar este mapa. Por ahora todos neutrales.
-// PARK_FACTORS[teamId] = 1.05 (favorece carreras) / 0.95 (las suprime)
-let PARK_FACTORS = {};
-function parkFactor(homeTeamId){
-  const pf = PARK_FACTORS[homeTeamId];
-  return (typeof pf === 'number' && pf>0) ? pf : 1.0; // neutral por defecto
-}
-
-// Estima el total de carreras esperado en un partido cruzando:
-// la ofensiva de cada equipo (carreras que anota) contra
-// lo que permite el rival (carreras que recibe), ajustado por park factor.
-// Devuelve null si no hay suficientes datos.
-function predictTotal(g){
-  const home = g.teams.home, away = g.teams.away;
-  const hid = home.team?.id, aid = away.team?.id;
-  const fh = hid ? FORM[hid] : null;
-  const fa = aid ? FORM[aid] : null;
-  if(!fh || !fa || fh.juegos<3 || fa.juegos<3) return null;
-
-  // promedios por juego
-  const homeRF = fh.rf/fh.juegos, homeRA = fh.ra/fh.juegos; // local: anota / permite
-  const awayRF = fa.rf/fa.juegos, awayRA = fa.ra/fa.juegos; // visitante: anota / permite
-
-  // carreras esperadas del local = promedio entre lo que anota y lo que el rival permite
-  const carrerasLocal = (homeRF + awayRA) / 2;
-  // carreras esperadas del visitante = lo que anota vs lo que el local permite
-  const carrerasVisita = (awayRF + homeRA) / 2;
-
-  let total = carrerasLocal + carrerasVisita;
-  total *= parkFactor(hid); // ajuste de estadio (neutral por ahora)
-
-  return {
-    total: total,
-    carrerasLocal: carrerasLocal,
-    carrerasVisita: carrerasVisita,
-    muestra: Math.min(fh.juegos, fa.juegos)
+    const rfProm = (f.rf/f.juegos).toFixed(1);
+    const raProm = (f.ra/f.juegos).toFixed(1);
+    const diff = f.rf - f.ra;
+    const diffCls = diff>=0 ? 'pos' : 'neg';
+    const diffTxt = (diff>=0?'+':'') + diff;
+    const mom = Math.round(formMomentum(side)*100);
+    const momCls = mom>=5 ? 'pos' : (mom<=-5 ? 'neg' : '');
+    const momTxt = (mom>0?'+':'') + mom + '%';
+    return `<div class="cmpcol">
+      <div class="cmpcol-team">${teamName}</div>
+      <div class="row"><span>Récord (últ. 10)</span><b>${f.w}-${f.l}</b></div>
+      <div class="row"><span>Carreras anotadas</span><b>${f.rf} <small style="color:var(--muted);font-weight:400;font-size:11px">(${rfProm}/j)</small></b></div>
+      <div class="row"><span>Carreras permitidas</span><b>${f.ra} <small style="color:var(--muted);font-weight:400;font-size:11px">(${raProm}/j)</small></b></div>
+      <div class="row"><span>Diferencia neta</span><b class="${diffCls}">${diffTxt}</b></div>
+      <div class="row"><span>Momentum</span><b class="${momCls}">${momTxt}</b></div>
+    </div>`;
   };
+  return `<div class="sech" style="margin-top:18px">Forma reciente · Últimos 10</div>
+    <div class="cmp">${buildCol(g.teams.away, g.teams.away.team.name)}${buildCol(g.teams.home, g.teams.home.team.name)}</div>`;
 }
 
 // devuelve el win% ajustado por localía: local usa su récord EN CASA,
@@ -1842,7 +2061,7 @@ function logoUrl(teamId){ return `https://www.mlbstatic.com/team-logos/${teamId}
 
 let STANDING_LOADED = false;
 function setView(v){
-  for(const tab of ['games','board','strategy','dash','standing']){
+  for(const tab of ['games','board','strategy','dash','eff','standing']){
     document.getElementById('vt-'+tab).classList.toggle('active', v===tab);
     document.getElementById('view-'+tab).style.display = v===tab?'':'none';
   }
@@ -1850,6 +2069,7 @@ function setView(v){
   if(v==='board'){ loadBoard(); }
   if(v==='strategy'){ loadStrategy(); }
   if(v==='dash'){ loadDashboard(); }
+  if(v==='eff'){ loadEffectiveness(); }
 }
 
 /* ---------- PIZARRA ---------- */
@@ -2400,6 +2620,300 @@ function totalsPanel(ligaFiltro){
   </div>`;
 }
 
+/* ===================== PESTAÑA EFECTIVIDAD (modelo, no apuestas) ===================== */
+let EFF_LIGA = null; // filtro: null=todas, 23=LMB, 1=MLB
+let EFF_DIA = '';    // día seleccionado para ver detalle ('' = ninguno)
+
+function setEffLiga(l){ EFF_LIGA = l; EFF_DIA=''; loadEffectiveness(); }
+function setEffDia(d){ EFF_DIA = d; loadEffectiveness(); }
+
+// detalle de los pronósticos de UN día: partido por partido
+function effDayDetail(hist, dia){
+  const del = hist.filter(r => r.fecha === dia);
+  if(!del.length) return '<div class="dash-empty" style="padding:14px">Sin pronósticos ese día.</div>';
+  let html = '';
+  for(const r of del){
+    const favName = r.favHome ? r.home : r.away;
+    const conf = Math.round(Math.max(r.probHome, 1-r.probHome)*100);
+    const ganador = r.homeWon ? r.home : r.away;
+    // línea de total si existe
+    let ouTxt = '';
+    if(typeof r.totalEst === 'number' && typeof r.totalReal === 'number'){
+      const err = r.totalReal - r.totalEst;
+      const errCls = Math.abs(err)<=1 ? 'pos' : (Math.abs(err)>=3 ? 'neg' : '');
+      ouTxt = `<div class="effd-ou">📊 Total: estimó <b>${r.totalEst.toFixed(1)}</b> · salió <b>${r.totalReal}</b> <span class="${errCls}">(${err>0?'+':''}${err.toFixed(1)})</span></div>`;
+    }
+    html += `
+      <div class="effd-game ${r.acerto?'ok':'no'}">
+        <div class="effd-top">
+          <span class="effd-match">${r.away} @ ${r.home}</span>
+          <span class="effd-score">${r.scoreAway}–${r.scoreHome}</span>
+        </div>
+        <div class="effd-pick">🎯 Pronosticó: <b>${favName}</b> (${conf}%) · Ganó: <b>${ganador}</b> ${r.acerto?'<span class="pos">✓ Acierto</span>':'<span class="neg">✗ Falló</span>'}</div>
+        ${ouTxt}
+      </div>`;
+  }
+  return html;
+}
+
+// agrupa el historial de pronósticos por día y calcula % de acierto diario
+function effDaily(hist){
+  const porDia = {};
+  for(const r of hist){
+    const d = r.fecha || 's/f';
+    (porDia[d] = porDia[d] || {ok:0, n:0});
+    porDia[d].n++;
+    if(r.acerto) porDia[d].ok++;
+  }
+  return Object.keys(porDia).sort().map(d=>({
+    fecha:d, n:porDia[d].n, ok:porDia[d].ok, pct: Math.round(porDia[d].ok/porDia[d].n*100)
+  }));
+}
+
+// % de acierto en una ventana de N días hacia atrás
+function effWindow(hist, dias){
+  const corte = new Date(); corte.setDate(corte.getDate()-dias);
+  const corteStr = localDate(corte);
+  const sub = hist.filter(r => (r.fecha||'') >= corteStr);
+  if(!sub.length) return null;
+  const ok = sub.filter(r=>r.acerto).length;
+  return { pct: Math.round(ok/sub.length*100), n: sub.length, ok };
+}
+
+// calibración: % de acierto por rango de confianza del modelo
+function effCalibracion(hist){
+  const rangos = [
+    { lbl:'50–55%', min:0.50, max:0.55 },
+    { lbl:'55–60%', min:0.55, max:0.60 },
+    { lbl:'60%+',  min:0.60, max:1.01 }
+  ];
+  return rangos.map(r=>{
+    const sub = hist.filter(x=>{
+      const conf = Math.max(x.probHome, 1-x.probHome); // confianza en el favorito
+      return conf>=r.min && conf<r.max;
+    });
+    const ok = sub.filter(x=>x.acerto).length;
+    return { lbl:r.lbl, n:sub.length, pct: sub.length? Math.round(ok/sub.length*100) : null };
+  });
+}
+
+// efectividad por equipo (aparezca como local o visitante), mínimo 3 juegos
+function effPorEquipo(hist){
+  const eq = {};
+  for(const r of hist){
+    for(const nombre of [r.home, r.away]){
+      (eq[nombre] = eq[nombre] || {ok:0,n:0});
+      eq[nombre].n++;
+      if(r.acerto) eq[nombre].ok++;
+    }
+  }
+  const lista = Object.keys(eq)
+    .filter(k=>eq[k].n>=3)
+    .map(k=>({ equipo:k, n:eq[k].n, pct: Math.round(eq[k].ok/eq[k].n*100) }))
+    .sort((a,b)=> b.pct - a.pct);
+  return lista;
+}
+
+// gráfico SVG de barras: % de acierto por día (últimos 30 días con datos)
+function effChartSVG(diario){
+  const datos = diario.slice(-30);
+  if(datos.length < 2) return '';
+  const W=640, H=150, pad=24;
+  const bw = Math.max(6, Math.min(20, (W-pad*2)/datos.length - 4));
+  const step = (W-pad*2)/datos.length;
+  let bars='', labels='';
+  datos.forEach((d,i)=>{
+    const x = pad + i*step + (step-bw)/2;
+    const h = (d.pct/100)*(H-pad*2);
+    const y = H-pad-h;
+    const color = d.pct>=60?'var(--green)':(d.pct>=50?'var(--gold)':'#c0504d');
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="${color}" opacity=".85"><title>${d.fecha}: ${d.pct}% (${d.ok}/${d.n})</title></rect>`;
+  });
+  // línea del 50% (referencia: azar)
+  const y50 = H-pad-(0.5*(H-pad*2));
+  return `<svg viewBox="0 0 ${W} ${H}" class="eff-chart">
+    <line x1="${pad}" y1="${y50}" x2="${W-pad}" y2="${y50}" stroke="var(--muted)" stroke-dasharray="4 4" opacity=".5"/>
+    <text x="${W-pad}" y="${y50-4}" fill="var(--muted)" font-size="9" text-anchor="end">50% (azar)</text>
+    ${bars}
+  </svg>`;
+}
+
+function loadEffectiveness(){
+  const box = document.getElementById('effout');
+  if(!box) return;
+  let hist = getTrackingHistory();
+  // filtro por liga (registros viejos sin liga = LMB)
+  if(EFF_LIGA===23 || EFF_LIGA===1){
+    hist = hist.filter(r => (r.liga||23) === EFF_LIGA);
+  }
+  hist.sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||''));
+
+  const filtro = `
+    <div class="dash-liga-filter">
+      <button class="dlf-btn ${EFF_LIGA===null?'on':''}" onclick="setEffLiga(null)">Todas</button>
+      <button class="dlf-btn ${EFF_LIGA===23?'on':''}" onclick="setEffLiga(23)">LMB</button>
+      <button class="dlf-btn ${EFF_LIGA===1?'on':''}" onclick="setEffLiga(1)">MLB</button>
+    </div>`;
+
+  if(!hist.length){
+    box.innerHTML = `
+      <div class="dash-head">
+        <div class="dash-title">Efectividad del Modelo</div>
+        <div class="dash-sub">Confiabilidad de los pronósticos diarios (todos, no solo apostados)</div>
+      </div>
+      ${filtro}
+      <div class="dash-empty" style="padding:30px;text-align:center">
+        Aún no hay pronósticos registrados${EFF_LIGA?' para esta liga':''}.<br><br>
+        El registro es automático: cada juego que la app pronostica (con pitcher confirmado) y termina, se guarda solo.<br>
+        Regresa después de que terminen los juegos de hoy. 📊
+      </div>`;
+    return;
+  }
+
+  const total = hist.length;
+  const aciertos = hist.filter(r=>r.acerto).length;
+  const pctGlobal = Math.round(aciertos/total*100);
+  const v7 = effWindow(hist, 7);
+  const v30 = effWindow(hist, 30);
+  const diario = effDaily(hist);
+  const calib = effCalibracion(hist);
+  const equipos = effPorEquipo(hist);
+  const muestraChica = total < 30;
+
+  const aviso = muestraChica
+    ? `<div class="eff-warn">⚠️ Muestra pequeña (${total} pronósticos). Los porcentajes se estabilizan con 30+; tómalos con reserva por ahora.</div>`
+    : '';
+
+  /* ---------- 📅 SELECTOR DE DÍA ---------- */
+  const dias = diario.map(d=>d.fecha).reverse(); // más reciente primero
+  const opciones = dias.map(d=>{
+    const info = diario.find(x=>x.fecha===d);
+    return `<option value="${d}" ${EFF_DIA===d?'selected':''}>${d} · ${info.pct}% (${info.ok}/${info.n})</option>`;
+  }).join('');
+  const diaPanel = `
+    <div class="eff-section">
+      <div class="eff-section-title">📅 Ver un día específico</div>
+      <select class="eff-day-select" onchange="setEffDia(this.value)">
+        <option value="">— elige una fecha —</option>
+        ${opciones}
+      </select>
+      ${EFF_DIA ? `<div class="effd-list">${effDayDetail(hist, EFF_DIA)}</div>` : ''}
+    </div>`;
+
+  /* ---------- 🎯 SECCIÓN GANADOR ---------- */
+  const cards = `
+    <div class="dash-metrics">
+      <div class="dash-metric">
+        <div class="dm-lbl">Acierto global</div>
+        <div class="dm-val ${pctGlobal>=55?'pos':(pctGlobal<50?'neg':'')}">${pctGlobal}%</div>
+        <div class="dm-sub">${aciertos} de ${total} pronósticos</div>
+      </div>
+      <div class="dash-metric">
+        <div class="dm-lbl">Últimos 7 días</div>
+        <div class="dm-val">${v7? v7.pct+'%' : '—'}</div>
+        <div class="dm-sub">${v7? v7.ok+' de '+v7.n : 'sin datos'}</div>
+      </div>
+      <div class="dash-metric">
+        <div class="dm-lbl">Últimos 30 días</div>
+        <div class="dm-val">${v30? v30.pct+'%' : '—'}</div>
+        <div class="dm-sub">${v30? v30.ok+' de '+v30.n : 'sin datos'}</div>
+      </div>
+    </div>`;
+  const chart = effChartSVG(diario);
+  const calibRows = calib.map(c=>{
+    const barW = c.pct!==null? c.pct : 0;
+    return `<div class="eff-cal-row">
+      <span class="eff-cal-lbl">Confianza ${c.lbl}</span>
+      <div class="eff-cal-bar"><div class="eff-cal-fill" style="width:${barW}%"></div></div>
+      <span class="eff-cal-val">${c.pct!==null? c.pct+'%' : '—'} <small>(${c.n})</small></span>
+    </div>`;
+  }).join('');
+  const ganadorSection = `
+    <div class="eff-section eff-sec-ml">
+      <div class="eff-section-title">🎯 Pronóstico de GANADOR (moneyline)</div>
+      ${cards}
+      ${chart ? `<div class="eff-sub-title">Acierto por día</div>${chart}` : ''}
+      <div class="eff-sub-title">Calibración por confianza</div>
+      <div class="dash-note" style="margin:2px 0 8px">Un modelo bien calibrado acierta ~igual a la confianza que declara.</div>
+      ${calibRows}
+    </div>`;
+
+  /* ---------- 📊 SECCIÓN CARRERAS (O/U) ---------- */
+  const t = totalsStats(EFF_LIGA);
+  let carrerasBody;
+  if(!t.n){
+    carrerasBody = `<div class="dash-empty" style="padding:16px;text-align:center">Aún no hay juegos con estimación de total registrados. Se guardan solos al terminar los juegos.</div>`;
+  } else {
+    const sesgoTxt = t.sesgo>0
+      ? `Subestima ${Math.abs(t.sesgo)} carreras en promedio`
+      : (t.sesgo<0 ? `Sobrestima ${Math.abs(t.sesgo)} carreras en promedio` : 'Sin sesgo apreciable');
+    carrerasBody = `
+      <div class="dash-metrics">
+        <div class="dash-metric">
+          <div class="dm-lbl">Muestra</div>
+          <div class="dm-val">${t.n}</div>
+          <div class="dm-sub">juegos con estimación</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dm-lbl">Error medio</div>
+          <div class="dm-val">${t.errMedio}</div>
+          <div class="dm-sub">carreras de diferencia</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dm-lbl">Dentro de ±1</div>
+          <div class="dm-val ${t.dentro1Pct>=40?'pos':''}">${t.dentro1Pct}%</div>
+          <div class="dm-sub">estimaciones muy cercanas</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dm-lbl">Sesgo</div>
+          <div class="dm-val ${t.sesgo>0?'neg':(t.sesgo<0?'pos':'')}">${t.sesgo>0?'+':''}${t.sesgo}</div>
+          <div class="dm-sub">${sesgoTxt}</div>
+        </div>
+      </div>
+      <div class="dash-note" style="margin-top:8px">Con 100+ juegos, el sesgo te dirá cómo ajustar el modelo. Exporta tus datos para análisis profundo.</div>`;
+  }
+  const carrerasSection = `
+    <div class="eff-section eff-sec-ou">
+      <div class="eff-section-title">📊 Pronóstico de CARRERAS (Over/Under)</div>
+      ${carrerasBody}
+    </div>`;
+
+  /* ---------- 🏟️ EQUIPOS ---------- */
+  let equiposPanel = '';
+  if(equipos.length >= 2){
+    const top = equipos.slice(0,5);
+    const bottom = equipos.slice(-5).reverse();
+    const row = e => `<div class="eff-team-row"><span>${e.equipo}</span><b class="${e.pct>=60?'pos':(e.pct<50?'neg':'')}">${e.pct}%</b> <small>(${e.n})</small></div>`;
+    equiposPanel = `
+      <div class="eff-section">
+        <div class="eff-section-title">🏟️ Efectividad por equipo (ganador)</div>
+        <div class="eff-teams-grid">
+          <div>
+            <div class="eff-team-head pos">▲ Donde más acierta</div>
+            ${top.map(row).join('')}
+          </div>
+          <div>
+            <div class="eff-team-head neg">▼ Donde menos acierta</div>
+            ${bottom.map(row).join('')}
+          </div>
+        </div>
+        <div class="dash-note" style="margin-top:8px">Mínimo 3 juegos por equipo. Confianza con unos, cautela con otros.</div>
+      </div>`;
+  }
+
+  box.innerHTML = `
+    <div class="dash-head">
+      <div class="dash-title">Efectividad del Modelo</div>
+      <div class="dash-sub">Confiabilidad de los pronósticos diarios (todos, no solo apostados)</div>
+    </div>
+    ${filtro}
+    ${aviso}
+    ${diaPanel}
+    ${ganadorSection}
+    ${carrerasSection}
+    ${equiposPanel}`;
+}
+
 // Grafica de linea de la evolucion del bank
 function bankChartSVG(curva, maxBank, inicial){
   const W=560, H=200, pad=34;
@@ -2520,6 +3034,25 @@ function loadStrategy(){
         </select>
         <div id="mb-fields"></div>
         <button class="manual-save" onclick="registerManualBet()">Guardar apuesta</button>
+      </div>
+    </div>
+    <div class="manual-bet">
+      <button class="manual-toggle" onclick="togglePastImport()">📋 Importar apuestas pasadas</button>
+      <div class="past-import" id="pastImportForm" style="display:none">
+        <div class="import-help">
+          Pega tus apuestas pasadas, una por línea. Formato:<br>
+          <code>fecha | equipo | tipo | monto | cuota | resultado</code><br>
+          <b>tipo:</b> ML, OU, HC, parlay<br>
+          <b>resultado:</b> won, lost, push<br>
+          Ejemplo: <code>2026-07-10 | Sultanes | ML | 100 | -150 | won</code><br>
+          <code>2026-07-10 | Over 9.5 | OU | 50 | -120 | lost</code><br>
+          <code>2026-07-11 | Parlay 3 equipos | parlay | 200 | +450 | won</code>
+        </div>
+        <textarea id="pastBetsText" class="import-textarea" placeholder="2026-07-10 | Sultanes | ML | 100 | -150 | won
+2026-07-10 | Over 9.5 | OU | 50 | -120 | lost
+..."></textarea>
+        <div id="pastBetsPreview" class="import-preview"></div>
+        <button class="import-apply" onclick="applyPastBets()">Importar apuestas</button>
       </div>
     </div>`;
 
@@ -2773,6 +3306,92 @@ function toggleManual(){
   const abrir = (f.style.display==='none');
   f.style.display = abrir ? 'block' : 'none';
   if(abrir) onManualTypeChange(); // pintar los campos del tipo por defecto
+}
+
+function togglePastImport(){
+  const f = document.getElementById('pastImportForm');
+  if(!f) return;
+  f.style.display = f.style.display==='none' ? 'block' : 'none';
+  if(f.style.display==='block'){
+    const ta = document.getElementById('pastBetsText');
+    if(ta){ ta.value=''; ta.oninput = previewPastBets; }
+    document.getElementById('pastBetsPreview').innerHTML = '';
+  }
+}
+
+function previewPastBets(){
+  const filas = parsePastBets();
+  const box = document.getElementById('pastBetsPreview');
+  if(!filas.length){ box.innerHTML=''; return; }
+  let html = '<div class="imp-prev-title">Vista previa:</div>';
+  for(const f of filas){
+    if(f.valid){
+      const resCls = f.resultado==='won'?'ok':'no';
+      html += `<div class="imp-prev-row ${resCls}">${f.resultado==='won'?'✓':'✗'} <b>${f.equipo}</b> · ${f.tipo.toUpperCase()} · $${f.monto} · cuota ${f.cuota} · ${f.resultado} · ${f.fecha}</div>`;
+    } else {
+      html += `<div class="imp-prev-row no">✗ Formato inválido: "${f.raw}"</div>`;
+    }
+  }
+  box.innerHTML = html;
+}
+
+function parsePastBets(){
+  const txt = document.getElementById('pastBetsText').value||'';
+  const lineas = txt.split('\n').map(l=>l.trim()).filter(Boolean);
+  const filas = [];
+  for(const linea of lineas){
+    const p = linea.split(/\s*[|;\t]\s*/).map(x=>x.trim());
+    if(p.length < 5){
+      filas.push({ valid:false, raw:linea }); continue;
+    }
+    const fecha = p[0] || '';
+    const equipo = p[1] || '';
+    const tipo = (p[2]||'').toLowerCase().replace(/money\s*line/i,'ML');
+    const monto = parseFloat((p[3]||'').replace(/[^0-9.-]/g,''));
+    const cuota = parseFloat((p[4]||'').replace('−','-').replace('+',''));
+    const resultado = (p[5]||'pending').toLowerCase().trim();
+    if(!equipo || isNaN(monto) || isNaN(cuota)){
+      filas.push({ valid:false, raw:linea }); continue;
+    }
+    filas.push({ valid:true, fecha, equipo, tipo, monto, cuota, resultado });
+  }
+  return filas;
+}
+
+function applyPastBets(){
+  const filas = parsePastBets();
+  const validas = filas.filter(f=>f.valid);
+  if(!validas.length){ alert('No se encontraron apuestas válidas. Revisa el formato.'); return; }
+  if(!confirm(`Vas a importar ${validas.length} apuesta(s). ¿Continuar?`)) return;
+
+  const s = getBank();
+  // si no tiene bank definido, inicializar
+  if(!s.bankroll) s.bankroll = 500;
+
+  for(const f of validas){
+    const betKind = f.tipo.includes('ou') || f.tipo.includes('over') || f.tipo.includes('under') ? 'overunder'
+      : f.tipo.includes('hc') || f.tipo.includes('handicap') ? 'handicap'
+      : f.tipo.includes('parlay') ? 'parlay' : 'moneyline';
+
+    const estado = ['won','lost','push'].includes(f.resultado) ? f.resultado : 'pending';
+
+    s.bets.push({
+      id: 'b'+Date.now()+Math.random().toString(36).slice(2,6),
+      manual: true,
+      imported: true,
+      betKind: betKind,
+      equipo: f.equipo,
+      match: f.equipo,
+      monto: f.monto,
+      cuotaAmerican: f.cuota,
+      fecha: f.fecha || new Date().toISOString().slice(0,10),
+      estado: estado,
+      liga: SPORT_ID
+    });
+  }
+  saveBank(s);
+  loadStrategy();
+  alert(`${validas.length} apuesta(s) importadas ✅`);
 }
 
 // genera las <option> con los partidos del dia (para over/under y handicap)
