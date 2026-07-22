@@ -258,9 +258,15 @@
   .social-date-picker{display:flex;align-items:center;gap:10px;margin-bottom:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
   .social-date-picker label{font-size:12.5px;color:var(--muted);font-weight:700}
   .social-date-picker input[type=date]{background:transparent;border:1px solid var(--line);border-radius:7px;color:var(--cream);padding:6px 8px;font-family:'Archivo';font-size:13px}
-  .social-preview-toggle{display:flex;justify-content:flex-end;margin-bottom:8px}
+  .social-preview-toggle{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
   .social-preview-toggle button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'Archivo';cursor:pointer}
   .social-preview-toggle button:hover{color:var(--cream)}
+  .social-pager{display:flex;align-items:center;gap:10px}
+  .social-pager button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;width:30px;height:30px;font-size:14px;font-family:'Archivo';cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .social-pager button:hover:not(:disabled){color:var(--cream);border-color:var(--cream)}
+  .social-pager button:disabled{opacity:.35;cursor:default}
+  .social-pager-label{font-size:12px;color:var(--muted);font-weight:700;min-width:60px;text-align:center}
+  .social-actions-post{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
   .social-warn{background:rgba(232,176,75,.1);border:1px solid rgba(232,176,75,.3);color:var(--gold);padding:10px 13px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:14px}
   .social-ok{background:rgba(63,169,106,.1);border:1px solid rgba(63,169,106,.3);color:#1e7d3c;padding:10px 13px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:14px}
   #socialPreviewWrap{width:340px;max-width:100%;background:#000;border-radius:14px;overflow:hidden;position:relative;border:1px solid var(--line);margin:0 auto;transition:width .2s}
@@ -302,9 +308,9 @@
   .tpl-plate{position:absolute;left:50%;top:50%;width:36px;height:29px;background:#f5efe3;border:2px solid #f5efe3;clip-path:polygon(0 0,100% 0,100% 55%,50% 100%,0 55%);transform:translate(-50%,-50%)}
 
   /* ---- Carrusel de Análisis (una imagen por partido) ---- */
-  .csl-enfrentamiento{display:flex;align-items:center;justify-content:space-between;padding:34px 56px 26px;border-bottom:1px solid #ddd6c4}
+  .csl-enfrentamiento{display:flex;align-items:center;justify-content:space-between;padding:48px 56px 40px;border-bottom:1px solid #ddd6c4;background-color:#f5efe3;background-image:radial-gradient(circle,#e9e1cf 1px,transparent 1.2px);background-size:14px 14px}
   .csl-equipo{display:flex;flex-direction:column;align-items:center;gap:14px;flex:1}
-  .csl-shield{width:168px;height:168px}
+  .csl-shield{width:216px;height:216px}
   .csl-equipo-nombre{font-family:'Bebas Neue';font-size:30px;letter-spacing:.5px;color:#07251e;text-align:center;text-transform:uppercase}
   .csl-vs{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;padding:0 22px}
   .csl-pcts{display:flex;align-items:center;gap:16px}
@@ -314,21 +320,67 @@
   .csl-pitchers{display:flex;padding:0 56px;gap:24px}
   .csl-pitcher{flex:1;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #ddd6c4;border-radius:14px;padding:18px 20px}
   .csl-pitcher-foto-wrap{width:76px;height:76px;flex-shrink:0;border-radius:50%;overflow:hidden}
-  .csl-pitcher-foto,.csl-pitcher-foto-fallback{width:100%;height:100%;object-fit:cover;display:block}
+  .csl-pitcher-foto{width:100%;height:100%;background-size:cover;background-position:center center;display:block}
+  .csl-pitcher-foto-fallback{width:100%;height:100%;object-fit:cover;display:block}
   .csl-pitcher-info{min-width:0}
   .csl-pitcher-nombre{font-family:'Bebas Neue';font-size:24px;color:#07251e;letter-spacing:.3px}
   .csl-pitcher-stats{font-family:'Anton',sans-serif;font-size:17px;color:#07251e;margin-top:8px}
   .csl-pitcher-extra{font-family:'Archivo';font-size:13px;color:#8a8272;margin-top:5px}
-  .csl-historial-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:8px;min-height:0}
+  .csl-historial-wrap{padding:26px 0 30px}
   .csl-historial{display:flex;padding:0 56px;gap:24px}
   .csl-h2h-col{flex:1}
   .csl-h2h-equipo{font-family:'Anton',sans-serif;font-size:18px;letter-spacing:1.5px;color:#f5efe3;background:#07251e;text-align:center;text-transform:uppercase;padding:14px 0;border-radius:10px 10px 0 0}
-  .csl-h2h-row{font-family:'Archivo';font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:space-between;padding:22px 18px;border-bottom:1px solid #e5e0d3;background:#fff}
+  .csl-h2h-row{font-family:'Archivo';font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:space-between;padding:42px 18px;border-bottom:1px solid #e5e0d3;background:#fff}
   .csl-h2h-row:last-child{border-radius:0 0 8px 8px}
   .csl-h2h-badge{font-family:'Anton',sans-serif;font-size:13px;color:#fff;border-radius:5px;padding:2px 9px;letter-spacing:.5px}
   .csl-h2h-row.fav .csl-h2h-badge{background:#1e7d3c}
   .csl-h2h-row.dog .csl-h2h-badge{background:#9b1412}
   .csl-h2h-vacio{font-family:'Archivo';font-size:13px;color:#8a8272;font-style:italic;background:#fff;padding:14px;text-align:center;border-radius:0 0 8px 8px}
+
+  /* Carrusel editorial: composición independiente; no modifica la plantilla de pronósticos ni resultados. */
+  .tpl01.csl-template{background:#f7f1e5}
+  .csl-template .tpl-header{box-sizing:border-box;height:232px;padding:28px 44px 0}
+  .csl-template .tpl-logo,.csl-template .tpl-lmb{width:150px;height:150px;top:28px}
+  .csl-template .tpl-logo{left:44px}.csl-template .tpl-lmb{right:44px}
+  .csl-template .tpl-brand{font-size:76px;letter-spacing:7px}
+  .csl-template .tpl-sub{display:flex;align-items:center;gap:16px;font-size:27px;letter-spacing:3px;margin-top:17px;white-space:nowrap}
+  .csl-template .tpl-sub::before,.csl-template .tpl-sub::after{content:'';width:78px;height:1px;background:#b98316;box-shadow:7px 0 0 -3px #b98316}
+  .csl-template .tpl-sub::after{box-shadow:-7px 0 0 -3px #b98316}
+  .csl-template .tpl-datebar{width:410px;box-sizing:border-box;margin:-5px auto 0;padding:10px 22px 11px;border-radius:28px;background:#07251e;color:#f7f1e5;font-size:26px;line-height:1;letter-spacing:2.5px}
+  .csl-template .csl-enfrentamiento{position:relative;isolation:isolate;height:368px;box-sizing:border-box;padding:28px 72px 20px;border:0;background:#f7f1e5;overflow:hidden}
+  .csl-template .csl-enfrentamiento::before,.csl-template .csl-enfrentamiento::after{content:'';position:absolute;z-index:-1;width:250px;height:190px;top:91px;background-image:radial-gradient(circle,#dfcfae 1.8px,transparent 2px);background-size:13px 13px;opacity:.72}
+  .csl-template .csl-enfrentamiento::before{left:18px}.csl-template .csl-enfrentamiento::after{right:18px}
+  .csl-template .csl-equipo{position:relative;z-index:1;gap:10px}
+  .csl-template .csl-shield{width:250px;height:250px}
+  .csl-template .csl-equipo-nombre{font-size:34px;line-height:1.05;letter-spacing:.7px;white-space:nowrap}
+  .csl-template .csl-vs{position:relative;z-index:1;gap:15px;padding:0 18px}
+  .csl-template .csl-vs::before{content:'';position:absolute;top:17px;bottom:45px;width:1px;background:#07251e}
+  .csl-template .csl-pcts{gap:24px}
+  .csl-template .csl-vs .tpl-pct{font-size:92px;min-width:0}
+  .csl-template .csl-vs-txt{display:grid;place-items:center;width:56px;height:56px;border:1.5px solid #07251e;border-radius:50%;font-family:'Bebas Neue';font-size:25px;letter-spacing:0;color:#07251e;background:#f7f1e5;z-index:1}
+  .csl-template .tpl-time{display:flex;align-items:center;gap:10px;font-family:'Bebas Neue';font-size:24px;letter-spacing:1px;color:#07251e;margin:0}
+  .csl-template .tpl-time::before{content:'◷';font-family:Arial,sans-serif;font-size:29px;font-weight:400}
+  .csl-template .csl-seccion-titulo{position:relative;display:flex;align-items:center;justify-content:center;gap:16px;padding:21px 44px 17px;font-size:25px;letter-spacing:3px}
+  .csl-template .csl-seccion-titulo::before,.csl-template .csl-seccion-titulo::after{content:'';height:1px;flex:1;background:#b98316}
+  .csl-template .csl-pitchers{padding:0 22px;gap:16px}
+  .csl-template .csl-pitcher{height:302px;box-sizing:border-box;position:relative;align-items:stretch;gap:12px;border:1.5px solid #07251e;border-radius:10px;background:rgba(255,255,255,.2);padding:14px 15px 10px;overflow:hidden}
+  .csl-template .csl-pitcher-foto-wrap{width:210px;height:280px;align-self:flex-end;border-radius:0;overflow:hidden;background:transparent}
+  .csl-template .csl-pitcher-foto-fallback{object-fit:contain;object-position:bottom center}
+  .csl-template .csl-pitcher-info{display:flex;flex:1;min-width:0;flex-direction:column;padding-top:7px}
+  .csl-template .csl-pitcher-nombre{font-size:32px;line-height:1;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .csl-template .csl-pitcher-role{align-self:flex-start;margin-top:11px;padding:5px 11px 4px;border-radius:3px;background:#07251e;color:#fff;font-family:'Anton',sans-serif;font-size:13px;letter-spacing:.6px}
+  .csl-template .csl-pitcher-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:20px 0 18px;font-family:'Bebas Neue';font-size:20px;color:#07251e}
+  .csl-template .csl-pitcher-stat{padding:0 9px;text-align:center;border-left:1px solid #aaa294}.csl-template .csl-pitcher-stat:first-child{padding-left:0;border-left:0}
+  .csl-template .csl-pitcher-stat b{display:block;font-family:'Anton',sans-serif;font-size:30px;font-weight:400;line-height:1.15}
+  .csl-template .csl-pitcher-extra{display:flex;gap:20px;border-top:1px solid #aaa294;padding-top:16px;margin:0;font-family:'Bebas Neue';font-size:23px;color:#07251e}
+  .csl-template .csl-pitcher-extra span{white-space:nowrap}
+  .csl-template .csl-historial-wrap{padding:0 22px 24px}
+  .csl-template .csl-historial{padding:0;gap:16px}
+  .csl-template .csl-h2h-equipo{font-size:19px;letter-spacing:1px;padding:11px 8px;border-radius:9px;background:#07251e}
+  .csl-template .csl-h2h-row{min-height:65px;box-sizing:border-box;display:grid;grid-template-columns:56px 38px 18px 38px minmax(0,1fr) auto 34px;gap:6px;align-items:center;padding:0 16px 0 13px;border:1px solid #e1d7c3;border-top:0;border-bottom-color:#e1d7c3;background:rgba(255,255,255,.42);font-family:'Bebas Neue';font-weight:400;font-size:17px;line-height:1}
+  .csl-template .csl-h2h-date{font-size:15px;color:#07251e}.csl-template .csl-h2h-logo{display:block;justify-self:center;align-self:center;width:38px;height:38px;object-fit:contain}.csl-template .csl-h2h-vs{font-size:14px;line-height:1;color:#07251e;text-align:center}.csl-template .csl-h2h-rival{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.csl-template .csl-h2h-score{font-family:'Anton',sans-serif;font-size:26px;line-height:1;color:#1e7d3c;padding-left:9px;border-left:1px solid #c8beab}.csl-template .csl-h2h-row.dog .csl-h2h-score{color:#9b1412}
+  .csl-template .csl-h2h-badge{justify-self:end;font-size:15px;border-radius:4px;padding:7px 9px 5px}.csl-template .csl-h2h-vacio{font-size:15px;padding:22px;border:1px solid #e1d7c3}
+  .csl-template .tpl-footer{height:58px}.csl-template .tpl-footer .bar{background:#07251e}.csl-template .tpl-plate{width:31px;height:25px;background:#f7f1e5;border-color:#f7f1e5}
 
   /* ---- Plantilla de Resultados ---- */
   .res-record{text-align:center;padding:28px 40px;border-bottom:1px solid #ddd6c4}
@@ -709,7 +761,6 @@
         <div class="social-note">Plantilla 01 · Pronósticos del Día (LMB). Usa los partidos ya cargados en la pestaña <b>Partidos</b> para la fecha seleccionada. Espera a que los pitchers estén confirmados antes de generar, para que la imagen salga completa.</div>
         <div class="social-actions">
           <button class="social-btn" onclick="generateSocialContent()">Generar Contenido</button>
-          <button class="social-btn social-btn-dl" id="socialDownloadBtn" style="display:none" onclick="downloadSocialPng()">Descargar PNG</button>
         </div>
       </div>
 
@@ -728,18 +779,26 @@
         </div>
         <div class="social-actions">
           <button class="social-btn" id="resultadosBtn" onclick="generateResultadosContenido()">Generar Resultados</button>
-          <button class="social-btn social-btn-dl" id="resultadosDownloadBtn" style="display:none" onclick="downloadSocialPng('resultadosDownloadBtn','nahuales-bc-resultados',document.getElementById('resultadosDateInput').value)">Descargar PNG</button>
         </div>
       </div>
 
       <div id="social-status"></div>
       <div class="social-preview-toggle" id="socialPreviewToggleWrap" style="display:none">
+        <div class="social-pager" id="socialPagerWrap" style="display:none">
+          <button onclick="socialPagerIr(-1)" id="socialPagerPrev">‹</button>
+          <span class="social-pager-label" id="socialPagerLabel">1 de 1</span>
+          <button onclick="socialPagerIr(1)" id="socialPagerNext">›</button>
+        </div>
         <button onclick="toggleSocialPreviewSize()" id="socialPreviewToggleBtn">Ver en grande</button>
       </div>
       <div id="socialPreviewWrap" style="display:none">
         <div id="socialScale">
           <div id="tpl-social-active"></div>
         </div>
+      </div>
+      <div class="social-actions-post" id="socialDownloadActions" style="display:none">
+        <button class="social-btn social-btn-dl" id="socialDownloadEstaBtn" onclick="socialDescargarActual()">Descargar esta</button>
+        <button class="social-btn social-btn-dl" id="socialDownloadTodasBtn" onclick="socialDescargarTodas()">Descargar todas</button>
       </div>
     </div>
   </div>
@@ -2146,6 +2205,7 @@ async function loadForm(){
         (porEquipo[id] = porEquipo[id] || []).push({
           win: gano, rf: side.score, ra: rival.score,
           esLocal,
+          rivalId: rival.team?.id || null,
           rival: rival.team?.abbreviation || rival.team?.teamName || rival.team?.name || '',
           fecha: j.fecha || ''
         });
@@ -2409,7 +2469,7 @@ function logoUrl(teamId){ return `https://www.mlbstatic.com/team-logos/${teamId}
 // especialmente de LMB, ya que este patron se confirmo solo en contexto MLB.
 // Cuando falla, la plantilla usa una silueta gris dibujada localmente
 // (ver renderCarrusel01), nunca deja un <img> roto.
-function pitcherPhotoUrl(personId){ return `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${personId}/headshot/67/current`; }
+function pitcherPhotoUrl(personId){ return `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/c_fill,g_face,ar_3:4,w_300,q_auto:best/v1/people/${personId}/headshot/67/current`; }
 
 let STANDING_LOADED = false;
 function setView(v){
@@ -2590,6 +2650,22 @@ function renderPlantilla01(games, fechaTxt){
     </div>`;
 }
 
+// Convierte los decimales técnicos de outs (x.333…/x.666…) a la notación
+// oficial de innings: x.1 y x.2. Los demás valores nunca exceden un decimal.
+function formatIP(valor){
+  if(valor===null || valor===undefined || valor==='') return '–';
+  const numero = Number(valor);
+  if(!Number.isFinite(numero)) return '–';
+  let enteros = Math.trunc(numero);
+  const fraccion = numero - enteros;
+  let decimal;
+  if(Math.abs(fraccion - 1/3) < .02) decimal = 1;
+  else if(Math.abs(fraccion - 2/3) < .02) decimal = 2;
+  else decimal = Math.round(fraccion * 10);
+  if(decimal >= 10){ enteros += 1; decimal = 0; }
+  return `${enteros}.${decimal}`;
+}
+
 // Motor de render del Carrusel de Análisis (una imagen por partido).
 // Recibe UN partido ya normalizado por collectSocialGames() (con pitchers y
 // forma reciente incluidos) y la fecha formateada. Header/footer idénticos a
@@ -2604,33 +2680,45 @@ function renderCarrusel01(g, fechaTxt){
   const filaPitcher = (p, lado)=>{
     if(!p) return `<div class="csl-pitcher ${lado}"><div class="csl-pitcher-nombre">Pitcher no confirmado</div></div>`;
     const record = (p.wins!==null && p.losses!==null) ? `${p.wins}-${p.losses}` : '–';
+    // html2canvas 1.4.1 no interpreta object-fit en <img>: estira el bitmap
+    // completo al tamaño del contenedor. background-size:cover sí lo pinta
+    // bien, así que la foto se renderiza como background-image de un div; el
+    // <img> oculto es solo una "sonda" para detectar con onerror nativo si
+    // la foto no carga, sin volver async el render del carrusel.
     const fotoHTML = p.foto
-      ? `<img class="csl-pitcher-foto" src="${p.foto}" crossorigin="anonymous" alt="" onerror="this.outerHTML='${siluetaSVG.replace(/'/g,"\\'")}'">`
+      ? `<div class="csl-pitcher-foto" style="background-image:url('${p.foto.replace(/'/g,'%27')}')"></div><img src="${p.foto}" alt="" style="display:none" onerror="this.previousElementSibling.outerHTML='${siluetaSVG.replace(/'/g,"\\'")}'">`
       : siluetaSVG;
     return `
       <div class="csl-pitcher ${lado}">
         <div class="csl-pitcher-foto-wrap">${fotoHTML}</div>
         <div class="csl-pitcher-info">
           <div class="csl-pitcher-nombre">${p.nombre}</div>
-          <div class="csl-pitcher-stats">ERA ${pct(p.era)} · WHIP ${pct(p.whip)} · ${record}</div>
-          <div class="csl-pitcher-extra">${pct(p.so)} K · ${pct(p.ip)} IP</div>
+          <div class="csl-pitcher-role">ABRIDOR</div>
+          <div class="csl-pitcher-stats">
+            <div class="csl-pitcher-stat">ERA<b>${pct(p.era)}</b></div>
+            <div class="csl-pitcher-stat">WHIP<b>${pct(p.whip)}</b></div>
+            <div class="csl-pitcher-stat">RÉCORD<b>${record}</b></div>
+          </div>
+          <div class="csl-pitcher-extra"><span>◉ ${pct(p.so)} K</span><span>◷ ${formatIP(p.ip)} IP</span></div>
         </div>
       </div>`;
   };
 
-  const filaHistorial = (forma, nombreEquipo)=>{
+  const filaHistorial = (forma, nombreEquipo, logoEquipo)=>{
     if(!forma.length) return `<div class="csl-h2h-vacio">Sin historial reciente disponible</div>`;
     return forma.map(j=>{
       const claseResultado = j.win ? 'fav' : 'dog';
-      const propio = j.win ? nombreEquipo : j.rival;
-      const rival = j.win ? j.rival : nombreEquipo;
       const badge = j.win ? 'G' : 'P';
-      return `<div class="csl-h2h-row ${claseResultado}"><span>${propio} ${j.rf}-${j.ra} ${rival}</span><span class="csl-h2h-badge">${badge}</span></div>`;
+      const fecha = j.fecha ? new Date(`${j.fecha}T12:00:00`).toLocaleDateString('es-MX',{day:'2-digit',month:'short'}).replace('.','').toUpperCase() : '—';
+      const rivalLogo = j.rivalId ? logoUrl(j.rivalId) : logoEquipo;
+      const logoLocal = j.esLocal ? logoEquipo : rivalLogo;
+      const logoVisitante = j.esLocal ? rivalLogo : logoEquipo;
+      return `<div class="csl-h2h-row ${claseResultado}"><span class="csl-h2h-date">${fecha}</span><img class="csl-h2h-logo" src="${logoLocal}" crossorigin="anonymous" alt=""><span class="csl-h2h-vs">VS</span><img class="csl-h2h-logo" src="${logoVisitante}" crossorigin="anonymous" alt=""><span class="csl-h2h-rival">${j.rival || nombreEquipo}</span><span class="csl-h2h-score">${j.rf}-${j.ra}</span><span class="csl-h2h-badge">${badge}</span></div>`;
     }).join('');
   };
 
   return `
-    <div class="tpl01">
+    <div class="tpl01 csl-template">
       <div class="tpl-header">
         <img class="tpl-logo" src="${NAHUALES_LOGO_B64}" alt="Nahuales BC">
         <div class="tpl-title-block">
@@ -2671,11 +2759,11 @@ function renderCarrusel01(g, fechaTxt){
         <div class="csl-historial">
           <div class="csl-h2h-col">
             <div class="csl-h2h-equipo">${g.homeTeam}</div>
-            ${filaHistorial(g.homeForma, g.homeTeam)}
+            ${filaHistorial(g.homeForma, g.homeTeam, g.homeLogo)}
           </div>
           <div class="csl-h2h-col">
             <div class="csl-h2h-equipo">${g.awayTeam}</div>
-            ${filaHistorial(g.awayForma, g.awayTeam)}
+            ${filaHistorial(g.awayForma, g.awayTeam, g.awayLogo)}
           </div>
         </div>
       </div>
@@ -2760,32 +2848,139 @@ const PLANTILLAS = {
   resultados01: { render: renderResultados01 }
 };
 
+// Máximo de partidos por imagen de Pronósticos antes de que las filas
+// empiecen a comprimirse por debajo de la altura cómoda. No es arbitrario:
+// se deriva del propio fitRowsToFrame() — con el header/datebar/footer
+// actuales, 1006px disponibles / 103px (alturaNormal) ≈ 9.7, así que 9 es
+// el máximo real donde todas las filas caben a su altura normal.
+const MAX_PARTIDOS_POR_IMAGEN = 9;
+
+// Divide la lista de partidos (ya en orden cronológico, tal como los
+// entrega collectSocialGames) en páginas para Pronósticos del Día. Si
+// caben en una sola imagen, devuelve un array de una sola página. Si no,
+// calcula cuántas páginas hacen falta y reparte PAREJO entre ellas (no
+// llena la primera al tope y deja el resto a la última) — así ninguna
+// imagen del lote se ve mucho más llena que las demás.
+function paginarPartidos(games){
+  if(games.length <= MAX_PARTIDOS_POR_IMAGEN) return [games];
+  const numPaginas = Math.ceil(games.length / MAX_PARTIDOS_POR_IMAGEN);
+  const porPagina = Math.ceil(games.length / numPaginas);
+  const paginas = [];
+  for(let i=0; i<games.length; i+=porPagina){
+    paginas.push(games.slice(i, i+porPagina));
+  }
+  return paginas;
+}
+
+// Estado central de "contenido generado" en la pestaña Social, compartido
+// por las tres plantillas (Pronósticos, Carrusel, Resultados). Se rellena
+// de forma distinta según la pestaña:
+//  - Pronósticos y Resultados: 'unidades' ya trae TODOS los datos
+//    calculados de una vez (son pocas páginas y livianas de renderizar).
+//  - Carrusel: 'unidades' trae los datos crudos de cada partido (liviano),
+//    pero el HTML renderizado de cada uno se calcula BAJO DEMANDA la
+//    primera vez que se navega a ese índice, y se guarda en 'htmlCache'
+//    para no volver a calcularlo si el usuario regresa a un partido ya
+//    visto — evita una espera larga al generar un día con muchos juegos.
+let SOCIAL_CONTENIDO = null; // {tipo, unidades, indice, fechaTxt, htmlCache, render}
+
+function socialContenidoReset(){
+  SOCIAL_CONTENIDO = null;
+  const pagerWrap = document.getElementById('socialPagerWrap');
+  const dlActions = document.getElementById('socialDownloadActions');
+  if(pagerWrap) pagerWrap.style.display = 'none';
+  if(dlActions) dlActions.style.display = 'none';
+}
+
+// Pinta en pantalla la unidad actual (SOCIAL_CONTENIDO.indice) y actualiza
+// el paginador. Para Carrusel, renderiza bajo demanda y cachea el
+// resultado; para Pronósticos/Resultados, el HTML ya está calculado.
+async function socialPagerRender(){
+  const c = SOCIAL_CONTENIDO;
+  if(!c) return;
+  const tpl = document.getElementById('tpl-social-active');
+  const total = c.unidades.length;
+
+  let html = c.htmlCache[c.indice];
+  if(html === undefined){
+    html = await c.render(c.unidades[c.indice], c.fechaTxt, c.indice);
+    c.htmlCache[c.indice] = html;
+  }
+  tpl.innerHTML = html;
+
+  const pagerWrap = document.getElementById('socialPagerWrap');
+  const label = document.getElementById('socialPagerLabel');
+  const btnPrev = document.getElementById('socialPagerPrev');
+  const btnNext = document.getElementById('socialPagerNext');
+  if(total > 1){
+    pagerWrap.style.display = '';
+    label.textContent = `${c.indice+1} de ${total}`;
+    btnPrev.disabled = c.indice===0;
+    btnNext.disabled = c.indice===total-1;
+  } else {
+    pagerWrap.style.display = 'none';
+  }
+
+  const dlActions = document.getElementById('socialDownloadActions');
+  const btnTodas = document.getElementById('socialDownloadTodasBtn');
+  dlActions.style.display = '';
+  btnTodas.style.display = total > 1 ? '' : 'none';
+
+  if(c.tipo === 'pronosticos') fitRowsToFrame(c.unidades[c.indice].length, 'tpl-social-active');
+  scaleSocialPreview('tpl-social-active');
+}
+
+// Botones ‹ › del paginador.
+function socialPagerIr(delta){
+  const c = SOCIAL_CONTENIDO;
+  if(!c) return;
+  const nuevo = c.indice + delta;
+  if(nuevo < 0 || nuevo >= c.unidades.length) return;
+  c.indice = nuevo;
+  socialPagerRender();
+}
+
 function generateSocialContent(){
-  const tplId = 'tpl-social-active';
   const activa = PLANTILLAS.plantilla01;
   const games = collectSocialGames();
-  const tpl = document.getElementById(tplId);
+  const tpl = document.getElementById('tpl-social-active');
   const statusBox = document.getElementById('social-status');
   const wrap = document.getElementById('socialPreviewWrap');
-  const dlBtn = document.getElementById('socialDownloadBtn');
 
   if(!games.length){
     statusBox.innerHTML = `<div class="social-warn">No hay partidos cargados para esta fecha. Ve a la pestaña <b>Partidos</b>, confirma que cargaron los juegos del día, y regresa aquí.</div>`;
     wrap.style.display = 'none';
-    dlBtn.style.display = 'none';
     tpl.innerHTML = '';
+    socialContenidoReset();
     return;
   }
 
   const sinPitcher = games.filter(g=>!g.hasFull).length;
   const fechaTxt = formatFechaLarga(dateInput.value);
+  const paginas = paginarPartidos(games);
 
-  tpl.innerHTML = activa.render(games, fechaTxt);
+  // Cálculo completo de una vez: Pronósticos son pocas páginas (máximo
+  // 2-3 en un día muy cargado) y cada una es liviana de renderizar, así
+  // que no hace falta diferir el cálculo — se llena htmlCache entero
+  // desde el inicio y la navegación entre páginas es instantánea.
+  const htmlCache = paginas.map(pagina => activa.render(pagina, fechaTxt));
+  SOCIAL_CONTENIDO = {
+    tipo: 'pronosticos',
+    unidades: paginas,
+    indice: 0,
+    fechaTxt,
+    htmlCache,
+    render: (pagina, fTxt) => activa.render(pagina, fTxt),
+    nombreArchivo: (i, total) => `nahuales-bc-pronosticos-${dateInput.value||'hoy'}${total>1?`-${String(i+1).padStart(2,'0')}-de-${total}`:''}.png`
+  };
 
+  const avisoPaginas = paginas.length > 1
+    ? ` Se generaron <b>${paginas.length} imágenes</b> (${paginas.map(p=>p.length).join(' + ')} partidos) — usa las flechas para revisarlas antes de descargar.`
+    : '';
   if(sinPitcher > 0){
-    statusBox.innerHTML = `<div class="social-warn">⚠️ ${sinPitcher} de ${games.length} partido(s) aún sin pitcher confirmado — su probabilidad se muestra como "—". Si quieres el dato completo, espera la confirmación y presiona "Generar Contenido" otra vez.</div>`;
+    statusBox.innerHTML = `<div class="social-warn">⚠️ ${sinPitcher} de ${games.length} partido(s) aún sin pitcher confirmado — su probabilidad se muestra como "—". Si quieres el dato completo, espera la confirmación y presiona "Generar Contenido" otra vez.${avisoPaginas}</div>`;
   } else {
-    statusBox.innerHTML = `<div class="social-ok">✅ ${games.length} partido(s) listos, todos con pitcher confirmado.</div>`;
+    statusBox.innerHTML = `<div class="social-ok">✅ ${games.length} partido(s) listos, todos con pitcher confirmado.${avisoPaginas}</div>`;
   }
 
   wrap.style.display = '';
@@ -2794,9 +2989,7 @@ function generateSocialContent(){
   const toggleBtn1 = document.getElementById('socialPreviewToggleBtn');
   if(toggleWrap1) toggleWrap1.style.display = '';
   if(toggleBtn1) toggleBtn1.textContent = 'Ver en grande';
-  dlBtn.style.display = '';
-  fitRowsToFrame(games.length, tplId);
-  scaleSocialPreview(tplId);
+  socialPagerRender();
 }
 
 // Genera la Plantilla de Resultados usando la fecha propia del selector de
@@ -2805,19 +2998,17 @@ function generateSocialContent(){
 // importar si esos partidos siguen cargados en GAMES o si es una fecha
 // pasada. Sigue el mismo patrón de UI que generateSocialContent.
 function generateResultadosContenido(){
-  const tplId = 'tpl-social-active';
   const fechaInput = document.getElementById('resultadosDateInput');
   const fechaISO = fechaInput ? fechaInput.value : '';
-  const tpl = document.getElementById(tplId);
+  const tpl = document.getElementById('tpl-social-active');
   const statusBox = document.getElementById('social-status');
   const wrap = document.getElementById('socialPreviewWrap');
-  const dlBtn = document.getElementById('resultadosDownloadBtn');
 
   if(!fechaISO){
     statusBox.innerHTML = `<div class="social-warn">Selecciona una fecha para consultar.</div>`;
     wrap.style.display = 'none';
-    if(dlBtn) dlBtn.style.display = 'none';
     tpl.innerHTML = '';
+    socialContenidoReset();
     return;
   }
 
@@ -2826,15 +3017,38 @@ function generateResultadosContenido(){
   if(!datos.total){
     statusBox.innerHTML = `<div class="social-warn">No hay resultados guardados para esta fecha. Los resultados se guardan automáticamente desde <b>Control</b> una vez que los partidos terminan.</div>`;
     wrap.style.display = 'none';
-    if(dlBtn) dlBtn.style.display = 'none';
     tpl.innerHTML = '';
+    socialContenidoReset();
     return;
   }
 
   const fechaTxt = formatFechaLarga(fechaISO);
-  tpl.innerHTML = PLANTILLAS.resultados01.render(datos, fechaTxt);
+  // Mismo mecanismo de paginación que Pronósticos (paginarPartidos ya es
+  // genérica: solo divide un array, no depende de la estructura de
+  // partidos de Pronósticos). Cada página conserva el RÉCORD TOTAL del
+  // día (aciertos/total/pct de 'datos'), solo cambia la lista de partidos
+  // que trae cada imagen — así "11 de 15, 73%" aparece igual en todas las
+  // páginas, tal como se confirmó.
+  const paginasPartidos = paginarPartidos(datos.partidos);
+  const render = (partidosPagina, fTxt) => PLANTILLAS.resultados01.render(
+    { ...datos, partidos: partidosPagina }, fTxt
+  );
+  const htmlCache = paginasPartidos.map(pp => render(pp, fechaTxt));
 
-  statusBox.innerHTML = `<div class="social-ok">✅ ${datos.aciertos} de ${datos.total} pronósticos acertados (${datos.pct}%).</div>`;
+  SOCIAL_CONTENIDO = {
+    tipo: 'resultados',
+    unidades: paginasPartidos,
+    indice: 0,
+    fechaTxt,
+    htmlCache,
+    render,
+    nombreArchivo: (i, total) => `nahuales-bc-resultados-${fechaISO}${total>1?`-${String(i+1).padStart(2,'0')}-de-${total}`:''}.png`
+  };
+
+  const avisoPaginas = paginasPartidos.length > 1
+    ? ` Se generaron <b>${paginasPartidos.length} imágenes</b> (${paginasPartidos.map(p=>p.length).join(' + ')} partidos) — usa las flechas para revisarlas.`
+    : '';
+  statusBox.innerHTML = `<div class="social-ok">✅ ${datos.aciertos} de ${datos.total} pronósticos acertados (${datos.pct}%).${avisoPaginas}</div>`;
 
   wrap.style.display = '';
   wrap.classList.remove('expandido');
@@ -2842,8 +3056,7 @@ function generateResultadosContenido(){
   const toggleBtn = document.getElementById('socialPreviewToggleBtn');
   if(toggleWrap) toggleWrap.style.display = '';
   if(toggleBtn) toggleBtn.textContent = 'Ver en grande';
-  if(dlBtn) dlBtn.style.display = '';
-  scaleSocialPreview(tplId);
+  socialPagerRender();
 }
 
 // La plantilla mide 1080x1350 fijo (formato Instagram) SIEMPRE, sin importar
@@ -2890,6 +3103,7 @@ function cambiarSocialTab(tab){
   if(toggleWrap) toggleWrap.style.display = 'none';
   const statusBox = document.getElementById('social-status');
   if(statusBox) statusBox.innerHTML = '';
+  socialContenidoReset();
 }
 
 // Alterna entre vista previa compacta (altura limitada, con scroll interno)
@@ -3024,60 +3238,28 @@ async function inlineTeamLogos(tpl){
   };
 }
 
-
-// sobre 1080x1350 = 2160x2700 final, tamaño correcto para Instagram feed)
-async function downloadSocialPng(botonId='socialDownloadBtn', prefijoArchivo='nahuales-bc-pronosticos', fechaTxt=null){
-  const tpl = document.getElementById('tpl-social-active');
-  if(!tpl || !tpl.innerHTML.trim()) return;
-  // Capturamos el elemento .tpl01 directamente, no su contenedor genérico:
-  // .tpl01 es quien tiene width:1080px/height:1350px fijos en su propio CSS.
-  const plantillaEl = tpl.querySelector('.tpl01') || tpl;
-  // CAUSA RAÍZ del espacio vacío a la derecha/abajo: #socialScale (ancestro
-  // de .tpl01) tiene un transform:scale(...) aplicado por scaleSocialPreview()
-  // para que la vista previa quepa en pantalla sin desbordar. Ese transform
-  // no se queda "fuera" del elemento capturado — html2canvas clona el DOM tal
-  // cual está, heredando el scale reducido del ancestro, así que terminaba
-  // capturando el contenido ya empequeñecido dentro de un lienzo de 1080x1350,
-  // dejando vacío el resto (con transform-origin:top left, el hueco cae a la
-  // derecha y abajo, exactamente el patrón reportado). Se anula el transform
-  // justo antes de capturar y se restaura después, pase lo que pase.
-  const scaleEl = document.getElementById('socialScale');
-  const transformOriginal = scaleEl ? scaleEl.style.transform : '';
-  const btn = document.getElementById(botonId);
-  const original = btn ? btn.textContent : '';
-  if(btn){ btn.textContent = 'Preparando imagen…'; btn.disabled = true; }
-  let restaurarLogos = null;
-  try{
-    await waitForTemplateAssets(tpl);
-    if(btn) btn.textContent = 'Optimizando escudos…';
-    restaurarLogos = await inlineTeamLogos(tpl);
-    await waitForTemplateAssets(tpl); // los <img> ahora apuntan a base64: esperar su "load" antes de capturar
-    if(btn) btn.textContent = 'Generando imagen…';
-    if(scaleEl) scaleEl.style.transform = 'none';
-    const canvas = await html2canvas(plantillaEl, { scale:2, width:1080, height:1350, backgroundColor:'#f5efe3', useCORS:true, imageTimeout:15000 });
-    const link = document.createElement('a');
-    const fecha = fechaTxt || dateInput.value || 'hoy';
-    link.download = `${prefijoArchivo}-${fecha}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }catch(e){
-    alert('No se pudo generar la imagen: ' + e.message + '\n\nEsto puede pasar si algún logo de equipo no cargó por CORS. Revisa la consola para más detalle.');
-  }finally{
-    if(scaleEl) scaleEl.style.transform = transformOriginal;
-    if(restaurarLogos) restaurarLogos();
-    if(btn){ btn.textContent = original; btn.disabled = false; }
-  }
+// html2canvas trabaja sobre un clon del DOM. Reafirmamos en ese clon las
+// medidas, recorte y object-fit de los retratos para que la exportación replique
+// exactamente la vista previa, incluso después de rasterizar imágenes remotas.
+function socialCanvasOptions(){
+  return {
+    scale:2, width:1080, height:1350, backgroundColor:'#f5efe3', useCORS:true, imageTimeout:15000,
+    onclone: (doc)=>{
+      doc.querySelectorAll('.csl-pitcher-foto-fallback').forEach(img=>{
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.display = 'block';
+        img.style.objectFit = 'contain';
+        img.style.objectPosition = 'bottom center';
+      });
+    }
+  };
 }
 
-/* ---------- CARRUSEL DE ANÁLISIS (lote de imágenes, una por partido) ---------- */
-// Reutiliza el mismo pipeline de captura que downloadSocialPng (esperar
-// assets, rasterizar logos a base64, anular el transform del preview,
-// capturar con html2canvas) pero repetido una vez por partido, inyectando
-// cada render en el mismo contenedor #tpl-social-active de forma secuencial.
-// Se descarga una imagen por partido, numerada, para subir manualmente como
-// carrusel en Instagram (no se arma ZIP: Instagram no lo acepta directo).
+
+// sobre 1080x1350 = 2160x2700 final, tamaño correcto para Instagram feed)
+
 async function generateCarruselAnalisis(){
-  const tpl = document.getElementById('tpl-social-active');
   // Garantiza que FORM (forma reciente por equipo) esté poblado antes de
   // leerlo en collectSocialGames(). Sin esto, si el usuario llega directo a
   // Social sin haber pasado por Partidos/Pizarra, FORM[teamId] está vacío y
@@ -3089,47 +3271,72 @@ async function generateCarruselAnalisis(){
   if(btnCarga){ btnCarga.textContent = 'Cargando forma reciente…'; btnCarga.disabled = true; }
   await loadForm();
   if(btnCarga){ btnCarga.textContent = textoOriginalCarga; btnCarga.disabled = false; }
+
   const games = collectSocialGames();
+  const statusBox = document.getElementById('social-status');
+  const wrap = document.getElementById('socialPreviewWrap');
   if(!games.length){
-    alert('No hay partidos cargados para esta fecha. Ve a la pestaña Partidos y confirma que cargaron los juegos del día.');
+    statusBox.innerHTML = `<div class="social-warn">No hay partidos cargados para esta fecha. Ve a la pestaña Partidos y confirma que cargaron los juegos del día.</div>`;
+    wrap.style.display = 'none';
+    socialContenidoReset();
     return;
   }
   const fechaTxt = formatFechaLarga(dateInput.value);
-  const scaleEl = document.getElementById('socialScale');
-  const transformOriginal = scaleEl ? scaleEl.style.transform : '';
-  const wrap = document.getElementById('socialPreviewWrap');
-  // CAUSA RAÍZ del lienzo en blanco: #socialPreviewWrap arranca con
-  // display:none en el HTML estático, y solo generateSocialContent() (botón
-  // de Pronósticos) lo hacía visible. Si el usuario genera el carrusel sin
-  // haber generado Pronósticos antes en esa visita a la vista Social, .tpl01
-  // vive dentro de un ancestro oculto — un elemento así no tiene layout real
-  // (offsetHeight/Width en 0), y html2canvas clona esa falta de layout tal
-  // cual, capturando un lienzo vacío sin importar cuánto contenido CSS/HTML
-  // tenga adentro. Se hace visible aquí, igual que hace generateSocialContent.
-  if(wrap) wrap.style.display = '';
-  const toggleWrap2 = document.getElementById('socialPreviewToggleWrap');
-  const toggleBtn2 = document.getElementById('socialPreviewToggleBtn');
-  if(toggleWrap2) toggleWrap2.style.display = '';
-  if(toggleBtn2) toggleBtn2.textContent = 'Ver en grande';
-  const btn = document.getElementById('carruselBtn');
-  const original = btn ? btn.textContent : '';
-  if(btn) btn.disabled = true;
-
-  // Blindaje: quitamos el listener de resize durante TODO el lote, no solo
-  // alrededor de cada captura individual. tpl.innerHTML cambia en cada
-  // iteración mientras dura la generación completa, así que cualquier
-  // reflow/resize disparado en ese lapso queda neutralizado de raíz.
-  window.removeEventListener('resize', onWindowResizeSocial);
-
   const slug = (s)=> (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 
-  try{
-    for(let i=0; i<games.length; i++){
-      const g = games[i];
-      const numero = String(i+1).padStart(2,'0');
-      if(btn) btn.textContent = `Generando ${i+1} de ${games.length}…`;
+  // Bajo demanda: 'unidades' son los datos crudos de cada partido (ya
+  // calculados por collectSocialGames, livianos), pero el HTML real de
+  // cada uno (renderCarrusel01) se calcula la primera vez que se navega
+  // a ese índice — ver socialPagerRender(). htmlCache empieza vacío.
+  SOCIAL_CONTENIDO = {
+    tipo: 'carrusel',
+    unidades: games,
+    indice: 0,
+    fechaTxt,
+    htmlCache: [],
+    render: (g, fTxt) => renderCarrusel01(g, fTxt),
+    nombreArchivo: (i, total) => `nahuales-carrusel-${String(i+1).padStart(2,'0')}-${slug(games[i].homeTeam)}-vs-${slug(games[i].awayTeam)}.png`
+  };
 
-      tpl.innerHTML = renderCarrusel01(g, fechaTxt);
+  statusBox.innerHTML = `<div class="social-ok">✅ ${games.length} partido(s) listos para el carrusel. Usa las flechas para revisarlos antes de descargar.</div>`;
+  wrap.style.display = '';
+  wrap.classList.remove('expandido');
+  const toggleWrap = document.getElementById('socialPreviewToggleWrap');
+  const toggleBtn = document.getElementById('socialPreviewToggleBtn');
+  if(toggleWrap) toggleWrap.style.display = '';
+  if(toggleBtn) toggleBtn.textContent = 'Ver en grande';
+  await socialPagerRender();
+}
+
+// Descarga el lote completo de un contenido ya generado (Pronósticos con
+// varias páginas, o Carrusel con varios partidos). Reutiliza el mismo
+// pipeline de captura ya validado: blindaje del listener de resize durante
+// todo el lote, rasterizado de logos a base64, anulación temporal del
+// transform del preview. Al terminar, deja la vista previa de vuelta en
+// el índice que el usuario tenía antes de descargar.
+async function socialDescargarTodas(){
+  const c = SOCIAL_CONTENIDO;
+  if(!c || c.unidades.length < 2) return;
+  const tpl = document.getElementById('tpl-social-active');
+  const scaleEl = document.getElementById('socialScale');
+  const transformOriginal = scaleEl ? scaleEl.style.transform : '';
+  const btn = document.getElementById('socialDownloadTodasBtn');
+  const original = btn ? btn.textContent : '';
+  if(btn) btn.disabled = true;
+  const indiceOriginal = c.indice;
+
+  window.removeEventListener('resize', onWindowResizeSocial);
+
+  try{
+    for(let i=0; i<c.unidades.length; i++){
+      if(btn) btn.textContent = `Generando ${i+1} de ${c.unidades.length}…`;
+
+      let html = c.htmlCache[i];
+      if(html === undefined){
+        html = c.render(c.unidades[i], c.fechaTxt, i);
+        c.htmlCache[i] = html;
+      }
+      tpl.innerHTML = html;
       const plantillaEl = tpl.querySelector('.tpl01') || tpl;
 
       await waitForTemplateAssets(tpl);
@@ -3137,12 +3344,12 @@ async function generateCarruselAnalisis(){
       await waitForTemplateAssets(tpl);
 
       if(scaleEl) scaleEl.style.transform = 'none';
-      const canvas = await html2canvas(plantillaEl, { scale:2, width:1080, height:1350, backgroundColor:'#f5efe3', useCORS:true, imageTimeout:15000 });
+      const canvas = await html2canvas(plantillaEl, socialCanvasOptions());
       restaurarLogos();
       if(scaleEl) scaleEl.style.transform = transformOriginal;
 
       const link = document.createElement('a');
-      link.download = `nahuales-carrusel-${numero}-${slug(g.homeTeam)}-vs-${slug(g.awayTeam)}.png`;
+      link.download = c.nombreArchivo(i, c.unidades.length);
       link.href = canvas.toDataURL('image/png');
       link.click();
       // pequeña pausa entre descargas: algunos navegadores bloquean o
@@ -3150,10 +3357,48 @@ async function generateCarruselAnalisis(){
       await new Promise(r => setTimeout(r, 400));
     }
   }catch(e){
-    alert('No se pudo generar el carrusel: ' + e.message);
+    alert('No se pudo generar el lote: ' + e.message);
   }finally{
     if(scaleEl) scaleEl.style.transform = transformOriginal;
     window.addEventListener('resize', onWindowResizeSocial);
+    if(btn){ btn.textContent = original; btn.disabled = false; }
+    c.indice = indiceOriginal;
+    await socialPagerRender();
+  }
+}
+
+// Descarga SOLO la imagen que se está viendo en este momento (el índice
+// actual del paginador). Usa el mismo pipeline de captura que el lote,
+// pero para una sola unidad.
+async function socialDescargarActual(){
+  const c = SOCIAL_CONTENIDO;
+  if(!c) return;
+  const tpl = document.getElementById('tpl-social-active');
+  const scaleEl = document.getElementById('socialScale');
+  const transformOriginal = scaleEl ? scaleEl.style.transform : '';
+  const btn = document.getElementById('socialDownloadEstaBtn');
+  const original = btn ? btn.textContent : '';
+  if(btn){ btn.textContent = 'Generando…'; btn.disabled = true; }
+
+  try{
+    const plantillaEl = tpl.querySelector('.tpl01') || tpl;
+    await waitForTemplateAssets(tpl);
+    const restaurarLogos = await inlineTeamLogos(tpl);
+    await waitForTemplateAssets(tpl);
+
+    if(scaleEl) scaleEl.style.transform = 'none';
+    const canvas = await html2canvas(plantillaEl, socialCanvasOptions());
+    restaurarLogos();
+    if(scaleEl) scaleEl.style.transform = transformOriginal;
+
+    const link = document.createElement('a');
+    link.download = c.nombreArchivo(c.indice, c.unidades.length);
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }catch(e){
+    alert('No se pudo generar la imagen: ' + e.message);
+  }finally{
+    if(scaleEl) scaleEl.style.transform = transformOriginal;
     if(btn){ btn.textContent = original; btn.disabled = false; }
   }
 }
