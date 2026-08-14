@@ -1,0 +1,31 @@
+# Instrucciones de trabajo — Nahuales BC
+
+## Eficiencia (prioridad alta)
+- No narres cada paso mientras trabajas. No repitas el código que vas a
+  cambiar antes de cambiarlo. No expliques qué es una función o qué hace
+  un fragmento de CSS si no te lo pregunto directamente.
+- Al terminar una tarea, da un resum# Instrucciones de trabajo — Nahuales BC
+
+## Eficiencia (prioridad alta)
+- No narres cada paso mientras trabajas. No repitas el código que vas a
+  cambiar antes de cambiarlo. No expliques qué es una función o qué hace
+  un fragmento de CSS si no te lo pregunto directamente.
+- Al terminar una tarea, da un resumen de 2-4 líneas: qué cambiaste, dónde,
+  y el resultado de la validación. Nada más.
+- No leas index.html completo salvo que sea estrictamente necesario. Usa
+  grep/búsqueda por nombre de función, clase o selector para ir directo al
+  punto. Este archivo pesa ~1MB — leerlo completo es caro.
+- No explores el resto del proyecto ni sugieras mejoras no solicitadas
+  fuera del alcance de la tarea. Si ves algo que crees que debería
+  arreglarse, menciónalo en una línea al final, no lo implementes.
+- Si una tarea tiene alcance ambiguo, pregunta antes de empezar a explorar
+  el código — no investigues primero y preguntes después.
+
+## Alcance
+- Cambios estrictos a lo pedido. No refactorices, no "mejores" código
+  adyacente, no cambies nombres de variables/funciones existentes salvo
+  que se pida explícitamente.
+- Node --check antes de cada commit. Commit solo cuando se confirme que
+  pasa.
+- No hagas commit ni push sin que yo lo confirme, salvo que te diga
+  explícitamente "haz commit y push al terminar"
