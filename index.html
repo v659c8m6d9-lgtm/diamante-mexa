@@ -3662,6 +3662,42 @@ async function generateCarruselAnalisis(){
   await socialPagerRender();
 }
 
+// Convierte un canvas a Blob (promisificado).
+function socialCanvasToBlob(canvas){
+  return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+}
+
+function socialDescargaTradicional(nombre, blob){
+  const link = document.createElement('a');
+  link.download = nombre;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+}
+
+// Entrega uno o varios PNG ya generados al usuario. En iOS Safari,
+// canvas.toDataURL()/blob + <a download> falla en silencio: no descarga y no
+// hay error visible. Ahi usamos navigator.share() con archivos, que abre el
+// menu nativo (Guardar en Fotos, o compartir directo a otra app). En
+// navegadores donde <a download> si funciona (escritorio), seguimos usando
+// eso, que es mas directo y no interrumpe con un menu.
+async function socialEntregarArchivos(archivos){
+  const files = archivos.map(a => new File([a.blob], a.nombre, {type:'image/png'}));
+  if(navigator.share && navigator.canShare && navigator.canShare({files})){
+    try{
+      await navigator.share({files});
+      return;
+    }catch(e){
+      if(e.name === 'AbortError') return; // el usuario cerro el menu de compartir
+      // si share falla por otra razon, seguimos con la descarga tradicional
+    }
+  }
+  for(const a of archivos){
+    socialDescargaTradicional(a.nombre, a.blob);
+    if(archivos.length > 1) await new Promise(r => setTimeout(r, 400));
+  }
+}
+
 // Descarga el lote completo de un contenido ya generado (Pronósticos con
 // varias páginas, o Carrusel con varios partidos). Reutiliza el mismo
 // pipeline de captura ya validado: blindaje del listener de resize durante
@@ -3681,6 +3717,7 @@ async function socialDescargarTodas(){
 
   window.removeEventListener('resize', onWindowResizeSocial);
 
+  const archivos = [];
   try{
     for(let i=0; i<c.unidades.length; i++){
       if(btn) btn.textContent = `Generando ${i+1} de ${c.unidades.length}…`;
@@ -3702,14 +3739,11 @@ async function socialDescargarTodas(){
       restaurarLogos();
       if(scaleEl) scaleEl.style.transform = transformOriginal;
 
-      const link = document.createElement('a');
-      link.download = c.nombreArchivo(i, c.unidades.length);
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      // pequeña pausa entre descargas: algunos navegadores bloquean o
-      // desordenan descargas múltiples disparadas sin ningún respiro
-      await new Promise(r => setTimeout(r, 400));
+      const blob = await socialCanvasToBlob(canvas);
+      archivos.push({nombre: c.nombreArchivo(i, c.unidades.length), blob});
     }
+    if(btn) btn.textContent = 'Entregando…';
+    await socialEntregarArchivos(archivos);
   }catch(e){
     alert('No se pudo generar el lote: ' + e.message);
   }finally{
@@ -3745,10 +3779,8 @@ async function socialDescargarActual(){
     restaurarLogos();
     if(scaleEl) scaleEl.style.transform = transformOriginal;
 
-    const link = document.createElement('a');
-    link.download = c.nombreArchivo(c.indice, c.unidades.length);
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const blob = await socialCanvasToBlob(canvas);
+    await socialEntregarArchivos([{nombre: c.nombreArchivo(c.indice, c.unidades.length), blob}]);
   }catch(e){
     alert('No se pudo generar la imagen: ' + e.message);
   }finally{
