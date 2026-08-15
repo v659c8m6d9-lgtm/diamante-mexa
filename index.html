@@ -511,6 +511,10 @@
   .bat th{color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase}
   .bat td.nm{text-align:left;white-space:nowrap;color:var(--txt)}
   .bat tr:hover td{background:rgba(7,37,30,.04)}
+  /* Glosario reutilizable: encabezados con tooltip (th-tip) + bubble compartido (tip-bubble) */
+  .th-tip{cursor:help;border-bottom:1px dotted var(--muted)}
+  .tip-bubble{position:fixed;z-index:9999;background:var(--cream);color:var(--bg);font-size:11px;font-weight:500;text-transform:none;letter-spacing:normal;padding:6px 9px;border-radius:6px;max-width:210px;line-height:1.35;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  .tip-bubble.show{opacity:1;visibility:visible}
   .tabs{display:flex;gap:6px;margin-bottom:14px}
   .tab{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--muted);padding:8px;border-radius:9px;font-family:'Archivo';font-weight:600;font-size:12px;cursor:pointer;transition:.15s}
   .tab.active{background:var(--red);color:var(--cream);border-color:var(--red)}
@@ -2074,6 +2078,84 @@ function linescoreTable(g, line){
     <tr><td class="tm">${hm}</td>${hrow}</tr></tbody></table>`;
 }
 
+/* ---------- GLOSARIO DE ESTADISTICAS (tooltips reutilizables) ---------- */
+// Diccionario clave -> explicacion breve. Para agregar tooltips a una
+// tabla nueva: agrega las claves que falten aqui y usa thGlosario('CLAVE')
+// en vez de <th>texto</th> al armar el <thead>.
+const GLOSARIO_STATS = {
+  AB: 'Turnos al bate',
+  C: 'Carreras anotadas',
+  H: 'Hits (imparables)',
+  CI: 'Carreras impulsadas',
+  BB: 'Bases por bolas',
+  K: 'Ponches',
+  AVG: 'Promedio de bateo',
+  ERA: 'Carreras limpias permitidas por cada 9 entradas',
+  WHIP: 'Hits + boletos permitidos por entrada lanzada',
+  IP: 'Entradas lanzadas',
+  AVG_RIVAL: 'Promedio de bateo de los bateadores rivales'
+};
+
+// Genera un elemento con tooltip: hover en escritorio, toque en movil
+// (via el bubble compartido mas abajo). etiqueta es el texto visible;
+// si se omite, usa la misma clave. tag por defecto 'th' (encabezados de
+// tabla); pasa 'span' u otro tag para etiquetas fuera de una tabla.
+function thGlosario(clave, etiqueta, tag){
+  const t = tag || 'th';
+  const exp = GLOSARIO_STATS[clave] || '';
+  return `<${t} class="th-tip" data-tip="${exp.replace(/"/g,'&quot;')}">${etiqueta || clave}</${t}>`;
+}
+
+// Bubble unico compartido por toda la app para mostrar data-tip de
+// cualquier elemento (no solo encabezados de tabla). Delegado a nivel
+// document: funciona con contenido insertado/reemplazado dinamicamente
+// (innerHTML) sin necesidad de volver a atar listeners.
+let _tipBubbleEl = null;
+function _tipBubble(){
+  if(!_tipBubbleEl){
+    _tipBubbleEl = document.createElement('div');
+    _tipBubbleEl.className = 'tip-bubble';
+    document.body.appendChild(_tipBubbleEl);
+  }
+  return _tipBubbleEl;
+}
+function _mostrarTip(el){
+  const texto = el.getAttribute('data-tip');
+  if(!texto) return;
+  const bubble = _tipBubble();
+  bubble.textContent = texto;
+  bubble.classList.add('show');
+  const r = el.getBoundingClientRect();
+  const bw = bubble.offsetWidth;
+  let left = r.left + r.width/2 - bw/2;
+  left = Math.max(6, Math.min(left, window.innerWidth - bw - 6));
+  bubble.style.left = `${left}px`;
+  bubble.style.top = `${r.bottom + 6}px`;
+}
+function _ocultarTip(){
+  if(_tipBubbleEl) _tipBubbleEl.classList.remove('show');
+}
+document.addEventListener('mouseover', e=>{
+  const el = e.target.closest('[data-tip]');
+  if(el) _mostrarTip(el);
+});
+document.addEventListener('mouseout', e=>{
+  const el = e.target.closest('[data-tip]');
+  if(el) _ocultarTip();
+});
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-tip]');
+  if(el){
+    e.stopPropagation();
+    const bubble = _tipBubble();
+    const yaAbierto = bubble.classList.contains('show') && bubble.textContent === el.getAttribute('data-tip');
+    _ocultarTip();
+    if(!yaAbierto) _mostrarTip(el);
+  }else{
+    _ocultarTip();
+  }
+});
+
 function battingTable(box, side){
   const team = box.teams[side];
   const order = team.battingOrder || [];
@@ -2092,7 +2174,7 @@ function battingTable(box, side){
   }
   if(!rows) rows = `<tr><td class="nm" colspan="8" style="color:var(--muted)">Sin datos de bateo todavía.</td></tr>`;
   return `<div class="sech">Bateo</div><table class="bat">
-    <thead><tr><th style="text-align:left">Jugador</th><th>AB</th><th>C</th><th>H</th><th>CI</th><th>BB</th><th>K</th><th>AVG</th></tr></thead>
+    <thead><tr><th style="text-align:left">Jugador</th>${thGlosario('AB')}${thGlosario('C')}${thGlosario('H')}${thGlosario('CI')}${thGlosario('BB')}${thGlosario('K')}${thGlosario('AVG')}</tr></thead>
     <tbody>${rows}</tbody></table>`;
 }
 
@@ -2202,12 +2284,12 @@ async function renderPreview(g){
     const c=cols[side];
     return `<div class="col"><h4>${teamName}</h4>
       <div style="font-size:13px;font-weight:600;margin-bottom:6px">${c.name}</div>
-      <div class="row"><span>ERA</span><b>${stat(c.s,'era')}</b></div>
-      <div class="row"><span>WHIP</span><b>${stat(c.s,'whip')}</b></div>
-      <div class="row"><span>Ponches (K)</span><b>${stat(c.s,'strikeOuts')}</b></div>
-      <div class="row"><span>Entradas (IP)</span><b>${stat(c.s,'inningsPitched')}</b></div>
+      <div class="row">${thGlosario('ERA', null, 'span')}<b>${stat(c.s,'era')}</b></div>
+      <div class="row">${thGlosario('WHIP', null, 'span')}<b>${stat(c.s,'whip')}</b></div>
+      <div class="row">${thGlosario('K', 'Ponches (K)', 'span')}<b>${stat(c.s,'strikeOuts')}</b></div>
+      <div class="row">${thGlosario('IP', 'Entradas (IP)', 'span')}<b>${stat(c.s,'inningsPitched')}</b></div>
       <div class="row"><span>Récord</span><b>${c.s?`${c.s.wins}-${c.s.losses}`:'—'}</b></div>
-      <div class="row"><span>AVG en contra</span><b>${stat(c.s,'avg')}</b></div>
+      <div class="row">${thGlosario('AVG_RIVAL', 'AVG en contra', 'span')}<b>${stat(c.s,'avg')}</b></div>
     </div>`;
   };
   body.innerHTML = `${recentFormBlock(g)}
