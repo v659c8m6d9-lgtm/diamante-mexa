@@ -668,6 +668,10 @@
   .liga-btn{padding:6px 12px;border:none;background:transparent;color:var(--muted);font-weight:800;font-size:12px;letter-spacing:.5px;border-radius:6px;cursor:pointer;transition:.15s;font-family:inherit}
   .liga-btn.on{background:var(--red);color:#fff}
   .liga-btn:not(.on):hover{color:var(--cream)}
+  .liga-inv{position:relative}
+  .liga-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:50;flex-direction:column;gap:3px;min-width:100%;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:3px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  .liga-menu.open{display:flex}
+  .liga-menu .liga-btn{text-align:left;white-space:nowrap}
   /* ===== Filtro de liga del dashboard ===== */
   .dash-liga-filter{display:flex;gap:6px;margin-bottom:14px}
   .dlf-btn{padding:7px 16px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:700;font-size:12px;border-radius:8px;cursor:pointer;transition:.15s;font-family:inherit}
@@ -731,6 +735,15 @@
     <div class="liga-sel">
       <button class="liga-btn" id="ligaLMB" onclick="cambiarLiga(23)">LMB</button>
       <button class="liga-btn" id="ligaMLB" onclick="cambiarLiga(1)">MLB</button>
+      <div class="liga-inv">
+        <button class="liga-btn" id="ligaInv" onclick="toggleMenuInvierno(event)">Invierno ▾</button>
+        <div class="liga-menu" id="ligaMenu">
+          <button class="liga-btn" id="ligaLMP" onclick="cambiarLiga(132)">LMP</button>
+          <button class="liga-btn" id="ligaLIDOM" onclick="cambiarLiga(131)">LIDOM</button>
+          <button class="liga-btn" id="ligaLVBP" onclick="cambiarLiga(135)">LVBP</button>
+          <button class="liga-btn" id="ligaLBPRC" onclick="cambiarLiga(133)">LBPRC</button>
+        </div>
+      </div>
     </div>
     <div class="data-badge" id="dataBadge" title="Estado de los datos del modelo">—</div>
     <button class="navbtn" id="prevDay" title="Día anterior">‹</button>
@@ -874,7 +887,39 @@ function aplicarParkFactors(){
     PARK_FACTORS = {};
   }
 }
-function ligaNombre(){ return SPORT_ID===1 ? 'MLB' : 'LMB'; }
+/* Ligas de invierno: las 4 son sportId=17 en la API y se distinguen por leagueId.
+   Para la app, SPORT_ID (y el campo liga guardado) = leagueId: 132, 131, 135, 133. */
+const LIGAS_INVIERNO = {
+  132: {nombre:'LMP',   sub:'LIGA MEXICANA DEL PACÍFICO'},
+  131: {nombre:'LIDOM', sub:'LIGA DE BÉISBOL DOMINICANA'},
+  135: {nombre:'LVBP',  sub:'LIGA VENEZOLANA DE BÉISBOL PROFESIONAL'},
+  133: {nombre:'LBPRC', sub:'LIGA DE BÉISBOL ROBERTO CLEMENTE (PUERTO RICO)'}
+};
+// sportId real para la API (las ligas de invierno son sportId=17) y filtro de liga
+function apiSportId(){ return SPORT_ID in LIGAS_INVIERNO ? 17 : SPORT_ID; }
+function leagueQ(){ return SPORT_ID in LIGAS_INVIERNO ? '&leagueId='+SPORT_ID : ''; }
+function nombreLiga(id){ return id===1 ? 'MLB' : id===23 ? 'LMB' : (LIGAS_INVIERNO[id] ? LIGAS_INVIERNO[id].nombre : 'LMB'); }
+function ligaNombre(){ return nombreLiga(SPORT_ID); }
+function esLigaFiltro(id){ return id===23 || id===1 || (id in LIGAS_INVIERNO); }
+// ligas con registros en una lista (apuestas o tracking; sin liga = LMB): [23, 1, 132, ...]
+function ligasConDatos(lista){
+  const ids = [];
+  if(lista.some(r=>(r.liga||23)===23)) ids.push(23);
+  if(lista.some(r=>r.liga===1)) ids.push(1);
+  for(const k of Object.keys(LIGAS_INVIERNO)){ if(lista.some(r=>r.liga===Number(k))) ids.push(Number(k)); }
+  return ids;
+}
+// selector Todas + una liga por boton; solo si hay 2 o mas ligas con datos
+function ligaFiltroHTML(ids, actual, fn){
+  if(ids.length < 2) return '';
+  return `
+      <div class="dash-liga-filter">
+        <button class="dlf-btn ${actual===null?'on':''}" onclick="${fn}(null)">Todas</button>`
+    + ids.map(id=>`
+        <button class="dlf-btn ${actual===id?'on':''}" onclick="${fn}(${id})">${nombreLiga(id)}</button>`).join('')
+    + `
+      </div>`;
+}
 
 /* ===================== NUBE (Supabase) ===================== */
 const SUPA_URL = "https://leghxfxnrwhkknkyotcx.supabase.co";
@@ -995,18 +1040,41 @@ function startApp(){
   load();
 }
 
-// marca visualmente qué liga está activa (LMB o MLB)
+// marca visualmente qué liga está activa (LMB, MLB o invierno)
 function marcarLigaActiva(){
   const bLMB = document.getElementById('ligaLMB');
   const bMLB = document.getElementById('ligaMLB');
   if(bLMB) bLMB.classList.toggle('on', SPORT_ID===23);
   if(bMLB) bMLB.classList.toggle('on', SPORT_ID===1);
+  for(const k in LIGAS_INVIERNO){
+    const b = document.getElementById('liga'+LIGAS_INVIERNO[k].nombre);
+    if(b) b.classList.toggle('on', SPORT_ID===Number(k));
+  }
+  // el boton compacto "Invierno" muestra la liga de invierno activa (si la hay)
+  const bInv = document.getElementById('ligaInv');
+  if(bInv){
+    bInv.classList.toggle('on', SPORT_ID in LIGAS_INVIERNO);
+    bInv.textContent = (SPORT_ID in LIGAS_INVIERNO ? LIGAS_INVIERNO[SPORT_ID].nombre : 'Invierno') + ' ▾';
+  }
   // actualizar subtítulo del header
   const sub = document.querySelector('.brand .sub');
   if(sub) sub.textContent = SPORT_ID===1
     ? 'ANÁLISIS DE PARTIDOS · MLB'
-    : 'ANÁLISIS DE PARTIDOS · LIGA MEXICANA DE BÉISBOL';
+    : (SPORT_ID in LIGAS_INVIERNO
+        ? 'ANÁLISIS DE PARTIDOS · ' + LIGAS_INVIERNO[SPORT_ID].sub
+        : 'ANÁLISIS DE PARTIDOS · LIGA MEXICANA DE BÉISBOL');
 }
+
+// menu compacto de ligas de invierno (se cierra al tocar fuera o al elegir liga)
+function toggleMenuInvierno(ev){
+  ev.stopPropagation();
+  document.getElementById('ligaMenu').classList.toggle('open');
+}
+function cerrarMenuInvierno(){
+  const m = document.getElementById('ligaMenu');
+  if(m) m.classList.remove('open');
+}
+document.addEventListener('click', cerrarMenuInvierno);
 
 // cambia de liga: guarda, recarga partidos y refresca todo
 function cambiarLiga(id){
@@ -1067,8 +1135,8 @@ let GAMES = {};
 // las tarjetas ya pintadas en #out -- no toca GAMES ni el orden que leen
 // Pizarra/Social.
 let ORDEN_PARTIDOS = 'hora';
-let DASH_LIGA = null; // filtro de liga en el dashboard: null=todas, 23=LMB, 1=MLB
-let MODEL_LIGA = null; // filtro de liga en el modulo Modelo: null=todas, 23=LMB, 1=MLB
+let DASH_LIGA = null; // filtro de liga en el dashboard: null=todas, 23=LMB, 1=MLB, 132/131/135/133=invierno
+let MODEL_LIGA = null; // filtro de liga en el modulo Modelo: null=todas, 23=LMB, 1=MLB, 132/131/135/133=invierno
 let MODEL_PERIODO = '30d'; // periodo activo del selector global de Modelo
 let MODEL_CUSTOM = null; // {desde,hasta} cuando MODEL_PERIODO==='personalizado'
 // Splits local/visitante por equipo (récord en casa vs de gira).
@@ -1132,7 +1200,7 @@ async function load(){
   out.innerHTML = '<div class="status"><div class="spinner"></div>Cargando partidos…</div>';
   GAMES = {};
   try{
-    const sched = await fetch(`${API}/schedule?sportId=${SPORT_ID}&date=${date}&hydrate=probablePitcher,linescore,team`).then(r=>r.json());
+    const sched = await fetch(`${API}/schedule?sportId=${apiSportId()}${leagueQ()}&date=${date}&hydrate=probablePitcher,linescore,team`).then(r=>r.json());
     const dates = sched.dates || [];
     if(!dates.length || !dates[0].games.length){
       out.innerHTML = '<div class="status">No hay partidos de la LMB en esta fecha.<br>Prueba con otra fecha de la temporada.</div>';
@@ -1327,7 +1395,7 @@ async function hydratePitchers(g){
     const cell = document.getElementById(`ps-${g.gamePk}-${side}`);
     if(!pp){ g._pstats[side] = null; continue; }
     try{
-      const url = `${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${SPORT_ID})`;
+      const url = `${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${apiSportId()})`;
       const data = await fetch(url).then(r=>r.json());
       const splits = data.people[0].stats?.[0]?.splits;
       if(splits && splits.length){
@@ -1792,7 +1860,7 @@ function modeloStats(rango, ligaFiltro){
   const todos = getTrackingHistory();
   const filtrado = todos.filter(r => {
     if(r.fecha < rango.desde || r.fecha > rango.hasta) return false;
-    if((ligaFiltro===23||ligaFiltro===1) && (r.liga||23)!==ligaFiltro) return false;
+    if(esLigaFiltro(ligaFiltro) && (r.liga||23)!==ligaFiltro) return false;
     return true;
   });
 
@@ -1938,7 +2006,7 @@ function trackingStats(){
 // Devuelve el error medio, el sesgo (si tiende a sobre/subestimar) y la muestra.
 function totalsStats(ligaFiltro){
   const hist = getTrackingHistory().filter(r => typeof r.totalEst === 'number' && typeof r.totalReal === 'number');
-  const filtrado = (ligaFiltro===23||ligaFiltro===1)
+  const filtrado = esLigaFiltro(ligaFiltro)
     ? hist.filter(r => (r.liga||23)===ligaFiltro) : hist;
   const n = filtrado.length;
   if(n===0) return { n:0 };
@@ -2275,7 +2343,7 @@ async function renderPreview(g){
     const pp = g.teams[side].probablePitcher;
     if(!pp){ cols[side] = {name:'Por confirmar', s:null}; continue; }
     try{
-      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${SPORT_ID})`).then(r=>r.json());
+      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${apiSportId()})`).then(r=>r.json());
       cols[side] = {name:pp.fullName, s:d.people[0].stats?.[0]?.splits?.[0]?.stat || null};
     }catch(e){ cols[side]={name:pp.fullName,s:null}; }
   }
@@ -2313,8 +2381,10 @@ async function loadSplits(){
     let leagueParam;
     if(SPORT_ID===1){
       leagueParam = '103,104';
+    } else if(SPORT_ID in LIGAS_INVIERNO){
+      leagueParam = String(SPORT_ID); // invierno: el leagueId es SPORT_ID, sin descubrirlo por /teams
     } else {
-      const teams = await fetch(`${API}/teams?sportId=${SPORT_ID}&season=${season}`).then(r=>r.json());
+      const teams = await fetch(`${API}/teams?sportId=${apiSportId()}${leagueQ()}&season=${season}`).then(r=>r.json());
       const ids = [...new Set((teams.teams||[])
         .filter(t => (t.league?.name||'').toLowerCase().includes('mexican'))
         .map(t => t.league?.id).filter(Boolean))];
@@ -2363,7 +2433,7 @@ async function loadForm(){
   const start = new Date(end); start.setDate(start.getDate()-25);
   const fmt = d => localDate(d);
   try{
-    const url = `${API}/schedule?sportId=${SPORT_ID}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team,linescore`;
+    const url = `${API}/schedule?sportId=${apiSportId()}${leagueQ()}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team,linescore`;
     const sched = await fetch(url).then(r=>r.json());
     // juntar todos los juegos finalizados, ordenados por fecha
     const juegos = [];
@@ -2556,7 +2626,7 @@ async function runBacktest(days){
   const end = new Date(); end.setDate(end.getDate()-1);
   const start = new Date(end); start.setDate(start.getDate()-days);
   const fmt = d => localDate(d);
-  const url = `${API}/schedule?sportId=${SPORT_ID}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team`;
+  const url = `${API}/schedule?sportId=${apiSportId()}${leagueQ()}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=team`;
   const sched = await fetch(url).then(r=>r.json());
   let hits=0, total=0, details=[];
   for(const date of (sched.dates||[])){
@@ -3141,7 +3211,7 @@ function renderResultados01(datos, fechaTxt){
   // está seleccionada en este momento, usar la variable global aquí
   // reintroduciría el mismo bug de mezclar/etiquetar mal la liga.
   const ligaTxt = datos.partidos.length
-    ? (datos.partidos[0].liga===1 ? 'MLB' : 'LMB')
+    ? nombreLiga(datos.partidos[0].liga)
     : ligaNombre(); // sin partidos guardados, no hay dato real: usamos la liga activa como mejor estimado
 
   return `
@@ -3877,7 +3947,7 @@ async function loadBoard(){
   const date = dateInput.value;
   box.innerHTML = '<div class="status"><div class="spinner"></div>Cargando pizarra…</div>';
   try{
-    const sched = await fetch(`${API}/schedule?sportId=${SPORT_ID}&date=${date}&hydrate=probablePitcher,linescore,team,decisions`).then(r=>r.json());
+    const sched = await fetch(`${API}/schedule?sportId=${apiSportId()}${leagueQ()}&date=${date}&hydrate=probablePitcher,linescore,team,decisions`).then(r=>r.json());
     const dates = sched.dates || [];
     if(!dates.length || !dates[0].games.length){
       box.innerHTML = '<div class="status">No hay partidos en esta fecha.</div>';
@@ -4025,7 +4095,7 @@ async function hydrateBoardForecast(g, card){
     const pp = g.teams[side].probablePitcher;
     if(!pp){ g._pstats[side]=null; continue; }
     try{
-      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${SPORT_ID})`).then(r=>r.json());
+      const d = await fetch(`${API}/people/${pp.id}?hydrate=stats(group=[pitching],type=[season],season=${season},sportId=${apiSportId()})`).then(r=>r.json());
       const s = d.people[0].stats?.[0]?.splits?.[0]?.stat;
       g._pstats[side] = s ? {era:parseFloat(s.era), whip:parseFloat(s.whip), ip:parseIP(s.inningsPitched), wins:s.wins, losses:s.losses, so:s.strikeOuts} : null;
     }catch(e){ g._pstats[side]=null; }
@@ -4117,9 +4187,9 @@ function bankStats(s){
 /* ===================== DASHBOARD (Control del Bank) ===================== */
 // Estadisticas extendidas para el dashboard, calculadas desde las apuestas resueltas.
 function dashStats(s, ligaFiltro){
-  // ligaFiltro: undefined/null = todas · 23 = LMB · 1 = MLB
+  // ligaFiltro: undefined/null = todas · 23 = LMB · 1 = MLB · 132/131/135/133 = invierno
   let bets = s.bets || [];
-  if(ligaFiltro===23 || ligaFiltro===1){
+  if(esLigaFiltro(ligaFiltro)){
     bets = bets.filter(b => (b.liga||23) === ligaFiltro); // apuestas viejas sin liga = LMB
   }
   const resueltas = bets.filter(b=> b.estado==='won' || b.estado==='lost');
@@ -4270,17 +4340,7 @@ function loadModelo(){
   // muestra si hay datos de ambas ligas en el historial completo (sin
   // filtrar), para no mostrar un selector inutil con una sola liga.
   const todos = getTrackingHistory();
-  const hayLMB = todos.some(r=>(r.liga||23)===23);
-  const hayMLB = todos.some(r=>r.liga===1);
-  let filtroLigaHTML = '';
-  if(hayLMB && hayMLB){
-    filtroLigaHTML = `
-      <div class="dash-liga-filter">
-        <button class="dlf-btn ${MODEL_LIGA===null?'on':''}" onclick="setModelLiga(null)">Todas</button>
-        <button class="dlf-btn ${MODEL_LIGA===23?'on':''}" onclick="setModelLiga(23)">LMB</button>
-        <button class="dlf-btn ${MODEL_LIGA===1?'on':''}" onclick="setModelLiga(1)">MLB</button>
-      </div>`;
-  }
+  const filtroLigaHTML = ligaFiltroHTML(ligasConDatos(todos), MODEL_LIGA, 'setModelLiga');
 
   if(s.sinDatos){
     box.innerHTML = `
@@ -4426,20 +4486,10 @@ function loadDashboard(){
   const s = getBank();
   const d = dashStats(s, DASH_LIGA);
 
-  // selector de liga del dashboard (Todas / LMB / MLB)
+  // selector de liga del dashboard (Todas + ligas con apuestas)
   const betsAll = s.bets || [];
-  const hayLMB = betsAll.some(b => (b.liga||23)===23);
-  const hayMLB = betsAll.some(b => b.liga===1);
-  let filtroHTML = '';
-  // solo mostramos el filtro si hay apuestas de ambas ligas (si no, no tiene sentido)
-  if(hayLMB && hayMLB){
-    filtroHTML = `
-      <div class="dash-liga-filter">
-        <button class="dlf-btn ${DASH_LIGA===null?'on':''}" onclick="setDashLiga(null)">Todas</button>
-        <button class="dlf-btn ${DASH_LIGA===23?'on':''}" onclick="setDashLiga(23)">LMB</button>
-        <button class="dlf-btn ${DASH_LIGA===1?'on':''}" onclick="setDashLiga(1)">MLB</button>
-      </div>`;
-  }
+  // solo mostramos el filtro si hay apuestas de 2 o mas ligas (si no, no tiene sentido)
+  const filtroHTML = ligaFiltroHTML(ligasConDatos(betsAll), DASH_LIGA, 'setDashLiga');
 
   const money = (n)=> (n>=0?'+':'') + '$' + Math.abs(n).toFixed(0).replace('-','');
   const moneyPlain = (n)=> '$' + n.toFixed(0);
@@ -5385,8 +5435,20 @@ async function loadStanding(){
       box.innerHTML = '<div class="zones-grid">' + records.map(renderZone).join('') + '</div>';
       return;
     }
+    if(SPORT_ID in LIGAS_INVIERNO){
+      // Ligas de invierno: el leagueId es SPORT_ID, sin descubrirlo por /teams
+      const urlW = `${API}/standings?leagueId=${SPORT_ID}&season=${season}&standingsTypes=regularSeason&hydrate=team,division`;
+      const dataW = await fetch(urlW).then(r=>r.json());
+      const recordsW = dataW.records || [];
+      if(!recordsW.length){
+        box.innerHTML = '<div class="status">No se pudo cargar la tabla en este momento.<br>Puede que la liga aún no publique standings para esta temporada.</div>';
+        return;
+      }
+      box.innerHTML = '<div class="zones-grid">' + recordsW.map(renderZone).join('') + '</div>';
+      return;
+    }
     // LMB: descubrir el/los leagueId reales de la Mexican League (sportId 23)
-    const teams = await fetch(`${API}/teams?sportId=${SPORT_ID}&season=${season}`).then(r=>r.json());
+    const teams = await fetch(`${API}/teams?sportId=${apiSportId()}${leagueQ()}&season=${season}`).then(r=>r.json());
     const leagueIds = [...new Set((teams.teams||[])
       .filter(t => (t.league?.name||'').toLowerCase().includes('mexican'))
       .map(t => t.league?.id).filter(Boolean))];
